@@ -1,4 +1,5 @@
-﻿using System.Text;
+﻿using Microsoft.Extensions.DependencyInjection;
+using System.Text;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
@@ -19,7 +20,9 @@ namespace Royal_Blueberry_Dictionary
         public MainWindow()
         {
             InitializeComponent();
-            
+            var searchTool = App.serviceProvider.GetRequiredService<Service.SearchService>();
+            var res = searchTool.searchAWord("hello");
+            Console.WriteLine(res.Result);
         }
     }
 }

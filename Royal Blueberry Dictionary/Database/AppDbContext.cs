@@ -14,11 +14,16 @@ namespace Royal_Blueberry_Dictionary.Database
     {
         public DbSet<WordEntry> WordEntries { get; set; }   
         public DbSet<Tag> Tags { get; set; }
-        public DbSet<CachedWord> CachedWords { get; set; }      
+        public DbSet<CachedWord> CachedWords { get; set; }
 
+        public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
+        {
+         
+         
+        }
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseSqlite("Data Source=rbbdictionary.db");
+         
         }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

@@ -1,10 +1,15 @@
-﻿using Royal_Blueberry_Dictionary.Database;
+﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+using Royal_Blueberry_Dictionary.Config;
+using Royal_Blueberry_Dictionary.Database;
+using Royal_Blueberry_Dictionary.Service.ApiClient;
 using System.Configuration;
 using System.Data;
+using System.IO;
+using System.Net.WebSockets;
 using System.Windows;
 using System.Windows.Media.Animation;
-using Microsoft.Extensions.DependencyInjection;
-using System.Net.WebSockets;
 
 namespace Royal_Blueberry_Dictionary
 {
@@ -20,13 +25,27 @@ namespace Royal_Blueberry_Dictionary
             base.OnStartup(e);
 
             var serviceCollection = new ServiceCollection();
-            serviceCollection.AddDbContext<AppDbContext>();
+            serviceCollection.AddDbContext<AppDbContext>(options =>
+                                options.UseSqlite("Data Source=blueberry.db")
+            );
+
+            var config = new ConfigurationBuilder().AddJsonFile("appsettings.json",optional: false, reloadOnChange : true).Build();
+            var apiSettings = new ApiSettings();
+            config.GetSection("ApiSettings").Bind(apiSettings);
+            serviceCollection.AddSingleton(apiSettings);
 
             // Repositories
             serviceCollection.AddScoped<Repository.Interface.IWordEntryRepository, Repository.Implement.WordEntryRepository>();
 
-            serviceProvider = serviceCollection.BuildServiceProvider();
+            // ApiClient
+            serviceCollection.AddSingleton<IBackendApiClient, BackendApiClient>();
+            //Service 
+            serviceCollection.AddScoped<Service.SearchService>();
 
+            serviceProvider = serviceCollection.BuildServiceProvider();
+            
+
+            // Ensure database is created
             using (var scope = serviceProvider.CreateScope())
             {
                 var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
