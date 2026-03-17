@@ -7,6 +7,10 @@
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
     <Grid>
-
+        <TextBlock Text="Hello, World!" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="24"
+                   Name="tx"/>
+        <Button Content="Click Me" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10" Click="Button_Click" />
     </Grid>
+    
+    
 </Window>

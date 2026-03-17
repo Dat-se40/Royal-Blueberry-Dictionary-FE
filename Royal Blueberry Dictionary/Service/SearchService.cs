@@ -17,10 +17,10 @@ namespace Royal_Blueberry_Dictionary.Service
             this.backendApiClient = backendApiClient;
         }   
 
-        public async Task<WordEntry> searchAWord(string word) 
+        public async Task<WordDetail> searchAWord(string word) 
         {
-            var reponse = await backendApiClient.GetAsync<WordEntry>($"search/get-detail/{word}");
-            return reponse;    
+            var response = await backendApiClient.GetAsync<WordDetail>($"searching/get-detail/{word}");
+            return response;
         }
     }
 }
