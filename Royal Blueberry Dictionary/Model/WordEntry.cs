@@ -11,6 +11,8 @@ namespace Royal_Blueberry_Dictionary.Model
         public string Id { get; set; } = Guid.NewGuid().ToString();
         public string UserId { get; set; }
         public string Word { get; set; }
+
+        public string Phonetic { get; set; }    
         public int MeaningIndex { get; set; }
         public string PartOfSpeech { get; set; }
         public string Definition { get; set; }
@@ -20,5 +22,23 @@ namespace Royal_Blueberry_Dictionary.Model
         public string Note { get; set; }
         public DateTime LastModifiedAt { get; set; } = DateTime.UtcNow;
         public bool IsDirty { get; set; } = false; // đã được sync với server chưa  
+
+        public WordEntry MapWordDetailToWordEntry(WordDetail detail, int meaningIdx, int defIdx)
+        {
+            var meaning = detail.Meanings[meaningIdx];
+            var definition = meaning.Definitions[defIdx];
+
+            return new WordEntry
+            {
+                Word = detail.Word,
+                Phonetic = detail.Phonetic,
+                PartOfSpeech = meaning.PartOfSpeech,
+                Definition = definition.Text,
+                Example = definition.Example,
+                MeaningIndex = meaningIdx,
+                LastModifiedAt = DateTime.UtcNow,
+                IsDirty = true // Đánh dấu để sync lên Server sau
+            };
+        }
     }
 }
