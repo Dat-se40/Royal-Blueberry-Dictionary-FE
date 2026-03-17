@@ -19,6 +19,7 @@ namespace Royal_Blueberry_Dictionary
         public MainWindow()
         {
             InitializeComponent();
+            
         }
     }
 }
