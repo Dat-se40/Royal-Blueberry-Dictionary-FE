@@ -9,4 +9,11 @@
     <UseWPF>true</UseWPF>
   </PropertyGroup>
 
+  <ItemGroup>
+    <Folder Include="Model\" />
+    <Folder Include="Repository\" />
+    <Folder Include="Service\" />
+    <Folder Include="ViewModel\" />
+  </ItemGroup>
+
 </Project>
