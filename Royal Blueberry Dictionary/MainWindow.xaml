@@ -3,14 +3,194 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:Royal_Blueberry_Dictionary"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
+        Title="Royal Blueberry Dictionary" Height="600" Width="1000"
+        FontFamily="{DynamicResource AppFontFamily}"
+        FontSize="{DynamicResource AppFontSize}"
+        Background="{DynamicResource MainBackground}">
+
     <Grid>
-        <TextBlock Text="Hello, World!" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="24"
-                   Name="tx"/>
-        <Button Content="Click Me" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10" Click="Button_Click" />
+        <Border x:Name="Overlay"
+                Background="#80000000"
+                Visibility="Collapsed"
+                Panel.ZIndex="99"
+                MouseDown="Overlay_MouseDown"/>
+
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+
+            <Border Grid.Row="0"
+                    Background="{DynamicResource NavbarBackground}"
+                    Padding="15"
+                    Effect="{StaticResource NavbarShadow}">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+
+                    <Button Grid.Column="0" x:Name="HamburgerBtn"
+                            Style="{StaticResource HamburgerButtonStyle}"
+                            Foreground="{DynamicResource MainBackground}"
+                            Margin="0,0,10,0"
+                            Click="HamburgerBtn_Click"/>
+
+                    <Button Grid.Column="1" x:Name="BackBtn"
+                            Style="{StaticResource NavButtonStyle}"
+                            IsEnabled="False"
+                            Margin="0,0,8,0">
+                        <TextBlock Text="◀" FontSize="16" FontWeight="Bold"/>
+                    </Button>
+
+                    <Button Grid.Column="2" x:Name="ForwardBtn"
+                            Style="{StaticResource NavButtonStyle}"
+                            IsEnabled="False"
+                            Margin="0,0,8,0">
+                        <TextBlock Text="▶" FontSize="16" FontWeight="Bold"/>
+                    </Button>
+
+                    <Button Grid.Column="3" x:Name="ReloadBtn"
+                            Style="{StaticResource NavButtonStyle}"
+                            Margin="0,0,20,0"
+                            Foreground="{DynamicResource MainBackground}">
+                        <TextBlock Text="🔄" FontSize="16"/>
+                    </Button>
+
+                    <Grid Grid.Column="4" MaxWidth="700" HorizontalAlignment="Stretch" Margin="20,0">
+                        <Border Background="{DynamicResource SearchBackground}"
+                                BorderBrush="{DynamicResource BorderColor}"
+                                BorderThickness="2"
+                                CornerRadius="25"
+                                Padding="15,8">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                </Grid.ColumnDefinitions>
+
+                                <TextBlock Grid.Column="0" Text="🔍" FontSize="18" 
+                                           VerticalAlignment="Center"
+                                           Foreground="{DynamicResource TextColor}" 
+                                           Margin="0,0,10,0"/>
+
+                                <TextBox Grid.Column="1" x:Name="SearchInput"
+                                         Style="{StaticResource SearchTextBoxStyle}"
+                                         Foreground="{DynamicResource TextColor}"/>
+
+                                <Button Grid.Column="2" x:Name="SearchBtn"  
+                                        Content="Search"
+                                        Style="{StaticResource SearchButtonStyle}"
+                                        Margin="10,0,0,0"/>
+                            </Grid>
+                        </Border>
+
+                        <Popup x:Name="SuggestionsPopup"
+                               PlacementTarget="{Binding ElementName=SearchInput}"
+                               Placement="Bottom"
+                               IsOpen="False"
+                               AllowsTransparency="True">
+                            <Border Background="{DynamicResource SuggestionsBackground}"
+                                    BorderBrush="{DynamicResource SuggestionsBorder}"
+                                    BorderThickness="2" CornerRadius="0,0,12,12">
+                                <ListBox x:Name="SuggestionsList"
+                                         Background="Transparent" BorderThickness="0">
+                                </ListBox>
+                            </Border>
+                        </Popup>
+                    </Grid>
+
+                    <Border Grid.Column="5" x:Name="ThemeToggle"
+                            Width="70" Height="34"
+                            Background="{DynamicResource ThemeToggleBackground}"
+                            CornerRadius="17" Cursor="Hand">
+                        <Canvas>
+                            <Border x:Name="ThemeSlider" Width="28" Height="28"
+                                    Background="{DynamicResource ThemeSliderBackground}"
+                                    CornerRadius="14" Canvas.Left="3" Canvas.Top="3">
+                                <TextBlock Text="🌙" FontSize="16"
+                                           HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                            </Border>
+                        </Canvas>
+                    </Border>
+                </Grid>
+            </Border>
+
+            <Frame Grid.Row="1" x:Name="MainFrame" NavigationUIVisibility="Hidden"/>
+        </Grid>
+
+        <Border x:Name="Sidebar" Width="280" HorizontalAlignment="Left"
+                Background="{DynamicResource SidebarBackground}"
+                Panel.ZIndex="100" Effect="{StaticResource SidebarShadow}">
+            <Border.RenderTransform>
+                <TranslateTransform X="-280"/>
+            </Border.RenderTransform>
+
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+
+                <Border Grid.Row="0" Background="{DynamicResource NavbarBackground}" Padding="25">
+                    <StackPanel>
+                        <TextBlock Text="📖 Dictionary" FontSize="24" FontWeight="Bold" Foreground="White" HorizontalAlignment="Center"/>
+                        <TextBlock Text="Quick Access Menu" FontSize="12" Foreground="White" Opacity="0.9" HorizontalAlignment="Center" Margin="0,5,0,0"/>
+                    </StackPanel>
+                </Border>
+
+                <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
+                    <StackPanel Margin="0,20,0,0">
+                        <Button Style="{StaticResource SidebarButtonStyle}">
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Text="🏠" FontSize="20" Margin="0,0,15,0" Width="24" TextAlignment="Center"/>
+                                <TextBlock Text="Home" FontSize="15" VerticalAlignment="Center"/>
+                            </StackPanel>
+                        </Button>
+
+                        <Button Style="{StaticResource SidebarButtonStyle}">
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Text="🕐" FontSize="20" Margin="0,0,15,0" Width="24" TextAlignment="Center"/>
+                                <TextBlock Text="History" FontSize="15" VerticalAlignment="Center"/>
+                            </StackPanel>
+                        </Button>
+                        <Button Style="{StaticResource SidebarButtonStyle}" Tag="Favourite">
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Text="⭐" FontSize="20" Margin="0,0,15,0" Width="24" TextAlignment="Center"/>
+                                <TextBlock Text="Favorite" FontSize="15" VerticalAlignment="Center"/>
+                            </StackPanel>
+                        </Button>
+
+                        <Button Style="{StaticResource SidebarButtonStyle}" Tag="MyWords" >
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Text="📚" FontSize="20" Margin="0,0,15,0" Width="24" TextAlignment="Center"/>
+                                <TextBlock Text="My Words" FontSize="15" VerticalAlignment="Center"/>
+                            </StackPanel>
+                        </Button>
+
+                        <Button Style="{StaticResource SidebarButtonStyle}" Tag="Game" >
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Text="🎮" FontSize="20" Margin="0,0,15,0" Width="24" TextAlignment="Center"/>
+                                <TextBlock Text="Game" FontSize="15" VerticalAlignment="Center"/>
+                            </StackPanel>
+                        </Button>
+
+                        <Button Style="{StaticResource SidebarButtonStyle}" Tag="Setting">
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Text="⚙️" FontSize="20" Margin="0,0,15,0" Width="24" TextAlignment="Center"/>
+                                <TextBlock Text="Setting" FontSize="15" VerticalAlignment="Center"/>
+                            </StackPanel>
+                        </Button>
+                    </StackPanel>
+                </ScrollViewer>
+            </Grid>
+        </Border>
     </Grid>
-    
-    
 </Window>

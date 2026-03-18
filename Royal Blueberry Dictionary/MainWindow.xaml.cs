@@ -11,6 +11,7 @@ using System.Windows.Data;
 using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
+using System.Windows.Media.Animation;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
@@ -22,6 +23,7 @@ namespace Royal_Blueberry_Dictionary
     /// </summary>
     public partial class MainWindow : Window
     {
+        private bool _isSidebarOpen = false;
         public MainWindow()
         {
             InitializeComponent();
@@ -47,12 +49,60 @@ namespace Royal_Blueberry_Dictionary
             Console.WriteLine((endTime - startTime).TotalSeconds + "seconds");
             Console.WriteLine($"Word: {res.Word}, Definition: {res.Meanings}");
         }
-
-        private void Button_Click(object sender, RoutedEventArgs e)
+        /// <summary>
+        /// Toggle Sidebar (Hamburger button)
+        /// </summary>
+        private void HamburgerBtn_Click(object sender, RoutedEventArgs e)
         {
-            
-            testSearch("hello");
-            
+            if (_isSidebarOpen)
+                CloseSidebar();
+            else
+                OpenSidebar();
+        }
+
+        /// <summary>
+        /// Open Sidebar with animation
+        /// </summary>
+        private void OpenSidebar()
+        {
+            _isSidebarOpen = true;
+            Overlay.Visibility = Visibility.Visible;
+
+            var animation = new DoubleAnimation
+            {
+                From = -280,
+                To = 0,
+                Duration = TimeSpan.FromMilliseconds(300),
+                EasingFunction = new CubicEase { EasingMode = EasingMode.EaseOut }
+            };
+
+            Sidebar.RenderTransform.BeginAnimation(TranslateTransform.XProperty, animation);
+        }
+
+        /// <summary>
+        /// Close Sidebar with animation
+        /// </summary>
+        private void CloseSidebar()
+        {
+            _isSidebarOpen = false;
+
+            var animation = new DoubleAnimation
+            {
+                From = 0,
+                To = -280,
+                Duration = TimeSpan.FromMilliseconds(300),
+                EasingFunction = new CubicEase { EasingMode = EasingMode.EaseIn }
+            };
+
+            animation.Completed += (s, e) => Overlay.Visibility = Visibility.Collapsed;
+            Sidebar.RenderTransform.BeginAnimation(TranslateTransform.XProperty, animation);
+        }
+        /// <summary>
+        /// Close sidebar when clicking overlay
+        /// </summary>
+        private void Overlay_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            CloseSidebar();
         }
     }
 }
