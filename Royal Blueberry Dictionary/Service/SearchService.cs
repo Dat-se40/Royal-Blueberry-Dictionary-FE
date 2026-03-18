@@ -4,6 +4,7 @@ using Royal_Blueberry_Dictionary.Model;
 using Royal_Blueberry_Dictionary.Service.ApiClient;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -16,15 +17,16 @@ namespace Royal_Blueberry_Dictionary.Service
         private readonly AppDbContext dbContext;
         private readonly Dictionary<string, WordDetail> cache = new();
         private readonly int cachedExpirationDate;
-
+        private HashSet<string> _availableWords = new();
         public SearchService(IBackendApiClient backendApiClient, AppDbContext appDbContext)
         {
             this.backendApiClient = backendApiClient;
             this.dbContext = appDbContext;
             this.cachedExpirationDate = App.serviceProvider.GetRequiredService<Config.ApiSettings>().cachedExpirationDate;
             loadCacheDataFromDB();
+            loadAvailableWordList();
         }
-
+        #region Main Search Logic
         public async Task<WordDetail> searchAWord(string word)
         {
             word = word.ToLower().Trim();
@@ -92,6 +94,66 @@ namespace Royal_Blueberry_Dictionary.Service
                 });
             }
             await dbContext.SaveChangesAsync();
+            _availableWords.Add(word);
+        }
+        #endregion
+        #region Levenshtein Implementation
+
+        public async Task<List<string>> GetSuggestionsAsync(string input, int maxSuggestions = 5)
+        {
+            if (string.IsNullOrWhiteSpace(input)) return new List<string>();
+
+            input = input.ToLower().Trim();
+
+            // Thực hiện tính toán LD trên background thread để tránh treo UI
+            return await Task.Run(() =>
+            {
+                return _availableWords
+                    .Select(word => new { Word = word, Distance = CalculateLevenshteinDistance(input, word) })
+                    .Where(x => x.Distance <= 3) // Chỉ lấy các từ có sai số tối đa 3 ký tự
+                    .OrderBy(x => x.Distance)
+                    .ThenBy(x => x.Word.Length)
+                    .Take(maxSuggestions)
+                    .Select(x => x.Word)
+                    .ToList();
+            });
+        }
+
+        private int CalculateLevenshteinDistance(string source, string target)
+        {
+            if (string.IsNullOrEmpty(source)) return target.Length;
+            if (string.IsNullOrEmpty(target)) return source.Length;
+
+            int n = source.Length;
+            int m = target.Length;
+            int[,] distance = new int[n + 1, m + 1];
+
+            for (int i = 0; i <= n; distance[i, 0] = i++) ;
+            for (int j = 0; j <= m; distance[0, j] = j++) ;
+
+            for (int i = 1; i <= n; i++)
+            {
+                for (int j = 1; j <= m; j++)
+                {
+                    int cost = (target[j - 1] == source[i - 1]) ? 0 : 1;
+                    distance[i, j] = Math.Min(
+                        Math.Min(distance[i - 1, j] + 1, distance[i, j - 1] + 1),
+                        distance[i - 1, j - 1] + cost);
+                }
+            }
+            return distance[n, m];
+        }
+
+        #endregion
+
+        private void loadAvailableWordList()
+        {
+           
+           var fileWords = File.ReadAllLines(Path.Combine(AppDomain.CurrentDomain.BaseDirectory,@"Database\AvailableWordList.txt"));
+           var dbWords = cache.Keys;
+           foreach (var w in dbWords) _availableWords.Add(w.ToLower());
+           _availableWords.UnionWith(fileWords);
+           Console.WriteLine($"Loaded {_availableWords.Count} available words for suggestions.");   
         }
     }
 }

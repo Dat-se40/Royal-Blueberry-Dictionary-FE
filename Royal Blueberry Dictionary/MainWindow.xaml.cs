@@ -38,7 +38,8 @@ namespace Royal_Blueberry_Dictionary
             //     var json = t.Content.ReadAsStringAsync().Result;
             //    Console.Write(json);
             //}
-            
+            SearchService ss = App.serviceProvider.GetRequiredService<SearchService>();
+
         }
         async void testSearch(string word) 
         {

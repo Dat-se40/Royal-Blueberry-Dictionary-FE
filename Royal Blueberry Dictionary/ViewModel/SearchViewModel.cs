@@ -33,10 +33,8 @@ namespace Royal_Blueberry_Dictionary.ViewModel
 
         #region Logic Hooks
 
-        // Hook tự động của CommunityToolkit khi SearchText thay đổi
         partial void OnSearchTextChanged(string value)
         {
-            // Gọi hàm xử lý Async    mà không dùng async void trực tiếp ở hook
             _ = UpdateSuggestionsAsync(value);
         }
 
