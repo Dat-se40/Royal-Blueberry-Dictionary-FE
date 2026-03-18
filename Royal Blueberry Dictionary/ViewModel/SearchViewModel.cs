@@ -3,6 +3,7 @@ using CommunityToolkit.Mvvm.Input;
 using Royal_Blueberry_Dictionary.Model;
 using Royal_Blueberry_Dictionary.Service;
 using System.Collections.ObjectModel;
+using System.Windows.Navigation;
 
 namespace Royal_Blueberry_Dictionary.ViewModel
 {
@@ -35,7 +36,7 @@ namespace Royal_Blueberry_Dictionary.ViewModel
         // Hook tự động của CommunityToolkit khi SearchText thay đổi
         partial void OnSearchTextChanged(string value)
         {
-            // Gọi hàm xử lý Async mà không dùng async void trực tiếp ở hook
+            // Gọi hàm xử lý Async    mà không dùng async void trực tiếp ở hook
             _ = UpdateSuggestionsAsync(value);
         }
 
@@ -55,43 +56,34 @@ namespace Royal_Blueberry_Dictionary.ViewModel
         }
 
         // Khi SearchResult có dữ liệu, tự động điều hướng
-        partial void OnSearchResultChanged(WordDetail? value)
-        {
-            if (value != null)
-            {
-                ExecuteShowDetailPage();
-            }
-        }
         #endregion
 
         #region Commands
 
         [RelayCommand]
-        public async Task ExecuteSearchAsync()
+        public async Task ExecuteSearchAsync(string? targetWord)
         {
-            if (string.IsNullOrWhiteSpace(SearchText)) return;
-
-            IsSearching = true;
-            BtnSearchText = "Searching...";
+            string wordToSearch = targetWord ?? SearchText;
+            if (string.IsNullOrWhiteSpace(wordToSearch)) return;
 
             try
             {
-                // Chỉ cần cập nhật SearchResult, OnSearchResultChanged sẽ lo phần điều hướng
-                SearchResult = await _searchService.searchAWord(SearchText);
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine($"[SearchViewModel] Error: {e.Message}");
-                // TODO: Thông báo lỗi cho người dùng qua UI
+                IsSearching = true;
+                var result = await _searchService.searchAWord(wordToSearch);
+
+                if (result != null)
+                {
+                    SearchResult = result;
+                    ExecuteShowDetailPage();
+                }
             }
             finally
             {
                 IsSearching = false;
-                BtnSearchText = "Search";
             }
         }
-
-        private void ExecuteShowDetailPage()
+        [RelayCommand]
+        public async void ExecuteShowDetailPage()
         {
             // navigationService.NavigateTo("DetailPage", SearchResult);
             Console.WriteLine("Navigating to detail page...");
