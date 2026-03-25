@@ -35,7 +35,6 @@ namespace Royal_Blueberry_Dictionary.Service.ApiClient
                  var response = await httpClient.GetAsync(endpoint);     
                  response.EnsureSuccessStatusCode();
                  var json = await response.Content.ReadAsStringAsync();
-
                 return System.Text.Json.JsonSerializer.Deserialize<T>(json, new System.Text.Json.JsonSerializerOptions()
                 {
                     PropertyNameCaseInsensitive = true

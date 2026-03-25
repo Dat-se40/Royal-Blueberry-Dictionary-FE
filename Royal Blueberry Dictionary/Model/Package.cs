@@ -12,16 +12,16 @@ namespace Royal_Blueberry_Dictionary.Model
     {
         [JsonPropertyName("id")]
         public string Id { get; set; } = Guid.NewGuid().ToString();
-
-        public string name; 
-
-        public string category;
-
-        public string level; 
-
-        public int totalWords;
-
-        public string description;
+        [JsonPropertyName("name")]
+        public string name { get; set; }    
+        [JsonPropertyName("category")] 
+        public string category { get; set; }    
+        [JsonPropertyName("level")]
+        public string level { get; set; }
+        [JsonPropertyName("totalWords")]
+        public int totalWords { get; set; } 
+        [JsonPropertyName("description")]
+        public string description { get; set; } 
 
         [JsonPropertyName("updateAt")]
         public string updateAt;

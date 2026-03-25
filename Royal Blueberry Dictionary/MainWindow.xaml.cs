@@ -27,20 +27,39 @@ namespace Royal_Blueberry_Dictionary
         private bool _isSidebarOpen = false;
         public MainWindow()
         {
-            InitializeComponent();
-            using (HttpClient httpClient = new HttpClient()
-            {
-                BaseAddress = new Uri("http://localhost:8080/api/"),
-                Timeout = TimeSpan.FromSeconds(30)
-            })
-            {
-                var response = httpClient.GetAsync("packages");
-                var t = response.Result;
-                var json = t.Content.ReadAsStringAsync().Result;
-                Console.Write(json);
-            }
+            //InitializeComponent();
+            //using (HttpClient httpClient = new HttpClient()
+            //{
+            //    BaseAddress = new Uri("http://localhost:8080/api/"),
+            //    Timeout = TimeSpan.FromSeconds(30)
+            //})
+            //{
+            //    testClient(httpClient); 
+            //}
             //SearchService ss = App.serviceProvider.GetRequiredService<SearchService>();
-            // testPackage();
+            testPackage();
+        }
+        async void testClient(HttpClient httpClient) 
+        {
+            var response = httpClient.GetAsync("packages");
+            var t = await response;
+            var json = t.Content.ReadAsStringAsync().Result;
+            Console.Write(json);
+            try
+            {
+                var packages = JsonSerializer.Deserialize<List<Package>>(json, new JsonSerializerOptions()
+                {
+                    PropertyNameCaseInsensitive = true
+                });
+                packages?.ForEach(p =>
+                {
+                    if (p != null) Console.WriteLine($"Package: {p}");
+                });
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+            }
         }
         async void testSearch(string word) 
         {
@@ -55,11 +74,11 @@ namespace Royal_Blueberry_Dictionary
         {
             try
             {
-                PackageService packageService = App.serviceProvider.GetService<PackageService>();
+                PackageService packageService = App.serviceProvider.GetRequiredService<PackageService>();
                 if (packageService != null) 
                 {
-                    var packages = packageService.getAllPackages().Result;
-                    packages.ForEach(p =>
+                    var packages = await packageService.getAllPackages();
+                    packages?.ForEach(p =>
                     {
                         if (p != null) Console.WriteLine($"Package: {p}");
                     });

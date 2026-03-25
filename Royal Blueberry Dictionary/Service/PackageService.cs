@@ -10,8 +10,8 @@ namespace Royal_Blueberry_Dictionary.Service
 {
     public class PackageService
     {
-        IBackendApiClient backendApiClient; 
-        AppDbContext appDbContext;
+        private readonly IBackendApiClient backendApiClient;
+        private readonly AppDbContext appDbContext;
 
         public PackageService(IBackendApiClient backendApiClient, AppDbContext appDbContext)
         {
@@ -21,12 +21,12 @@ namespace Royal_Blueberry_Dictionary.Service
 
         public async Task<List<Package>> getAllPackages()
         {
-            var packages = await backendApiClient.GetAsync<List<Package>>(@"api/packages"); 
+            var packages = await backendApiClient.GetAsync<List<Package>>(@"packages"); 
             return packages;
         }
         public async Task<PackageDetail> getDetailByPackageId(string id) 
         {
-            var detail = await backendApiClient.GetAsync<PackageDetail>($@"api/packages/details/{id}");
+            var detail = await backendApiClient.GetAsync<PackageDetail>($@"packages/details/{id}");
             return detail; 
         }
     }

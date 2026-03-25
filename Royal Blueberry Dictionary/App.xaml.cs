@@ -41,7 +41,8 @@ namespace Royal_Blueberry_Dictionary
             serviceCollection.AddSingleton<IBackendApiClient, BackendApiClient>();
             //Service 
             serviceCollection.AddScoped<Service.SearchService>();
-            serviceCollection.AddScoped<Service.PackageService>(); 
+            serviceCollection.AddScoped<Service.PackageService>()
+                ; 
             serviceProvider = serviceCollection.BuildServiceProvider();
             
 
