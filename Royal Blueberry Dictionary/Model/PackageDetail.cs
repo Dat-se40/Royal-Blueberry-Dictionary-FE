@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Linq;
 using System.Text;
 using System.Text.Json.Serialization;
@@ -14,10 +15,17 @@ namespace Royal_Blueberry_Dictionary.Model
 
         [JsonPropertyName("packageId")]
         public string PackageId { get; set; }
-
-        public int TotalWords => Words?.Count ?? 0;
+        [JsonPropertyName("totalWords")]
+        public int TotalWords { get; set; }
 
         [JsonPropertyName("words")] 
         public List<WordEntry> Words { get; set; } = new List<WordEntry>();
+
+        override public string ToString()
+        {
+            string wordList = Words != null ? string.Join(", ", Words.Select(w => w.Word)) : "No words";
+            return $"PackageDetail for PackageId: {PackageId} with {TotalWords} words : {Words}";
+        }   
+
     }
 }

@@ -19,6 +19,7 @@ namespace Royal_Blueberry_Dictionary.Model
         public string Definition { get; set; }
         [JsonPropertyName("example")]
         public string Example { get; set; }
+        [JsonPropertyName("id")]
         public string Id { get; set; } = Guid.NewGuid().ToString();
         public string UserId { get; set; }
         public string TagIdsJson { get; set; }
@@ -43,6 +44,10 @@ namespace Royal_Blueberry_Dictionary.Model
                 LastModifiedAt = DateTime.UtcNow,
                 IsDirty = true // Đánh dấu để sync lên Server sau
             };
+        }
+        override public string ToString()
+        {
+            return $"{Word} ({PartOfSpeech}): {Definition}";
         }
     }
 }
