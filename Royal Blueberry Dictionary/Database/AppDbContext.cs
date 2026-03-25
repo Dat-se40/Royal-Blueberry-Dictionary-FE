@@ -16,6 +16,7 @@ namespace Royal_Blueberry_Dictionary.Database
         public DbSet<Tag> Tags { get; set; }
         public DbSet<CachedWord> CachedWords { get; set; }
 
+        public DbSet<Package> packages { get; set; }
         public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
         {
          
@@ -45,6 +46,10 @@ namespace Royal_Blueberry_Dictionary.Database
             // CachedWord
             modelBuilder.Entity<CachedWord>()
                 .HasKey(c => c.Word);
+
+            // Package 
+            modelBuilder.Entity<Package>()
+                .HasKey(p => p.Id);
         }   
     }
 }

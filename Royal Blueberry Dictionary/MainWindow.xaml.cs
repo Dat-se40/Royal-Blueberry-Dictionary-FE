@@ -2,6 +2,7 @@
 using Royal_Blueberry_Dictionary.Model;
 using Royal_Blueberry_Dictionary.Service;
 using System.Net.Http;
+using System.Net.WebSockets;
 using System.Text;
 using System.Text.Json;
 using System.Text.Json.Nodes;
@@ -27,19 +28,19 @@ namespace Royal_Blueberry_Dictionary
         public MainWindow()
         {
             InitializeComponent();
-            //using (HttpClient httpClient = new HttpClient() 
-            //{
-            //    BaseAddress = new Uri("http://localhost:8080/api/"),
-            //    Timeout = TimeSpan.FromSeconds(30)
-            //}) 
-            //{
-            //    var response =  httpClient.GetAsync("packages");
-            //    var t = response.Result;
-            //     var json = t.Content.ReadAsStringAsync().Result;
-            //    Console.Write(json);
-            //}
-            SearchService ss = App.serviceProvider.GetRequiredService<SearchService>();
-
+            using (HttpClient httpClient = new HttpClient()
+            {
+                BaseAddress = new Uri("http://localhost:8080/api/"),
+                Timeout = TimeSpan.FromSeconds(30)
+            })
+            {
+                var response = httpClient.GetAsync("packages");
+                var t = response.Result;
+                var json = t.Content.ReadAsStringAsync().Result;
+                Console.Write(json);
+            }
+            //SearchService ss = App.serviceProvider.GetRequiredService<SearchService>();
+            // testPackage();
         }
         async void testSearch(string word) 
         {
@@ -48,7 +49,32 @@ namespace Royal_Blueberry_Dictionary
             var res = await tool.searchAWord(word);
             TimeSpan endTime = DateTime.Now.TimeOfDay;
             Console.WriteLine((endTime - startTime).TotalSeconds + "seconds");
-            Console.WriteLine($"Word: {res.Word}, Definition: {res.Meanings}");
+            Console.WriteLine($"Word: {res.Word}, Definition: {res.AudioUk}");
+        }
+        async void testPackage() 
+        {
+            try
+            {
+                PackageService packageService = App.serviceProvider.GetService<PackageService>();
+                if (packageService != null) 
+                {
+                    var packages = packageService.getAllPackages().Result;
+                    packages.ForEach(p =>
+                    {
+                        if (p != null) Console.WriteLine($"Package: {p}");
+                    });
+                }else 
+                {
+                    Console.WriteLine("PackageService is null");
+                }
+                
+            }
+            catch (Exception e)
+            {
+
+                Console.WriteLine(e);
+            }
+
         }
         /// <summary>
         /// Toggle Sidebar (Hamburger button)

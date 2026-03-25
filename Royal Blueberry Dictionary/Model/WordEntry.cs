@@ -2,21 +2,25 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
 namespace Royal_Blueberry_Dictionary.Model
 {
     public class WordEntry
     {
+        public string Word { get; set; }
+        [JsonPropertyName("phonetic")]
+        public string Phonetic { get; set; }
+        public int MeaningIndex { get; set; }
+        [JsonPropertyName("partOfSpeech")]
+        public string PartOfSpeech { get; set; }
+        [JsonPropertyName("definition")]
+        public string Definition { get; set; }
+        [JsonPropertyName("example")]
+        public string Example { get; set; }
         public string Id { get; set; } = Guid.NewGuid().ToString();
         public string UserId { get; set; }
-        public string Word { get; set; }
-
-        public string Phonetic { get; set; }    
-        public int MeaningIndex { get; set; }
-        public string PartOfSpeech { get; set; }
-        public string Definition { get; set; }
-        public string Example { get; set; }
         public string TagIdsJson { get; set; }
         public bool IsFavorited { get; set; } = false;
         public string Note { get; set; }
