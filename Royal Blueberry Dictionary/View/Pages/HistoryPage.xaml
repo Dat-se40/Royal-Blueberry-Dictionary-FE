@@ -1,0 +1,79 @@
+﻿<Page x:Class="Royal_Blueberry_Dictionary.View.Pages.HistoryPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+      xmlns:local="clr-namespace:Royal_Blueberry_Dictionary.View.Pages"
+      mc:Ignorable="d"
+      d:DesignHeight="600" d:DesignWidth="1200"
+      Title="HistoryPage"
+      Background="{DynamicResource MainBackground}">
+
+    <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+        <Grid Margin="30">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+
+            <!-- ================================= -->
+            <!-- PAGE HEADER -->
+            <!-- ================================= -->
+            <Border Grid.Row="0"
+                    Background="{DynamicResource CardBackground}"
+                    BorderBrush="{DynamicResource BorderColor}"
+                    BorderThickness="2"
+                    CornerRadius="20"
+                    Padding="40,30"
+                    Margin="0,0,0,30">
+                <Border.Effect>
+                    <DropShadowEffect BlurRadius="16" ShadowDepth="4" Opacity="0.1" Color="Black"/>
+                </Border.Effect>
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+
+                    <!-- Title Section -->
+                    <StackPanel Grid.Column="0" Orientation="Horizontal">
+                        <TextBlock Text="🕐"
+                                   FontSize="48"
+                                   VerticalAlignment="Center"
+                                   Foreground="{DynamicResource TextColor}"
+                                   Margin="0,-8,15,0"/>
+                        <TextBlock Text="History"
+                                   FontSize="40"
+                                   FontWeight="Bold"
+                                   Foreground="{DynamicResource TextColor}"
+                                   VerticalAlignment="Center"
+                                   Margin="0,-3,0,0"/>
+                    </StackPanel>
+
+                    <!-- [NOTE] Clear All Button: Command đã bị xóa -->
+                    <!-- TODO: Gắn lại Command="{Binding ClearAllCommand}" khi ViewModel sẵn sàng -->
+                    <Button Grid.Column="1"
+                            Style="{StaticResource ClearButtonStyle}"
+                            VerticalAlignment="Center">
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="🗑️" FontSize="16" Margin="0,0,8,0"/>
+                            <TextBlock Text="Delete All"/>
+                        </StackPanel>
+                    </Button>
+
+                </Grid>
+            </Border>
+
+            <!-- ================================= -->
+            <!-- HISTORY CONTENT -->
+            <!-- ================================= -->
+            <StackPanel Grid.Row="1">
+                <UniformGrid Columns="3" Margin="0,0,0,30" Name="mainContent">
+                    <!-- [NOTE] Cards được populate từ code-behind LoadDefCards() -->
+                    <!-- TODO: Gắn lại ItemsSource binding khi chuyển sang ItemsControl + DataTemplate -->
+                </UniformGrid>
+            </StackPanel>
+
+        </Grid>
+    </ScrollViewer>
+</Page>
