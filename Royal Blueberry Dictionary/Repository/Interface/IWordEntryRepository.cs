@@ -9,13 +9,11 @@ namespace Royal_Blueberry_Dictionary.Repository.Interface
 {
     public interface IWordEntryRepository
     {
-        Task<WordEntry> GetByIdAsync(string id);
+        Task<WordEntry?> GetByIdAsync(string id);
         Task<List<WordEntry>> GetAllAsync(string userId);
-        Task<List<WordEntry>> GetByTagAsync(string tagId);
+        Task<WordEntry?> GetByWordAndMeaningAsync(string userId, string word, int meaningIndex);
         Task<List<WordEntry>> GetDirtyAsync(string userId);
-        Task<WordEntry> GetByWordAndMeaningAsync(string userId, string word, int meaningIndex);
-
-        Task<List<WordEntry>> GetAllWordEntriesAsync();
+        Task<List<WordEntry>> GetFavoritedAsync(string userId);
 
         Task AddAsync(WordEntry entry);
         Task UpdateAsync(WordEntry entry);

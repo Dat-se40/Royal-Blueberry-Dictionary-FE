@@ -39,13 +39,14 @@ namespace Royal_Blueberry_Dictionary
 
             // Repositories
             serviceCollection.AddScoped<Repository.Interface.IWordEntryRepository, Repository.Implement.WordEntryRepository>();
-
+            serviceCollection.AddScoped<Repository.Interface.ITagRepository, Repository.Implement.TagRepository>();
             // ApiClient
             serviceCollection.AddSingleton<IBackendApiClient, BackendApiClient>();
             //Service 
             serviceCollection.AddScoped<Service.SearchService>();
             serviceCollection.AddScoped<Service.PackageService>();
             serviceCollection.AddScoped<Service.NavigationService>();
+            serviceCollection.AddScoped<Service.TagService>();    
             // Views
             serviceCollection.AddTransient<DetailsPage>(); 
             // View Models

@@ -2,91 +2,64 @@
 using Royal_Blueberry_Dictionary.Database;
 using Royal_Blueberry_Dictionary.Model;
 using Royal_Blueberry_Dictionary.Repository.Interface;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Royal_Blueberry_Dictionary.Repository.Implement
 {
     public class WordEntryRepository : IWordEntryRepository
     {
-        private readonly AppDbContext appDbContext;
+        private readonly AppDbContext _context;
 
-        public WordEntryRepository(AppDbContext appDbContext)
+        public WordEntryRepository(AppDbContext context)
         {
-            this.appDbContext = appDbContext;
+            _context = context;
         }
+
+        private string GetEffectiveId(string userId) => string.IsNullOrEmpty(userId) ? "GUEST" : userId;
+
+        public async Task<WordEntry?> GetByIdAsync(string id) =>
+            await _context.WordEntries.FirstOrDefaultAsync(e => e.Id == id);
+
+        public async Task<List<WordEntry>> GetAllAsync(string userId) =>
+            await _context.WordEntries.Where(e => e.UserId == GetEffectiveId(userId)).ToListAsync();
+
+        public async Task<WordEntry?> GetByWordAndMeaningAsync(string userId, string word, int meaningIndex) =>
+            await _context.WordEntries.FirstOrDefaultAsync(e =>
+                e.UserId == GetEffectiveId(userId) &&
+                e.Word.ToLower() == word.ToLower() &&
+                e.MeaningIndex == meaningIndex);
+
+        public async Task<List<WordEntry>> GetDirtyAsync(string userId) =>
+            await _context.WordEntries.Where(e => e.UserId == GetEffectiveId(userId) && e.IsDirty).ToListAsync();
+
+        public async Task<List<WordEntry>> GetFavoritedAsync(string userId) =>
+            await _context.WordEntries.Where(e => e.UserId == GetEffectiveId(userId) && e.IsFavorited).ToListAsync();
+
         public async Task AddAsync(WordEntry entry)
         {
-            appDbContext.Add(entry);
-            await appDbContext.SaveChangesAsync();
+            entry.UserId = GetEffectiveId(entry.UserId);
+            entry.IsDirty = true;
+            await _context.WordEntries.AddAsync(entry);
+            await _context.SaveChangesAsync();
         }
 
-        public Task DeleteAsync(string id)
+        public async Task UpdateAsync(WordEntry entry)
         {
-            appDbContext.Remove(new WordEntry { Id = id });
-            return appDbContext.SaveChangesAsync(); 
+            entry.IsDirty = true;
+            entry.LastModifiedAt = DateTime.UtcNow;
+            _context.WordEntries.Update(entry);
+            await _context.SaveChangesAsync();
         }
 
-        public Task<List<WordEntry>> GetAllAsync(string userId)
+        public async Task DeleteAsync(string id)
         {
-            return appDbContext.WordEntries.Where(e => e.UserId == userId).ToListAsync();  
+            var entry = await GetByIdAsync(id);
+            if (entry != null)
+            {
+                _context.WordEntries.Remove(entry);
+                await _context.SaveChangesAsync();
+            }
         }
 
-        public async Task<WordEntry> GetByIdAsync(string id)
-        {
-            var result = await appDbContext.WordEntries.FirstOrDefaultAsync(e => e.Id == id);
-            return result;
-        }
-
-        public Task<List<WordEntry>> GetByTagAsync(string tagId)
-        {
-            //var result = appDbContext.WordEntries.Where(e => e.TagIdsJson.Contains(tagId)).ToListAsync();
-            //return result;  
-            throw new NotImplementedException();
-        }
-
-        public Task<WordEntry> GetByWordAndMeaningAsync(string userId, string word, int meaningIndex)
-        {
-            throw new NotImplementedException();
-        }
-
-        public async Task<List<WordEntry>> GetDirtyAsync(string userId)
-        {
-            var result = await appDbContext.WordEntries.Where(e => e.UserId == userId && e.IsDirty).ToListAsync();
-            return result;
-        }
-
-        public async Task<List<WordEntry>> GetAllWordEntriesAsync()
-        {
-            var result = await appDbContext.WordEntries.ToListAsync();
-            return result;
-        }
-        public async Task<List<WordEntry>> GetPartOfSpeech(string part) 
-        {
-            var result = await appDbContext.WordEntries.Where(e => e.PartOfSpeech == part).ToListAsync();   
-            return result;  
-        }
-        public async Task<List<WordEntry>> GetByLetter(char letter)
-        {
-            var result = await appDbContext.WordEntries.Where(e => e.Word.StartsWith(letter)).ToListAsync();
-            return result;
-        }
-        public async Task<List<WordEntry>> GeAlltFavorited() 
-            var result = await appDbContext.WordEntries.Where(e => e.IsFavorited).ToListAsync();    
-        {
-        }
-        public Task SaveChangesAsync()
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task UpdateAsync(WordEntry entry)
-        {
-            throw new NotImplementedException();
-        }
+        public async Task SaveChangesAsync() => await _context.SaveChangesAsync();
     }
 }

@@ -1,10 +1,11 @@
-﻿using System;
+﻿using Microsoft.EntityFrameworkCore;
+using Royal_Blueberry_Dictionary.Model;
+using Royal_Blueberry_Dictionary.Model.Word;
+using System;
 using System.Collections.Generic;
-using Microsoft.EntityFrameworkCore;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Royal_Blueberry_Dictionary.Model;
 using System.Windows.Automation.Peers;
 
 namespace Royal_Blueberry_Dictionary.Database
@@ -15,7 +16,7 @@ namespace Royal_Blueberry_Dictionary.Database
         public DbSet<WordEntry> WordEntries { get; set; }   
         public DbSet<Tag> Tags { get; set; }
         public DbSet<CachedWord> CachedWords { get; set; }
-
+        public DbSet<WordTagRelation> WordTagRelations { get; set; }
         public DbSet<Package> packages { get; set; }
         public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
         {
@@ -32,8 +33,11 @@ namespace Royal_Blueberry_Dictionary.Database
             modelBuilder.Entity<WordEntry>().HasKey(w => w.Id);
             // Tạo các thuộc tính
             modelBuilder.Entity<WordEntry>()
-                .HasIndex(w => new { w.UserId, w.Word , w.MeaningIndex})
-                .IsUnique();
+                        .Property(e => e.TagIdsJson)
+                         .HasConversion(
+            v => System.Text.Json.JsonSerializer.Serialize(v, (System.Text.Json.JsonSerializerOptions)null),
+            v => System.Text.Json.JsonSerializer.Deserialize<List<string>>(v, (System.Text.Json.JsonSerializerOptions)null) ?? new List<string>()
+        );
 
             // Tag
             modelBuilder.Entity<Tag>()
@@ -50,6 +54,9 @@ namespace Royal_Blueberry_Dictionary.Database
             // Package 
             modelBuilder.Entity<Package>()
                 .HasKey(p => p.Id);
-        }   
+            // WordTagRelation
+            modelBuilder.Entity<WordTagRelation>()
+                .HasKey(wt => wt.Id);
+        }
     }
 }
