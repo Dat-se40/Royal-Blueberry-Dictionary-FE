@@ -1,16 +1,19 @@
-﻿using CommunityToolkit.Mvvm.ComponentModel;
+﻿using BlueBerryDictionary.ViewModels;
+using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Royal_Blueberry_Dictionary.Model;
 using Royal_Blueberry_Dictionary.Service;
+using Royal_Blueberry_Dictionary.View.Pages;
 using System.Collections.ObjectModel;
 using System.Windows.Navigation;
+using NavigationService = Royal_Blueberry_Dictionary.Service.NavigationService;
 
 namespace Royal_Blueberry_Dictionary.ViewModel
 {
-    public partial class SearchViewModel : ObservableObject
+    public partial class SearchViewModel : ObservableObject, Service.INavigationAware
     {
         private readonly SearchService _searchService;
-
+        private readonly NavigationService _navigationService;
         [ObservableProperty]
         private string _searchText = string.Empty;
 
@@ -25,32 +28,34 @@ namespace Royal_Blueberry_Dictionary.ViewModel
 
         [ObservableProperty]
         private WordDetail? _searchResult;
-
-        public SearchViewModel(SearchService searchService)
+        [ObservableProperty]
+        private bool _isSuggestionsOpen = false;
+        public SearchViewModel(SearchService searchService, Service.NavigationService navigationService )
         {
             _searchService = searchService;
+            _navigationService = navigationService;
         }
 
         #region Logic Hooks
 
         partial void OnSearchTextChanged(string value)
         {
+            if (string.IsNullOrWhiteSpace(value))
+            {
+                Suggestions.Clear();
+                IsSuggestionsOpen = false;
+                return;
+            }
             _ = UpdateSuggestionsAsync(value);
         }
 
         private async Task UpdateSuggestionsAsync(string value)
         {
-            //if (string.IsNullOrWhiteSpace(value))
-            //{
-            //    Suggestions.Clear();
-            //    return;
-            //}
+            var results = await _searchService.GetSuggestionsAsync(value);
 
-            //// TODO: Thêm Task.Delay(300) ở đây để làm Debounce nếu gọi API
-            //var results = await _searchService.GetSuggestionsAsync(value);
-
-            //Suggestions.Clear();
-            //foreach (var item in results) Suggestions.Add(item);
+            Suggestions.Clear();
+            foreach (var item in results) Suggestions.Add(item);
+            IsSuggestionsOpen = Suggestions.Count > 0;
         }
 
         // Khi SearchResult có dữ liệu, tự động điều hướng
@@ -63,28 +68,46 @@ namespace Royal_Blueberry_Dictionary.ViewModel
         {
             string wordToSearch = targetWord ?? SearchText;
             if (string.IsNullOrWhiteSpace(wordToSearch)) return;
-
             try
             {
+                Console.WriteLine($"Searching : {wordToSearch}");
                 IsSearching = true;
                 var result = await _searchService.searchAWord(wordToSearch);
-
                 if (result != null)
                 {
                     SearchResult = result;
-                    ExecuteShowDetailPage();
+
                 }
+                _navigationService.NavigateTo<DetailsPage, DetailsPageViewModel>(result);
             }
             finally
             {
                 IsSearching = false;
             }
         }
+        // Command khi người dùng Click vào một dòng trong ListBox gợi ý
         [RelayCommand]
-        public async void ExecuteShowDetailPage()
+        public async Task SelectSuggestionAsync(string selectedWord)
         {
-            // navigationService.NavigateTo("DetailPage", SearchResult);
-            Console.WriteLine("Navigating to detail page...");
+            if (string.IsNullOrEmpty(selectedWord)) return;
+
+            SearchText = selectedWord; // Cập nhật text lên ô search
+            IsSuggestionsOpen = false;  // Đóng popup
+
+            await ExecuteSearchAsync(selectedWord); // Tiến hành search luôn
+        }
+        public void NavigateToDetailsPage(WordDetail wordDetail)
+        {
+            _navigationService.NavigateTo<DetailsPage, DetailsPageViewModel>(wordDetail);
+        }
+
+        public void OnNavigatedTo(object parameter)
+        { 
+        }
+
+        public void OnNavigatedFrom()
+        {
+         
         }
         #endregion
     }
