@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Royal_Blueberry_Dictionary.Model;
 using Royal_Blueberry_Dictionary.Service;
+using Royal_Blueberry_Dictionary.ViewModel;
 using System.Net.Http;
 using System.Net.WebSockets;
 using System.Text;
@@ -16,6 +17,7 @@ using System.Windows.Media.Animation;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using NavigationService = Royal_Blueberry_Dictionary.Service.NavigationService;
 
 namespace Royal_Blueberry_Dictionary
 {
@@ -25,19 +27,15 @@ namespace Royal_Blueberry_Dictionary
     public partial class MainWindow : Window
     {
         private bool _isSidebarOpen = false;
+        private SearchViewModel searchViewModel;
+        private NavigationService navigationService;    
         public MainWindow()
         {
-            //InitializeComponent();
-            //using (HttpClient httpClient = new HttpClient()
-            //{
-            //    BaseAddress = new Uri("http://localhost:8080/api/"),
-            //    Timeout = TimeSpan.FromSeconds(30)
-            //})
-            //{
-            //    testClient(httpClient); 
-            //}
-            //SearchService ss = App.serviceProvider.GetRequiredService<SearchService>();
-            testPackage();
+            InitializeComponent();
+            searchViewModel = App.serviceProvider.GetRequiredService<SearchViewModel>();
+            navigationService = App.serviceProvider.GetRequiredService<NavigationService>();
+            navigationService.SetMainFrame(MainFrame);
+            this.DataContext = searchViewModel; 
         }
         async void testClient(HttpClient httpClient) 
         {

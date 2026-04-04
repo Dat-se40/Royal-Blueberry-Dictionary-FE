@@ -1,9 +1,12 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using BlueBerryDictionary.ViewModels;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Royal_Blueberry_Dictionary.Config;
 using Royal_Blueberry_Dictionary.Database;
 using Royal_Blueberry_Dictionary.Service.ApiClient;
+using Royal_Blueberry_Dictionary.View.Pages;
+using Royal_Blueberry_Dictionary.ViewModel;
 using System.Configuration;
 using System.Data;
 using System.IO;
@@ -41,8 +44,13 @@ namespace Royal_Blueberry_Dictionary
             serviceCollection.AddSingleton<IBackendApiClient, BackendApiClient>();
             //Service 
             serviceCollection.AddScoped<Service.SearchService>();
-            serviceCollection.AddScoped<Service.PackageService>()
-                ; 
+            serviceCollection.AddScoped<Service.PackageService>();
+            serviceCollection.AddScoped<Service.NavigationService>();
+            // Views
+            serviceCollection.AddTransient<DetailsPage>(); 
+            // View Models
+            serviceCollection.AddScoped<DetailsPageViewModel>();  
+            serviceCollection.AddScoped<SearchViewModel >(); 
             serviceProvider = serviceCollection.BuildServiceProvider();
             
 

@@ -4,7 +4,7 @@ namespace Royal_Blueberry_Dictionary.Model
 {
     public class WordDetail
     {
-        public string Word { get; set; }
+        public string Word { get; set; }    
         public string Phonetic { get; set; }
         public string AudioUs { get; set; }
         public string AudioUk { get; set; }

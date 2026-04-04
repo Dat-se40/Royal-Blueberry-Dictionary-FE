@@ -5,8 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d"
         Title="Royal Blueberry Dictionary" Height="600" Width="1000"
-        FontFamily="{DynamicResource AppFontFamily}"
-        FontSize="{DynamicResource AppFontSize}"
+        
         Background="{DynamicResource MainBackground}">
 
     <Grid>
@@ -81,27 +80,53 @@
                                            Foreground="{DynamicResource TextColor}" 
                                            Margin="0,0,10,0"/>
 
-                                <TextBox Grid.Column="1" x:Name="SearchInput"
-                                         Style="{StaticResource SearchTextBoxStyle}"
-                                         Foreground="{DynamicResource TextColor}"/>
+                                <TextBox Grid.Column="1" x:Name="SearchInput" Style="{StaticResource SearchTextBoxStyle}"
+                                        Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}">
+                                    <TextBox.InputBindings>
+                                        <KeyBinding Key="Enter" Command="{Binding ExecuteSearchCommand}"/>
+                                    </TextBox.InputBindings>
+                                </TextBox>
 
                                 <Button Grid.Column="2" x:Name="SearchBtn"  
                                         Content="Search"
                                         Style="{StaticResource SearchButtonStyle}"
-                                        Margin="10,0,0,0"/>
+                                        Margin="10,0,0,0"
+                                        Command="{Binding ExecuteSearchCommand}"/>
                             </Grid>
                         </Border>
 
-                        <Popup x:Name="SuggestionsPopup"
-                               PlacementTarget="{Binding ElementName=SearchInput}"
-                               Placement="Bottom"
-                               IsOpen="False"
-                               AllowsTransparency="True">
+                        <Popup x:Name="SuggestionsPopup" PlacementTarget="{Binding ElementName=SearchInput}"
+                            Placement="Bottom" AllowsTransparency="True" PopupAnimation="Fade" IsOpen="{Binding IsSuggestionsOpen}" StaysOpen="False">
                             <Border Background="{DynamicResource SuggestionsBackground}"
-                                    BorderBrush="{DynamicResource SuggestionsBorder}"
-                                    BorderThickness="2" CornerRadius="0,0,12,12">
+            BorderBrush="{DynamicResource SuggestionsBorder}"
+            BorderThickness="2" 
+            CornerRadius="0,0,12,12"
+            Width="{Binding ElementName=SearchInput, Path=ActualWidth}" >
                                 <ListBox x:Name="SuggestionsList"
-                                         Background="Transparent" BorderThickness="0">
+                 ItemsSource="{Binding Suggestions}"
+                 Background="Transparent" 
+                 BorderThickness="0"
+                 ScrollViewer.HorizontalScrollBarVisibility="Disabled">
+                                    
+
+                                    <ListBox.ItemContainerStyle>
+                                        <Style TargetType="ListBoxItem">
+                                            <Setter Property="Padding" Value="10,8"/>
+                                            <Setter Property="Cursor" Value="Hand"/>
+                                            <Style.Triggers>
+                                                <Trigger Property="IsMouseOver" Value="True">
+                                                    <Setter Property="Background" Value="{DynamicResource ToolButtonActive}"/>
+                                                    <Setter Property="Foreground" Value="White"/>
+                                                </Trigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </ListBox.ItemContainerStyle>
+
+                                    <ListBox.InputBindings>
+                                        <MouseBinding MouseAction="LeftClick" 
+                              Command="{Binding SelectSuggestionCommand}"
+                              CommandParameter="{Binding ElementName=SuggestionsList, Path=SelectedItem}"/>
+                                    </ListBox.InputBindings>
                                 </ListBox>
                             </Border>
                         </Popup>
@@ -139,7 +164,7 @@
                     <RowDefinition Height="*"/>
                 </Grid.RowDefinitions>
 
-                <Border Grid.Row="0" Background="{DynamicResource NavbarBackground}" Padding="25">
+                <Border Grid.Row="0" Background="{DynamicResource NavbarBackground}">
                     <StackPanel>
                         <TextBlock Text="📖 Dictionary" FontSize="24" FontWeight="Bold" Foreground="White" HorizontalAlignment="Center"/>
                         <TextBlock Text="Quick Access Menu" FontSize="12" Foreground="White" Opacity="0.9" HorizontalAlignment="Center" Margin="0,5,0,0"/>
