@@ -1,0 +1,223 @@
+﻿<UserControl x:Class="Royal_Blueberry_Dictionary.View.User_Control.WordDefinitionCard"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             mc:Ignorable="d"
+             d:DesignHeight="450" d:DesignWidth="800">
+
+    <UserControl.Resources>
+        <!-- Card Action Button Style with Hover Effect -->
+        <Style x:Key="CardActionButton" TargetType="Button">
+            <Setter Property="Background" Value="{DynamicResource SearchBackground}" />
+            <Setter Property="Foreground" Value="{DynamicResource ButtonColor}" />
+            <Setter Property="BorderBrush" Value="{DynamicResource BorderColor}" />
+            <Setter Property="BorderThickness" Value="2" />
+            <Setter Property="Cursor" Value="Hand" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}"
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                CornerRadius="10">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="{DynamicResource WordItemHover}" />
+                    <Setter Property="BorderBrush" Value="{DynamicResource ToolButtonActive}" />
+                    <Setter Property="RenderTransform">
+                        <Setter.Value>
+                            <TranslateTransform Y="-2" />
+                        </Setter.Value>
+                    </Setter>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
+        <!-- Delete Button Style (Red hover) -->
+        <Style x:Key="DeleteButton" TargetType="Button" BasedOn="{StaticResource CardActionButton}">
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="#fee2e2" />
+                    <Setter Property="BorderBrush" Value="#dc2626" />
+                    <Setter Property="RenderTransform">
+                        <Setter.Value>
+                            <TranslateTransform Y="-2" />
+                        </Setter.Value>
+                    </Setter>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
+        <BooleanToVisibilityConverter x:Key="BoolToVis" />
+    </UserControl.Resources>
+
+    <Border x:Name="CardBorder" Cursor="Hand"
+            Background="{DynamicResource CardBackground}"
+            CornerRadius="15" Padding="25" Margin="10"
+            BorderBrush="{DynamicResource BorderColor}"
+            BorderThickness="2">
+        <Border.Style>
+            <Style TargetType="Border">
+                <Style.Triggers>
+                    <Trigger Property="IsMouseOver" Value="True">
+                        <Setter Property="BorderBrush" Value="{DynamicResource ToolButtonActive}" />
+                        <Setter Property="Effect">
+                            <Setter.Value>
+                                <DropShadowEffect BlurRadius="24" ShadowDepth="8" Opacity="0.15" Color="#2D4ACC" />
+                            </Setter.Value>
+                        </Setter>
+                    </Trigger>
+                </Style.Triggers>
+            </Style>
+        </Border.Style>
+
+        <StackPanel>
+            <!-- HEADER -->
+            <Grid Margin="0,0,0,0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+
+                <!-- Word only -->
+                <StackPanel Grid.Column="0" Margin="0,0,10,0" VerticalAlignment="Center">
+                    <Viewbox MaxHeight="30"
+                             Stretch="Uniform"
+                             StretchDirection="DownOnly"
+                             HorizontalAlignment="Left">
+                        <TextBlock Text="{Binding Word}" FontSize="24"
+                                   FontWeight="Bold"
+                                   Foreground="{DynamicResource TextColor}" />
+                    </Viewbox>
+                </StackPanel>
+
+                <!-- POS Badge + ACTION BUTTONS -->
+                <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center">
+                    <Border Background="{DynamicResource ToolButtonActive}"
+                            CornerRadius="15" Padding="8,3" Margin="0,0,10,0"
+                            HorizontalAlignment="Left"
+                            VerticalAlignment="Center">
+                        <TextBlock Text="{Binding PartOfSpeech}"
+                                   FontSize="10" FontWeight="Bold" Foreground="White" />
+                    </Border>
+
+                    <!-- Chỉ còn là nút UI -->
+                    <Button Content="❤️" Width="40" Height="40" Name="btnFav"
+                            Style="{StaticResource CardActionButton}"
+                            Margin="3" />
+
+                    <Button Content="💾" Width="40" Height="40" Name="btnSave"
+                            Style="{StaticResource CardActionButton}"
+                            Margin="3" />
+
+                    <Button Content="❌" Width="40" Height="40"
+                            Style="{StaticResource DeleteButton}"
+                            Margin="3"
+                            Name="btnDelete" />
+                </StackPanel>
+            </Grid>
+
+            <!-- PRONUNCIATION SECTION -->
+            <StackPanel Margin="0,0,0,15">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+
+                    <Border Grid.Column="0"
+                            Background="{DynamicResource WordItemBackground}"
+                            CornerRadius="8" Padding="8,3" Margin="0,0,10,0">
+                        <TextBlock Text="{Binding Region}" FontSize="11"
+                                   FontWeight="Bold" Foreground="{DynamicResource ButtonColor}" />
+                    </Border>
+
+                    <TextBlock Grid.Column="1"
+                               Text="{Binding Pronunciation}"
+                               FontSize="12"
+                               FontFamily="Courier New"
+                               Foreground="{DynamicResource TextColor}"
+                               VerticalAlignment="Center" />
+                </Grid>
+            </StackPanel>
+
+            <!-- DEFINITION -->
+            <StackPanel Margin="0,0,0,20">
+                <TextBlock TextWrapping="Wrap" FontSize="13"
+                           LineHeight="24"
+                           Foreground="{DynamicResource TextColor}"
+                           Margin="0,0,0,10">
+                    <Run FontWeight="Bold">Definition:</Run>
+                    <Run Text="{Binding Definition}" />
+                </TextBlock>
+
+                <!-- EXAMPLES SECTION -->
+                <Border BorderBrush="{DynamicResource ButtonColor}"
+                        BorderThickness="3,0,0,0"
+                        Padding="15,0,0,0">
+                    <StackPanel>
+                        <StackPanel x:Name="Example1Container" Margin="0,0,0,10">
+                            <TextBlock x:Name="Example1Label"
+                                       Text="Example:"
+                                       FontWeight="Bold"
+                                       FontSize="11"
+                                       Foreground="{DynamicResource ButtonColor}"
+                                       Margin="0,0,0,5" />
+                            <TextBlock x:Name="Example1Text"
+                                       Text="{Binding Example1}"
+                                       FontStyle="Italic"
+                                       FontSize="12"
+                                       TextWrapping="Wrap"
+                                       Foreground="{DynamicResource SearchPlaceholder}" />
+                        </StackPanel>
+
+                        <Border x:Name="Example2Container"
+                                Visibility="Collapsed"
+                                Background="#FFF5E6"
+                                BorderBrush="#FFD700"
+                                BorderThickness="1"
+                                CornerRadius="6"
+                                Padding="12,8"
+                                Margin="0,10,0,0">
+                            <StackPanel>
+                                <TextBlock x:Name="Example2Label"
+                                           Text="Note:"
+                                           FontWeight="Bold"
+                                           FontSize="11"
+                                           Foreground="#FF8C00"
+                                           Margin="0,0,0,5" />
+                                <TextBlock x:Name="Example2Text"
+                                           Text="{Binding Example2}"
+                                           FontStyle="Italic"
+                                           FontSize="12"
+                                           TextWrapping="Wrap"
+                                           Foreground="#FF8C00" />
+                            </StackPanel>
+                        </Border>
+                    </StackPanel>
+                </Border>
+            </StackPanel>
+
+            <!-- FOOTER -->
+            <Border BorderBrush="{DynamicResource SearchPlaceholder}"
+                    BorderThickness="0,1,0,0"
+                    Padding="0,15,0,0">
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock Text="{Binding ViewCount}"
+                               FontSize="12"
+                               Foreground="{DynamicResource SearchPlaceholder}"
+                               Margin="0,0,20,0" />
+                    <TextBlock Text="{Binding TimeStamp}"
+                               FontSize="12"
+                               Foreground="{DynamicResource SearchPlaceholder}" />
+                </StackPanel>
+            </Border>
+        </StackPanel>
+    </Border>
+</UserControl>
