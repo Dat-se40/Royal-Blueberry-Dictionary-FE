@@ -22,7 +22,7 @@ namespace Royal_Blueberry_Dictionary.Model
         [JsonPropertyName("id")]
         public string Id { get; set; } = Guid.NewGuid().ToString();
         public string UserId { get; set; }
-        public string TagIdsJson { get; set; }
+        public List<string> TagIdsJson { get; set; }
         public bool IsFavorited { get; set; } = false;
         public string Note { get; set; }
         public DateTime LastModifiedAt { get; set; } = DateTime.UtcNow;

@@ -5,6 +5,7 @@ using Royal_Blueberry_Dictionary.Repository.Interface;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -18,28 +19,33 @@ namespace Royal_Blueberry_Dictionary.Repository.Implement
         {
             this.appDbContext = appDbContext;
         }
-        public Task AddAsync(WordEntry entry)
+        public async Task AddAsync(WordEntry entry)
         {
-            throw new NotImplementedException();
+            appDbContext.Add(entry);
+            await appDbContext.SaveChangesAsync();
         }
 
         public Task DeleteAsync(string id)
         {
-            throw new NotImplementedException();
+            appDbContext.Remove(new WordEntry { Id = id });
+            return appDbContext.SaveChangesAsync(); 
         }
 
         public Task<List<WordEntry>> GetAllAsync(string userId)
         {
-            throw new NotImplementedException();
+            return appDbContext.WordEntries.Where(e => e.UserId == userId).ToListAsync();  
         }
 
-        public Task<WordEntry> GetByIdAsync(string id)
+        public async Task<WordEntry> GetByIdAsync(string id)
         {
-            throw new NotImplementedException();
+            var result = await appDbContext.WordEntries.FirstOrDefaultAsync(e => e.Id == id);
+            return result;
         }
 
-        public Task<List<WordEntry>> GetByTagAsync(string userId, string tagId)
+        public Task<List<WordEntry>> GetByTagAsync(string tagId)
         {
+            //var result = appDbContext.WordEntries.Where(e => e.TagIdsJson.Contains(tagId)).ToListAsync();
+            //return result;  
             throw new NotImplementedException();
         }
 
@@ -48,9 +54,10 @@ namespace Royal_Blueberry_Dictionary.Repository.Implement
             throw new NotImplementedException();
         }
 
-        public Task<List<WordEntry>> GetDirtyAsync(string userId)
+        public async Task<List<WordEntry>> GetDirtyAsync(string userId)
         {
-            throw new NotImplementedException();
+            var result = await appDbContext.WordEntries.Where(e => e.UserId == userId && e.IsDirty).ToListAsync();
+            return result;
         }
 
         public async Task<List<WordEntry>> GetAllWordEntriesAsync()
@@ -58,7 +65,20 @@ namespace Royal_Blueberry_Dictionary.Repository.Implement
             var result = await appDbContext.WordEntries.ToListAsync();
             return result;
         }
-
+        public async Task<List<WordEntry>> GetPartOfSpeech(string part) 
+        {
+            var result = await appDbContext.WordEntries.Where(e => e.PartOfSpeech == part).ToListAsync();   
+            return result;  
+        }
+        public async Task<List<WordEntry>> GetByLetter(char letter)
+        {
+            var result = await appDbContext.WordEntries.Where(e => e.Word.StartsWith(letter)).ToListAsync();
+            return result;
+        }
+        public async Task<List<WordEntry>> GeAlltFavorited() 
+            var result = await appDbContext.WordEntries.Where(e => e.IsFavorited).ToListAsync();    
+        {
+        }
         public Task SaveChangesAsync()
         {
             throw new NotImplementedException();

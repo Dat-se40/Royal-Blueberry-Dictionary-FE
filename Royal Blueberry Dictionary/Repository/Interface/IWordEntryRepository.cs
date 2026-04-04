@@ -11,7 +11,7 @@ namespace Royal_Blueberry_Dictionary.Repository.Interface
     {
         Task<WordEntry> GetByIdAsync(string id);
         Task<List<WordEntry>> GetAllAsync(string userId);
-        Task<List<WordEntry>> GetByTagAsync(string userId, string tagId);
+        Task<List<WordEntry>> GetByTagAsync(string tagId);
         Task<List<WordEntry>> GetDirtyAsync(string userId);
         Task<WordEntry> GetByWordAndMeaningAsync(string userId, string word, int meaningIndex);
 

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.RightsManagement;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -13,7 +14,9 @@ namespace Royal_Blueberry_Dictionary.Model
         public string Name { get; set; }
         public string Icon { get; set; }
         public string Color { get; set; }
+        
         public DateTime LastModifiedAt { get; set; } = DateTime.UtcNow;
         public bool IsDirty { get; set; } = false;
+
     }
 }
