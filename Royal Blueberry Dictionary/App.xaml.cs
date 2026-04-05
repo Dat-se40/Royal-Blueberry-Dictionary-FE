@@ -48,10 +48,12 @@ namespace Royal_Blueberry_Dictionary
             serviceCollection.AddScoped<Service.NavigationService>();
             serviceCollection.AddScoped<Service.TagService>();    
             // Views
-            serviceCollection.AddTransient<DetailsPage>(); 
+            serviceCollection.AddTransient<DetailsPage>();
+            serviceCollection.AddTransient<HistoryPage>();
             // View Models
             serviceCollection.AddScoped<DetailsPageViewModel>();  
-            serviceCollection.AddScoped<SearchViewModel >(); 
+            serviceCollection.AddScoped<SearchViewModel >();
+            serviceCollection.AddScoped<HistoryPageViewModel>();
             serviceProvider = serviceCollection.BuildServiceProvider();
             
 

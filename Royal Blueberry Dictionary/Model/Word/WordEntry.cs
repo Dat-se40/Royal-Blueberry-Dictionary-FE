@@ -1,5 +1,7 @@
-﻿using System;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
+using System;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.Linq;
 using System.Text;
 using System.Text.Json.Serialization;
@@ -7,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace Royal_Blueberry_Dictionary.Model
 {
-    public class WordEntry
+    public class WordEntry 
     {
         public string Word { get; set; }
         [JsonPropertyName("phonetic")]
@@ -30,20 +32,29 @@ namespace Royal_Blueberry_Dictionary.Model
 
         public WordEntry MapWordDetailToWordEntry(WordDetail detail, int meaningIdx, int defIdx)
         {
-            var meaning = detail.Meanings[meaningIdx];
-            var definition = meaning.Definitions[defIdx];
-
-            return new WordEntry
+            try
             {
-                Word = detail.Word,
-                Phonetic = detail.Phonetic,
-                PartOfSpeech = meaning.PartOfSpeech,
-                Definition = definition.Text,
-                Example = definition.Example,
-                MeaningIndex = meaningIdx,
-                LastModifiedAt = DateTime.UtcNow,
-                IsDirty = true // Đánh dấu để sync lên Server sau
-            };
+                var meaning = detail.Meanings[meaningIdx];
+                var definition = meaning.Definitions[defIdx];
+
+                return new WordEntry
+                {
+                    Word = detail.Word,
+                    Phonetic = detail.Phonetic,
+                    PartOfSpeech = meaning.PartOfSpeech,
+                    Definition = definition.Text,
+                    Example = definition.Example,
+                    MeaningIndex = meaningIdx,
+                    LastModifiedAt = DateTime.UtcNow,
+                    IsDirty = true // Đánh dấu để sync lên Server sau
+                };
+            }
+            catch (Exception ex) 
+            {
+                Console.WriteLine(ex.ToString());
+                return null; 
+            }
+            
         }
         override public string ToString()
         {

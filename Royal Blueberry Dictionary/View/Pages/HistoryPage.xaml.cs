@@ -51,7 +51,6 @@ namespace Royal_Blueberry_Dictionary.View.Pages
 
         private void LoadDefCards()
         {
-            mainContent.Children.Clear();
 
             // [NOTE] Đã xóa vòng lặp foreach (var item in HistoryItems)
             // TODO: Khôi phục khi HistoryItems có dữ liệu:

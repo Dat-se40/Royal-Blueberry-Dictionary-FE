@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Text.Json.Serialization;
 
 namespace Royal_Blueberry_Dictionary.Model
 {
@@ -24,6 +25,7 @@ namespace Royal_Blueberry_Dictionary.Model
     public class Definition
     {
         public int DefinitionIndex { get; set; }
+        [JsonPropertyName("definition")]
         public string Text { get; set; } // Map với 'definition' trong JSON BE
         public string Example { get; set; }
         public List<string> Synonyms { get; set; } = new List<string>();

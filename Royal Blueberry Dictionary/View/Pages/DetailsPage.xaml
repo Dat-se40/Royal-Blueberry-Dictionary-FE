@@ -10,28 +10,38 @@
       Background="{DynamicResource MainBackground}">
 
     <Page.Resources>
-        <conv:BooleanToVisibilityConverter x:Key="BooleanToVisibility"/>
-        <conv:StringNullOrEmptyToVisibilityConverter x:Key="StringToVisibility"/>
-        <conv:TakeFirstNEnumerableConverter x:Key="TakeFirstFive"/>
-
-        <Style x:Key="MeaningCardStyle" TargetType="Border">
-            <Setter Property="Background" Value="{DynamicResource MeaningBackground}"/>
-            <Setter Property="BorderBrush" Value="{DynamicResource MeaningBorder}"/>
-            <Setter Property="BorderThickness" Value="1"/>
-            <Setter Property="CornerRadius" Value="16"/>
-            <Setter Property="Margin" Value="0,0,0,16"/>
-            <Setter Property="Padding" Value="22,20"/>
+        <Style x:Key="PhoneticButtonStyle" TargetType="Border">
+            <Setter Property="Background" Value="{DynamicResource WordItemBackground}"/>
+            <Setter Property="BorderBrush" Value="{DynamicResource BorderColor}"/>
+            <Setter Property="BorderThickness" Value="2"/>
+            <Setter Property="CornerRadius" Value="12"/>
+            <Setter Property="Padding" Value="18,12"/>
+            <Setter Property="MinWidth" Value="180"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="{DynamicResource WordItemHover}"/>
+                    <Setter Property="RenderTransform">
+                        <Setter.Value>
+                            <TranslateTransform Y="-2"/>
+                        </Setter.Value>
+                    </Setter>
+                    <Setter Property="Effect">
+                        <Setter.Value>
+                            <DropShadowEffect Color="{Binding Source={StaticResource BorderColor}, Path=Color}"
+                                    Opacity="0.2"
+                                    BlurRadius="12"
+                                    ShadowDepth="4"/>
+                        </Setter.Value>
+                    </Setter>
+                </Trigger>
+            </Style.Triggers>
         </Style>
 
-        <Style x:Key="PosBadgeStyle" TargetType="Border">
-            <Setter Property="Background" Value="{DynamicResource ToolButtonActive}"/>
-            <Setter Property="CornerRadius" Value="10"/>
-            <Setter Property="Padding" Value="14,6"/>
-            <Setter Property="HorizontalAlignment" Value="Left"/>
-            <Setter Property="Margin" Value="0,0,0,16"/>
-        </Style>
-
+        <!-- Action Button Style -->
         <Style x:Key="ActionButtonStyle" TargetType="Button">
+            <Setter Property="Width" Value="36"/>
+            <Setter Property="Height" Value="36"/>
             <Setter Property="Background" Value="{DynamicResource WordItemBackground}"/>
             <Setter Property="BorderBrush" Value="{DynamicResource BorderColor}"/>
             <Setter Property="BorderThickness" Value="1"/>
@@ -40,11 +50,12 @@
                 <Setter.Value>
                     <ControlTemplate TargetType="Button">
                         <Border Background="{TemplateBinding Background}"
-                                BorderBrush="{TemplateBinding BorderBrush}"
-                                BorderThickness="{TemplateBinding BorderThickness}"
-                                CornerRadius="10"
-                                Padding="8">
-                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        BorderBrush="{TemplateBinding BorderBrush}"
+                        BorderThickness="{TemplateBinding BorderThickness}"
+                        CornerRadius="8"
+                        Padding="8">
+                            <ContentPresenter HorizontalAlignment="Center"
+                                    VerticalAlignment="Center"/>
                         </Border>
                     </ControlTemplate>
                 </Setter.Value>
@@ -52,223 +63,287 @@
             <Style.Triggers>
                 <Trigger Property="IsMouseOver" Value="True">
                     <Setter Property="Background" Value="{DynamicResource WordItemHover}"/>
+                    <Setter Property="RenderTransform">
+                        <Setter.Value>
+                            <TranslateTransform Y="-2"/>
+                        </Setter.Value>
+                    </Setter>
                 </Trigger>
             </Style.Triggers>
         </Style>
-
-        <Style x:Key="PhoneticChipStyle" TargetType="Border">
-            <Setter Property="Background" Value="{DynamicResource WordItemBackground}"/>
-            <Setter Property="BorderBrush" Value="{DynamicResource BorderColor}"/>
-            <Setter Property="BorderThickness" Value="2"/>
-            <Setter Property="CornerRadius" Value="12"/>
-            <Setter Property="Padding" Value="16,10"/>
-            <Setter Property="MinWidth" Value="160"/>
-            <Setter Property="Cursor" Value="Hand"/>
-            <Style.Triggers>
-                <Trigger Property="IsMouseOver" Value="True">
-                    <Setter Property="Background" Value="{DynamicResource WordItemHover}"/>
-                </Trigger>
-            </Style.Triggers>
-        </Style>
-
-        <Style x:Key="ToolbarIconButtonStyle" TargetType="Button" BasedOn="{StaticResource ActionButtonStyle}">
-            <Setter Property="Width" Value="40"/>
-            <Setter Property="Height" Value="40"/>
-            <Setter Property="Margin" Value="4,0,0,0"/>
-        </Style>
+        <conv:TakeFirstNEnumerableConverter x:Key="TakeFirstFive"/>
+        <conv:StringNullOrEmptyToVisibilityConverter x:Key="StringToVi"/>
     </Page.Resources>
 
-    <ScrollViewer VerticalScrollBarVisibility="Auto" Padding="0,0,8,0">
-        <Grid Margin="28,24,28,36" MaxWidth="920" HorizontalAlignment="Center">
-            <Border Style="{StaticResource CardStyle}" Padding="0" BorderThickness="1">
+    <ScrollViewer VerticalScrollBarVisibility="Auto">
+        <Grid Margin="30">
+            <!-- Main Card -->
+            <Border Style="{StaticResource CardStyle}"
+                Padding="0"
+                BorderThickness="2">
                 <StackPanel>
-
-                    <!-- Header -->
+                    <!-- ================================= -->
+                    <!-- HEADER COMPACT -->
+                    <!-- ================================= -->
                     <Border Background="{DynamicResource ToolbarBackground}"
-                            BorderBrush="{DynamicResource ToolbarBorder}"
-                            BorderThickness="0,0,0,1"
-                            CornerRadius="16,16,0,0"
-                            Padding="28,22">
+                        BorderBrush="{DynamicResource ToolbarBorder}"
+                        BorderThickness="0,0,0,2"
+                        CornerRadius="16,16,0,0"
+                        Padding="30,20">
                         <Grid>
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="Auto"/>
-                                <RowDefinition Height="Auto"/>
-                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
 
-                            <Grid Grid.Row="0">
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="*"/>
-                                    <ColumnDefinition Width="Auto"/>
-                                </Grid.ColumnDefinitions>
+                            <!-- Word Title + Phonetics (CÙNG HÀNG NGANG) -->
+                            <StackPanel Grid.Column="0"
+                                   Orientation="Horizontal"
+                                   VerticalAlignment="Center">
+                                <!-- Word Title -->
+                                <TextBlock x:Name="WordTitle"
+                                      Text="{Binding WordTitle}"
+                                      FontSize="35"
+                                      FontWeight="Bold"
+                                      Foreground="{DynamicResource TextColor}"
+                                      Margin="0,0,30,0"/>
 
-                                <StackPanel Grid.Column="0">
-                                    <TextBlock Text="{Binding WordTitle}"
-                                               FontSize="36" FontWeight="Bold"
-                                               Foreground="{DynamicResource TextColor}"
-                                               TextWrapping="Wrap"/>
-                                    <TextBlock Text="{Binding WordDetail.Phonetic}"
-                                               FontSize="17" Opacity="0.75"
-                                               Foreground="{DynamicResource TextColor}"
-                                               Margin="0,6,0,0"/>
+                                <!-- Phonetic Buttons -->
+                                <StackPanel Orientation="Horizontal">
+                                    <!-- US Phonetic -->
+                                    <Border x:Name="PhoneticUSBorder"
+                                       Style="{StaticResource PhoneticButtonStyle}"
+                           
+                                       ToolTip="US Pronunciation"
+                                       Margin="0,0,10,0">
+                                        <Grid>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="*"/>
+                                                <ColumnDefinition Width="Auto"/>
+                                            </Grid.ColumnDefinitions>
+
+                                            <StackPanel Grid.Column="0">
+                                                <TextBlock Text="US 🇺🇸"
+                                                      FontSize="10"
+                                                      FontWeight="Bold"
+                                                      Foreground="{DynamicResource ButtonColor}"
+                                                      Opacity="0.9"/>
+                                                <TextBlock x:Name="PhoneticUSTextBlock"
+                                                      Text="{Binding PhoneticUs}"
+                                                      FontSize="16"
+                                                      FontWeight="SemiBold"
+                                                      Foreground="{DynamicResource TextColor}"
+                                                      Margin="0,2,0,0"/>
+                                            </StackPanel>
+
+                                            <!-- Speaker Icon  -->
+                                            <Viewbox Grid.Column="1"
+                                                Width="28" Height="28"
+                                                Margin="10,0,0,0">
+                                                <Canvas Width="24" Height="24">
+                                                    <Path Data="M11 5 L6 9 L2 9 L2 15 L6 15 L11 19 Z"
+                                                      Fill="{DynamicResource ButtonColor}"
+                                                      Opacity="0.9"/>
+                                                    <Path Data="M15.54 8.46a5 5 0 0 1 0 7.07"
+                                                      Stroke="{DynamicResource ButtonColor}"
+                                                      StrokeThickness="2"
+                                                      StrokeStartLineCap="Round"
+                                                      StrokeEndLineCap="Round"
+                                                      Opacity="0.9"/>
+                                                    <Path Data="M19.07 4.93a10 10 0 0 1 0 14.14"
+                                                      Stroke="{DynamicResource ButtonColor}"
+                                                      StrokeThickness="2"
+                                                      StrokeStartLineCap="Round"
+                                                      StrokeEndLineCap="Round"
+                                                      Opacity="0.7"/>
+                                                </Canvas>
+                                            </Viewbox>
+                                        </Grid>
+                                    </Border>
+
+                                    <!-- UK Phonetic -->
+                                    <Border x:Name="PhoneticUKBorder"
+                                       Style="{StaticResource PhoneticButtonStyle}"
+    
+                                       ToolTip="UK Pronunciation">
+                                        <Grid>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="*"/>
+                                                <ColumnDefinition Width="Auto"/>
+                                            </Grid.ColumnDefinitions>
+
+                                            <StackPanel Grid.Column="0">
+                                                <TextBlock Text="UK 🇬🇧"
+                                                      FontSize="10"
+                                                      FontWeight="Bold"
+                                                      Foreground="{DynamicResource ButtonColor}"
+                                                      Opacity="0.9"/>
+                                                <TextBlock x:Name="PhoneticUKTextBlock"
+                                                      Text="{Binding PhoneticUk }"
+                                                      FontSize="16"
+                                                      FontWeight="SemiBold"
+                                                      Foreground="{DynamicResource TextColor}"
+                                                      Margin="0,2,0,0"/>
+                                            </StackPanel>
+
+                                            <Viewbox Grid.Column="1"
+                                                Width="28" Height="28"
+                                                Margin="10,0,0,0">
+                                                <Canvas Width="24" Height="24">
+                                                    <Path Data="M11 5 L6 9 L2 9 L2 15 L6 15 L11 19 Z"
+                                                      Fill="{DynamicResource ButtonColor}"
+                                                      Opacity="0.9"/>
+                                                    <Path Data="M15.54 8.46a5 5 0 0 1 0 7.07"
+                                                      Stroke="{DynamicResource ButtonColor}"
+                                                      StrokeThickness="2"
+                                                      StrokeStartLineCap="Round"
+                                                      StrokeEndLineCap="Round"
+                                                      Opacity="0.9"/>
+                                                    <Path Data="M19.07 4.93a10 10 0 0 1 0 14.14"
+                                                      Stroke="{DynamicResource ButtonColor}"
+                                                      StrokeThickness="2"
+                                                      StrokeStartLineCap="Round"
+                                                      StrokeEndLineCap="Round"
+                                                      Opacity="0.7"/>
+                                                </Canvas>
+                                            </Viewbox>
+                                        </Grid>
+                                    </Border>
                                 </StackPanel>
+                            </StackPanel>
 
-                                <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Top">
-                                    <Button Content="❤️" Style="{StaticResource ToolbarIconButtonStyle}"
-                                            Command="{Binding ToggleFavoriteCommand}"/>
-                                    <Button Content="🏷️" Style="{StaticResource ToolbarIconButtonStyle}"
-                                            Command="{Binding SaveWordCommand}"/>
-                                    <Button Content="📝" Style="{StaticResource ToolbarIconButtonStyle}"
-                                            Command="{Binding OpenNoteCommand}"/>
-                                    <Button Content="🔗" Style="{StaticResource ToolbarIconButtonStyle}"
-                                            Command="{Binding ShareWordCommand}"/>
-                                </StackPanel>
-                            </Grid>
+                            <!-- Action Buttons (SVG Icons từ code cũ) -->
+                            <StackPanel Grid.Column="1" Orientation="Horizontal">
+                                <!-- Favorite -->
+                                <Button x:Name="FavoriteBtn"
+                                   Style="{StaticResource ActionButtonStyle}"
+                                   ToolTip="Favorite"
+                                   Margin="0,0,8,0">
+                                    <Viewbox Width="18" Height="18">
+                                        <Canvas Width="24" Height="24">
+                                            <Path Data="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"
+                                              Stroke="{DynamicResource ButtonColor}"
+                                              StrokeThickness="2"
+                                              Fill="Transparent"/>
+                                        </Canvas>
+                                    </Viewbox>
+                                </Button>
 
-                            <StackPanel Grid.Row="1" Orientation="Horizontal" Margin="0,18,0,0">
-                                <Border Style="{StaticResource PhoneticChipStyle}" Margin="0,0,10,0"
-                                        ToolTip="US pronunciation">
-                                    <Border.InputBindings>
-                                        <MouseBinding MouseAction="LeftClick"
-                                                      Command="{Binding PlayAudioUsCommand}"/>
-                                    </Border.InputBindings>
-                                    <StackPanel>
-                                        <TextBlock Text="US" FontSize="11" FontWeight="Bold"
-                                                   Foreground="{DynamicResource ButtonColor}"/>
-                                        <TextBlock Text="{Binding PhoneticUs}" FontSize="15"
-                                                   Foreground="{DynamicResource TextColor}" Margin="0,2,0,0"/>
-                                    </StackPanel>
-                                </Border>
-                                <Border Style="{StaticResource PhoneticChipStyle}"
-                                        ToolTip="UK pronunciation">
-                                    <Border.InputBindings>
-                                        <MouseBinding MouseAction="LeftClick"
-                                                      Command="{Binding PlayAudioUkCommand}"/>
-                                    </Border.InputBindings>
-                                    <StackPanel>
-                                        <TextBlock Text="UK" FontSize="11" FontWeight="Bold"
-                                                   Foreground="{DynamicResource ButtonColor}"/>
-                                        <TextBlock Text="{Binding PhoneticUk}" FontSize="15"
-                                                   Foreground="{DynamicResource TextColor}" Margin="0,2,0,0"/>
-                                    </StackPanel>
-                                </Border>
+                                <!-- Save -->
+                                <Button Style="{StaticResource ActionButtonStyle}"
+        
+                                   ToolTip="Save word to My Words"
+                                    FontSize="14"
+                                   Margin="0,0,8,0" Content="🏷️"
+                                    Foreground="{StaticResource ButtonColor}">
+                                </Button>
+                                <!-- Note -->
+                                <Button Style="{StaticResource ActionButtonStyle}"
+                                   Name="btnNote"
+                                   ToolTip="Note"
+                                    FontSize="14"
+                                   Margin="0,0,8,0"
+                                     Content="📝"
+                                    Foreground="{StaticResource ButtonColor}">
+                                </Button>
+                                <!-- Download -->
+                                
                             </StackPanel>
                         </Grid>
                     </Border>
 
-                    <!-- Illustration -->
-                    <Border Margin="28,24,28,0"
-                            Visibility="{Binding HasWordImage, Converter={StaticResource BooleanToVisibility}}">
-                        <Border Width="520" Height="280" HorizontalAlignment="Center"
-                                CornerRadius="16" ClipToBounds="True"
-                                Background="{DynamicResource WordItemBackground}"
-                                BorderBrush="{DynamicResource BorderColor}" BorderThickness="2">
-                            <Image Source="{Binding WordImage}" Stretch="UniformToFill"/>
+                    <!-- ================================= -->
+                    <!-- WORD IMAGE (Nhỏ hơn, căn giữa) -->
+                    <!-- ================================= -->
+                    <Border Padding="30,20"
+    HorizontalAlignment="Center">
+                        <Border Width="500" Height="300"
+        CornerRadius="15"
+        Background="{DynamicResource WordItemBackground}"
+        BorderBrush="{DynamicResource BorderColor}"
+        BorderThickness="3"
+        ClipToBounds="True">
+                            <Border.Effect>
+                                <DropShadowEffect Color="Black"
+                          Opacity="0.1"
+                          BlurRadius="12"
+                          ShadowDepth="4"/>
+                            </Border.Effect>
+
+                            <Image x:Name="DemonstrateImage"
+           Stretch="Uniform"
+           HorizontalAlignment="Center"
+           VerticalAlignment="Center"/>
                         </Border>
                     </Border>
 
-                    <!-- Meanings -->
-                    <ItemsControl ItemsSource="{Binding WordDetail.Meanings}" Margin="28,24,28,28">
+                    <!-- ================================= -->
+                    <!-- MEANINGS (DYNAMIC) -->
+                    <!-- ================================= -->
+                    <Border Margin="30,0,30,30">
+                        <StackPanel x:Name="MeaningsContainer">
+                            <ItemsControl ItemsSource="{Binding WordDetail.Meanings}" Margin="30,0,30,30">
                         <ItemsControl.ItemTemplate>
                             <DataTemplate>
-                                <Border Style="{StaticResource MeaningCardStyle}">
+                                <Border BorderThickness="2" CornerRadius="12" Margin="0,0,0,20" Padding="15"
+                                        BorderBrush="{DynamicResource MeaningBorder}" Background="{DynamicResource MeaningBackground}">
                                     <StackPanel>
-                                        <Border Style="{StaticResource PosBadgeStyle}">
-                                            <TextBlock Text="{Binding PartOfSpeech}"
-                                                       Foreground="White" FontWeight="Bold" FontSize="14"/>
+                                        <Border Background="{DynamicResource ToolButtonActive}" CornerRadius="16" Padding="10,4" HorizontalAlignment="Left" Margin="0,0,0,15">
+                                            <TextBlock Text="{Binding PartOfSpeech}" Foreground="White" FontWeight="Bold"/>
                                         </Border>
 
                                         <ItemsControl ItemsSource="{Binding Definitions}">
                                             <ItemsControl.ItemTemplate>
                                                 <DataTemplate>
-                                                    <StackPanel Margin="0,0,0,18">
-                                                        <StackPanel Orientation="Horizontal">
-                                                            <TextBlock Text="•" FontSize="18" FontWeight="Bold"
-                                                                       Foreground="{DynamicResource ButtonColor}"
-                                                                       Margin="0,0,10,0" VerticalAlignment="Top"/>
-                                                            <TextBlock Text="{Binding Text}" TextWrapping="Wrap"
-                                                                       FontSize="17" LineHeight="24"
-                                                                       Foreground="{DynamicResource TextColor}"/>
-                                                        </StackPanel>
-
-                                                        <Border Margin="28,12,0,0" Padding="14,12" CornerRadius="10"
-                                                                BorderThickness="3,0,0,0"
-                                                                BorderBrush="{DynamicResource ExampleBorder}"
-                                                                Background="{DynamicResource ExampleBackground}"
-                                                                Visibility="{Binding Example, Converter={StaticResource StringToVisibility}}">
-                                                            <TextBlock FontStyle="Italic" Opacity="0.88"
-                                                                       TextWrapping="Wrap" FontSize="15"
-                                                                       Foreground="{DynamicResource TextColor}"
-                                                                       Text="{Binding Example}"/>
+                                                    <StackPanel Margin="0,0,0,15">
+                                                        <TextBlock TextWrapping="Wrap" FontSize="15">
+                                                            <Run Text="• " FontWeight="Bold" Foreground="{DynamicResource ButtonColor}"/>
+                                                            <Run Text="{Binding Text}"/>
+                                                        </TextBlock>
+                                                        <Border 
+                                                                BorderThickness="3,0,0,0" BorderBrush="{DynamicResource ExampleBorder}" 
+                                                                Background="{DynamicResource ExampleBackground}" Margin="25,8,0,0" Padding="10"
+                                                                 Visibility="{Binding Example,Converter={StaticResource StringToVi}}">
+                                                            <TextBlock Text="{Binding Example}" FontStyle="Italic" Opacity="0.8"/>
                                                         </Border>
                                                     </StackPanel>
                                                 </DataTemplate>
                                             </ItemsControl.ItemTemplate>
                                         </ItemsControl>
 
-                                        <!-- Đồng nghĩa / trái nghĩa: tối đa 5 mục, một hàng ngang -->
-                                        <Grid Margin="0,12,0,0">
-                                            <Grid.ColumnDefinitions>
-                                                <ColumnDefinition Width="*"/>
-                                                <ColumnDefinition Width="20"/>
-                                                <ColumnDefinition Width="*"/>
-                                            </Grid.ColumnDefinitions>
-
-                                            <StackPanel Grid.Column="0">
-                                                <TextBlock Text="Synonyms" FontSize="14" FontWeight="SemiBold"
-                                                           Foreground="{DynamicResource ButtonColor}" Margin="0,0,0,8"/>
-                                                <ScrollViewer HorizontalScrollBarVisibility="Auto"
-                                                              VerticalScrollBarVisibility="Disabled"
-                                                              Padding="0,2,0,4">
-                                                    <ItemsControl ItemsSource="{Binding Synonyms, Converter={StaticResource TakeFirstFive}, ConverterParameter=5}">
-                                                        <ItemsControl.ItemsPanel>
-                                                            <ItemsPanelTemplate>
-                                                                <StackPanel Orientation="Horizontal"/>
-                                                            </ItemsPanelTemplate>
-                                                        </ItemsControl.ItemsPanel>
-                                                        <ItemsControl.ItemTemplate>
-                                                            <DataTemplate>
-                                                                <Button Content="{Binding}"
-                                                                        Margin="0,0,8,0"
-                                                                        Style="{StaticResource TagButtonStyle}"
-                                                                        Command="{Binding DataContext.SearchRelatedWordCommand, RelativeSource={RelativeSource AncestorType=Page}}"
-                                                                        CommandParameter="{Binding}"/>
-                                                            </DataTemplate>
-                                                        </ItemsControl.ItemTemplate>
-                                                    </ItemsControl>
-                                                </ScrollViewer>
+                                        <ItemsControl ItemsSource="{Binding Synonyms, Converter={StaticResource TakeFirstFive}}" Margin="0,10,0,0">
+                                            <ItemsControl.ItemsPanel>
+                                                <ItemsPanelTemplate><WrapPanel/></ItemsPanelTemplate>
+                                            </ItemsControl.ItemsPanel>
+                                            <ItemsControl.ItemTemplate>
+                                                <DataTemplate>
+                                                    <Button Content="{Binding}" Margin="0,0,8,8" Style="{StaticResource TagButtonStyle}"
+                                                            Command="{Binding DataContext.SearchRelatedWordCommand, RelativeSource={RelativeSource AncestorType=Page}}"
+                                                            CommandParameter="{Binding}"/>
+                                                </DataTemplate>
+                                            </ItemsControl.ItemTemplate>
+                                        </ItemsControl>
+                                                <ItemsControl ItemsSource="{Binding Antonyms, Converter={StaticResource TakeFirstFive}}" Margin="0,10,0,0">
+                                                    <ItemsControl.ItemsPanel>
+                                                        <ItemsPanelTemplate>
+                                                            <WrapPanel/>
+                                                        </ItemsPanelTemplate>
+                                                    </ItemsControl.ItemsPanel>
+                                                    <ItemsControl.ItemTemplate>
+                                                        <DataTemplate>
+                                                            <Button Content="{Binding}" Margin="0,0,8,8" Style="{StaticResource TagButtonStyle}"
+                    Command="{Binding DataContext.SearchRelatedWordCommand, RelativeSource={RelativeSource AncestorType=Page}}"
+                    CommandParameter="{Binding}"/>
+                                                        </DataTemplate>
+                                                    </ItemsControl.ItemTemplate>
+                                                </ItemsControl>
                                             </StackPanel>
-
-                                            <StackPanel Grid.Column="2">
-                                                <TextBlock Text="Antonyms" FontSize="14" FontWeight="SemiBold"
-                                                           Foreground="{DynamicResource ButtonColor}" Margin="0,0,0,8"/>
-                                                <ScrollViewer HorizontalScrollBarVisibility="Auto"
-                                                              VerticalScrollBarVisibility="Disabled"
-                                                              Padding="0,2,0,4">
-                                                    <ItemsControl ItemsSource="{Binding Antonyms, Converter={StaticResource TakeFirstFive}, ConverterParameter=5}">
-                                                        <ItemsControl.ItemsPanel>
-                                                            <ItemsPanelTemplate>
-                                                                <StackPanel Orientation="Horizontal"/>
-                                                            </ItemsPanelTemplate>
-                                                        </ItemsControl.ItemsPanel>
-                                                        <ItemsControl.ItemTemplate>
-                                                            <DataTemplate>
-                                                                <Button Content="{Binding}"
-                                                                        Margin="0,0,8,0"
-                                                                        Style="{StaticResource TagButtonStyle}"
-                                                                        Command="{Binding DataContext.SearchRelatedWordCommand, RelativeSource={RelativeSource AncestorType=Page}}"
-                                                                        CommandParameter="{Binding}"/>
-                                                            </DataTemplate>
-                                                        </ItemsControl.ItemTemplate>
-                                                    </ItemsControl>
-                                                </ScrollViewer>
-                                            </StackPanel>
-                                        </Grid>
-                                    </StackPanel>
                                 </Border>
                             </DataTemplate>
                         </ItemsControl.ItemTemplate>
                     </ItemsControl>
-
+                        </StackPanel>
+                    </Border>
                 </StackPanel>
             </Border>
         </Grid>

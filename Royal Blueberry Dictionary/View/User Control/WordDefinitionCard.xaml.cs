@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Royal_Blueberry_Dictionary.Model;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -109,71 +110,74 @@ namespace Royal_Blueberry_Dictionary.View.User_Control
         // =========================
         // Constructor
         // =========================
-
+        private WordEntry _wordEntry; 
         public WordDefinitionCard()
         {
             InitializeComponent();
-
-        // FE/UI only:
-        // Gán DataContext vào chính control để XAML binding trực tiếp các DependencyProperty.
-        DataContext = this;
-
-            // TODO:
-            // Nếu sau này dự án chuyển sang MVVM chuẩn,
-            // có thể bỏ DataContext = this và bind bằng ViewModel từ ngoài.
+            _wordEntry = new WordEntry();
         }
-
+        public void LoadData(WordEntry wordEntry) 
+        {
+            if (wordEntry == null) return;
+            this.Word  = wordEntry.Word ?? "NULL";
+            this.Pronunciation = wordEntry.Phonetic ?? "NULL";  
+            this.PartOfSpeech = wordEntry.PartOfSpeech ?? "NULL";   
+            this.Definition = wordEntry.Definition ?? "NULL";   
+            this.Region = "US";
+            this.Example1 = wordEntry.Example ?? string.Empty;    
+            this.Example2 = wordEntry.Note ?? string.Empty;
+        }
         // =========================
         // UI Helper Methods
         // =========================
 
-        //public void UpdateExampleSection(
-        //    string example1Text,
-        //    string example2Text = "",
-        //    string example1LabelText = "Example:",
-        //    string example2LabelText = "Note:")
-        //{
-        //    Example1 = example1Text ?? string.Empty;
-        //    Example2 = example2Text ?? string.Empty;
+        public void UpdateExampleSection(
+            string example1Text,
+            string example2Text = "",
+            string example1LabelText = "Example:",
+            string example2LabelText = "Note:")
+        {
+            Example1 = example1Text ?? string.Empty;
+            Example2 = example2Text ?? string.Empty;
 
-        //    if (Example1Label != null)
-        //        Example1Label.Text = example1LabelText;
+            if (Example1Label != null)
+                Example1Label.Text = example1LabelText;
 
-        //    if (Example2Label != null)
-        //        Example2Label.Text = example2LabelText;
+            if (Example2Label != null)
+                Example2Label.Text = example2LabelText;
 
-        //    if (Example2Container != null)
-        //    {
-        //        Example2Container.Visibility =
-        //            string.IsNullOrWhiteSpace(Example2)
-        //            ? Visibility.Collapsed
-        //            : Visibility.Visible;
-        //    }
-        //}
+            if (Example2Container != null)
+            {
+                Example2Container.Visibility =
+                    string.IsNullOrWhiteSpace(Example2)
+                    ? Visibility.Collapsed
+                    : Visibility.Visible;
+            }
+        }
 
-        //public void HideExample2()
-        //{
-        //    if (Example2Container != null)
-        //        Example2Container.Visibility = Visibility.Collapsed;
-        //}
+        public void HideExample2()
+        {
+            if (Example2Container != null)
+                Example2Container.Visibility = Visibility.Collapsed;
+        }
 
-        //public void ShowExample2()
-        //{
-        //    if (Example2Container != null)
-        //        Example2Container.Visibility = Visibility.Visible;
-        //}
+        public void ShowExample2()
+        {
+            if (Example2Container != null)
+                Example2Container.Visibility = Visibility.Visible;
+        }
 
-        //public void SetExample1Label(string text)
-        //{
-        //    if (Example1Label != null)
-        //        Example1Label.Text = text;
-        //}
+        public void SetExample1Label(string text)
+        {
+            if (Example1Label != null)
+                Example1Label.Text = text;
+        }
 
-        //public void SetExample2Label(string text)
-        //{
-        //    if (Example2Label != null)
-        //        Example2Label.Text = text;
-        //}
+        public void SetExample2Label(string text)
+        {
+            if (Example2Label != null)
+                Example2Label.Text = text;
+        }
 
         // =========================
         // Commented Functional/Event Logic

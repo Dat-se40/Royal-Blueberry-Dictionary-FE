@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Royal_Blueberry_Dictionary.Model;
 using Royal_Blueberry_Dictionary.Service;
+using Royal_Blueberry_Dictionary.View.Pages;
 using Royal_Blueberry_Dictionary.ViewModel;
 using System.Net.Http;
 using System.Net.WebSockets;
@@ -103,7 +104,20 @@ namespace Royal_Blueberry_Dictionary
             else
                 OpenSidebar();
         }
+        private void SideBarNavigate(object sender, RoutedEventArgs e) 
+        {
+            var button = sender as Button;
+            var tag = button.Tag.ToString();
+            switch (tag)
+            {
+                case "History":
+                    navigationService.NavigateTo<HistoryPage, HistoryPageViewModel>("Hello"); 
+                    break; 
+                default:
+                    break;
+            }
 
+        }
         /// <summary>
         /// Open Sidebar with animation
         /// </summary>

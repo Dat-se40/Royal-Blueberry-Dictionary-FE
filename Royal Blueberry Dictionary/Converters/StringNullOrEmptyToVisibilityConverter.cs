@@ -7,14 +7,20 @@ namespace Royal_Blueberry_Dictionary.Converters
 {
     public class StringNullOrEmptyToVisibilityConverter : IValueConverter
     {
+        public bool CollapseWhenNullOrEmpty { get; set; } = true;
+
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            if (value is string s && !string.IsNullOrWhiteSpace(s))
-                return Visibility.Visible;
-            return Visibility.Collapsed;
+            var s = value as string;
+            bool isNullOrEmpty = string.IsNullOrEmpty(s);
+
+            var visibilityWhenEmpty = CollapseWhenNullOrEmpty ? Visibility.Collapsed : Visibility.Hidden;
+            return isNullOrEmpty ? visibilityWhenEmpty : Visibility.Visible;
         }
 
-        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture) =>
-            throw new NotImplementedException();
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            throw new NotSupportedException();
+        }
     }
 }

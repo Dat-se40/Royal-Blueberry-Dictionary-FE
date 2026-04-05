@@ -4,6 +4,7 @@
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
       xmlns:local="clr-namespace:Royal_Blueberry_Dictionary.View.Pages"
+      xmlns:uc ="clr-namespace:Royal_Blueberry_Dictionary.View.User_Control"
       mc:Ignorable="d"
       d:DesignHeight="600" d:DesignWidth="1200"
       Title="HistoryPage"
@@ -68,10 +69,21 @@
             <!-- HISTORY CONTENT -->
             <!-- ================================= -->
             <StackPanel Grid.Row="1">
-                <UniformGrid Columns="3" Margin="0,0,0,30" Name="mainContent">
-                    <!-- [NOTE] Cards được populate từ code-behind LoadDefCards() -->
-                    <!-- TODO: Gắn lại ItemsSource binding khi chuyển sang ItemsControl + DataTemplate -->
-                </UniformGrid>
+                <ItemsControl ItemsSource="{Binding HistoryWords}">
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <uc:WordDefinitionCard 
+                                    Word="{Binding Word}"
+                                    PartOfSpeech="{Binding PartOfSpeech}"
+                                    Definition="{Binding Definition}"
+                                    Pronunciation="{Binding Phonetic}"
+                                    Example1="{Binding Example}"
+                                    Example2="{Binding Note}"
+                                    Margin="0,0,0,10" />
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+
             </StackPanel>
 
         </Grid>
