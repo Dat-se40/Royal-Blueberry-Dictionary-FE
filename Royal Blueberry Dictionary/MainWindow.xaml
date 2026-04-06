@@ -88,7 +88,7 @@
                                 </TextBox>
 
                                 <Button Grid.Column="2" x:Name="SearchBtn"  
-                                        Content="Search"
+                                        Content="{Binding StatusText}"
                                         Style="{StaticResource SearchButtonStyle}"
                                         Margin="10,0,0,0"
                                         Command="{Binding ExecuteSearchCommand}"/>
@@ -173,7 +173,7 @@
 
                 <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
                     <StackPanel Margin="0,20,0,0">
-                        <Button Style="{StaticResource SidebarButtonStyle}">
+                        <Button Style="{StaticResource SidebarButtonStyle}" Tag="Home" Click="SideBarNavigate">
                             <StackPanel Orientation="Horizontal">
                                 <TextBlock Text="🏠" FontSize="20" Margin="0,0,15,0" Width="24" TextAlignment="Center"/>
                                 <TextBlock Text="Home" FontSize="15" VerticalAlignment="Center"/>

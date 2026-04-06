@@ -133,7 +133,7 @@ namespace Royal_Blueberry_Dictionary.Service
                     var detail = await _searchService.searchAWord(rel.Word);
                     if (detail != null)
                     {
-                        var newEntry = new WordEntry().MapWordDetailToWordEntry(detail, rel.MeaningIndex, 0);
+                        var newEntry = WordService.MapWordDetailToWordEntry(detail, rel.MeaningIndex, 0);
                         newEntry.UserId = GetEffectiveId(userId);
                         await _wordRepo.AddAsync(newEntry);
                         result.Add(newEntry);

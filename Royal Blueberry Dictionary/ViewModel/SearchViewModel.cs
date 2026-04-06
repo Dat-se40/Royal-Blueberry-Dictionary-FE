@@ -30,6 +30,8 @@ namespace Royal_Blueberry_Dictionary.ViewModel
         private WordDetail? _searchResult;
         [ObservableProperty]
         private bool _isSuggestionsOpen = false;
+        [ObservableProperty]
+        private string _statusText ="Search";  
         public SearchViewModel(SearchService searchService, Service.NavigationService navigationService )
         {
             _searchService = searchService;
@@ -48,7 +50,7 @@ namespace Royal_Blueberry_Dictionary.ViewModel
             }
             _ = UpdateSuggestionsAsync(value);
         }
-
+        // partial void On<Properties Name>Change
         private async Task UpdateSuggestionsAsync(string value)
         {
             var results = await _searchService.GetSuggestionsAsync(value);
@@ -67,6 +69,7 @@ namespace Royal_Blueberry_Dictionary.ViewModel
         public async Task ExecuteSearchAsync(string? targetWord)
         {
             string wordToSearch = targetWord ?? SearchText;
+            StatusText = "Searching"; 
             if (string.IsNullOrWhiteSpace(wordToSearch)) return;
             try
             {
@@ -78,12 +81,13 @@ namespace Royal_Blueberry_Dictionary.ViewModel
                     SearchResult = result;
 
                 }
-                _navigationService.NavigateTo<DetailsPage, DetailsPageViewModel>(result);
+                NavigateToDetailsPage(result);
             }
             finally
             {
                 IsSearching = false;
             }
+            StatusText = "Search";
         }
         // Command khi người dùng Click vào một dòng trong ListBox gợi ý
         [RelayCommand]
@@ -98,11 +102,16 @@ namespace Royal_Blueberry_Dictionary.ViewModel
         }
         public void NavigateToDetailsPage(WordDetail wordDetail)
         {
+            if (wordDetail == null) 
+            {
+                Console.WriteLine("have no data to load");
+            }
             _navigationService.NavigateTo<DetailsPage, DetailsPageViewModel>(wordDetail);
         }
 
         public void OnNavigatedTo(object parameter)
-        { 
+        {
+            Console.WriteLine("Ddang qua ben detail");
         }
 
         public void OnNavigatedFrom()

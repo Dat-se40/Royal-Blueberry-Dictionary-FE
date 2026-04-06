@@ -1,9 +1,12 @@
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using Microsoft.Extensions.DependencyInjection;
+using Royal_Blueberry_Dictionary;
 using Royal_Blueberry_Dictionary.Model;
 using Royal_Blueberry_Dictionary.Service;
 using Royal_Blueberry_Dictionary.View.Pages;
 using System.Reflection.Metadata;
+using System.Runtime.CompilerServices;
 using System.Windows;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
@@ -17,6 +20,7 @@ namespace BlueBerryDictionary.ViewModels
         private readonly NavigationService _navigationService;
         private readonly SearchService _searchService;
         private readonly MediaPlayer _mediaPlayer = new();
+        private WordEntry snapShot = new(); 
         #endregion
 
         #region Observable Properties
@@ -46,6 +50,8 @@ namespace BlueBerryDictionary.ViewModels
 
         [ObservableProperty]
         private bool _hasWordImage;
+
+        public bool IsFavorited => snapShot.IsFavorited;
         #endregion
 
         #region Constructor
@@ -261,6 +267,14 @@ namespace BlueBerryDictionary.ViewModels
             {
                 MessageBox.Show($"Error searching word: {ex.Message}", "Error");
             }
+        }
+        [RelayCommand]
+        private async Task FavoriteAsync() 
+        {
+            var wordService = App.serviceProvider.GetRequiredService<WordService>();
+            snapShot = await wordService.GetWordEntryByDetail(WordDetail, 0, 0);
+            snapShot.IsFavorited =!snapShot.IsFavorited;
+            await wordService.FavoriteAsync(snapShot); 
         }
         #endregion
     }

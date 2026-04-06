@@ -72,14 +72,9 @@
                 <ItemsControl ItemsSource="{Binding HistoryWords}">
                     <ItemsControl.ItemTemplate>
                         <DataTemplate>
-                            <uc:WordDefinitionCard 
-                                    Word="{Binding Word}"
-                                    PartOfSpeech="{Binding PartOfSpeech}"
-                                    Definition="{Binding Definition}"
-                                    Pronunciation="{Binding Phonetic}"
-                                    Example1="{Binding Example}"
-                                    Example2="{Binding Note}"
-                                    Margin="0,0,0,10" />
+                            <uc:WordDefinitionCard DataSource="{Binding}" Margin="0,0,0,10" 
+                                                   DeleteCommand="{Binding DataContext.RemoveFromHistoryCommand, RelativeSource={RelativeSource AncestorType=Page}}"
+                                                   FavoriteCommand="{Binding DataContext.FavoriteCommand, RelativeSource={RelativeSource  AncestorType=Page}}"/>
                         </DataTemplate>
                     </ItemsControl.ItemTemplate>
                 </ItemsControl>

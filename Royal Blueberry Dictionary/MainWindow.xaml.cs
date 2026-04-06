@@ -29,70 +29,16 @@ namespace Royal_Blueberry_Dictionary
     {
         private bool _isSidebarOpen = false;
         private SearchViewModel searchViewModel;
-        private NavigationService navigationService;    
+        private NavigationService navigationService;
+        private HomePage homePage;
         public MainWindow()
         {
             InitializeComponent();
             searchViewModel = App.serviceProvider.GetRequiredService<SearchViewModel>();
             navigationService = App.serviceProvider.GetRequiredService<NavigationService>();
             navigationService.SetMainFrame(MainFrame);
-            this.DataContext = searchViewModel; 
-        }
-        async void testClient(HttpClient httpClient) 
-        {
-            var response = httpClient.GetAsync("packages");
-            var t = await response;
-            var json = t.Content.ReadAsStringAsync().Result;
-            Console.Write(json);
-            try
-            {
-                var packages = JsonSerializer.Deserialize<List<Package>>(json, new JsonSerializerOptions()
-                {
-                    PropertyNameCaseInsensitive = true
-                });
-                packages?.ForEach(p =>
-                {
-                    if (p != null) Console.WriteLine($"Package: {p}");
-                });
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e);
-            }
-        }
-        async void testSearch(string word) 
-        {
-            TimeSpan startTime = DateTime.Now.TimeOfDay;
-            var tool = App.serviceProvider.GetRequiredService<SearchService>();
-            var res = await tool.searchAWord(word);
-            TimeSpan endTime = DateTime.Now.TimeOfDay;
-            Console.WriteLine((endTime - startTime).TotalSeconds + "seconds");
-            Console.WriteLine($"Word: {res.Word}, Definition: {res.AudioUk}");
-        }
-        async void testPackage() 
-        {
-            try
-            {
-                PackageService packageService = App.serviceProvider.GetRequiredService<PackageService>();
-                if (packageService != null) 
-                {
-                    var packages = await packageService.getAllPackages();
-                    packages?.ForEach(p =>
-                    {
-                        if (p != null) Console.WriteLine($"Package: {p}");
-                    });
-                }else 
-                {
-                    Console.WriteLine("PackageService is null");
-                }
-                
-            }
-            catch (Exception e)
-            {
-
-                Console.WriteLine(e);
-            }
-
+            this.DataContext = searchViewModel;
+            navigationService.NavigateTo<HomePage, SearchViewModel>("hello");
         }
         /// <summary>
         /// Toggle Sidebar (Hamburger button)
@@ -112,7 +58,10 @@ namespace Royal_Blueberry_Dictionary
             {
                 case "History":
                     navigationService.NavigateTo<HistoryPage, HistoryPageViewModel>("Hello"); 
-                    break; 
+                    break;
+                case "Home":
+                    navigationService.NavigateTo<HomePage, SearchViewModel>("hello");
+                    break;
                 default:
                     break;
             }

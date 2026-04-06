@@ -9,53 +9,27 @@ using System.Threading.Tasks;
 
 namespace Royal_Blueberry_Dictionary.Model
 {
-    public class WordEntry 
+    public partial class WordEntry : ObservableObject
     {
         public string Word { get; set; }
         [JsonPropertyName("phonetic")]
-        public string Phonetic { get; set; }
+        public string Phonetic { get; set; } = string.Empty;    
         public int MeaningIndex { get; set; }
         [JsonPropertyName("partOfSpeech")]
-        public string PartOfSpeech { get; set; }
+        public string PartOfSpeech { get; set; } = string.Empty ;
         [JsonPropertyName("definition")]
         public string Definition { get; set; }
         [JsonPropertyName("example")]
-        public string Example { get; set; }
+        public string Example { get; set; } = string.Empty; 
         [JsonPropertyName("id")]
         public string Id { get; set; } = Guid.NewGuid().ToString();
         public string UserId { get; set; }
-        public List<string> TagIdsJson { get; set; }
-        public bool IsFavorited { get; set; } = false;
-        public string Note { get; set; }
+        public List<string> TagIdsJson { get; set; } = new List<string>();
+        public string Note { get; set; } = string.Empty;    
         public DateTime LastModifiedAt { get; set; } = DateTime.UtcNow;
         public bool IsDirty { get; set; } = false; // đã được sync với server chưa  
-
-        public WordEntry MapWordDetailToWordEntry(WordDetail detail, int meaningIdx, int defIdx)
-        {
-            try
-            {
-                var meaning = detail.Meanings[meaningIdx];
-                var definition = meaning.Definitions[defIdx];
-
-                return new WordEntry
-                {
-                    Word = detail.Word,
-                    Phonetic = detail.Phonetic,
-                    PartOfSpeech = meaning.PartOfSpeech,
-                    Definition = definition.Text,
-                    Example = definition.Example,
-                    MeaningIndex = meaningIdx,
-                    LastModifiedAt = DateTime.UtcNow,
-                    IsDirty = true // Đánh dấu để sync lên Server sau
-                };
-            }
-            catch (Exception ex) 
-            {
-                Console.WriteLine(ex.ToString());
-                return null; 
-            }
-            
-        }
+        [ObservableProperty]
+        public bool _isFavorited;
         override public string ToString()
         {
             return $"{Word} ({PartOfSpeech}): {Definition}";

@@ -8,6 +8,7 @@ namespace Royal_Blueberry_Dictionary.Service.ApiClient
 {
     public interface IBackendApiClient
     {
+        //CRUD : T: kiểu dữ liệu mình lấy hoặc gửi, endpoint
         Task<T> GetAsync<T>(string endpoint);
         Task<T> PostAsync<T>(string endpoint, object data);
         Task<T> PutAsync<T>(string endpoint, object data);

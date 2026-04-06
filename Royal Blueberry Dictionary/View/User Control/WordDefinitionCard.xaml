@@ -65,6 +65,7 @@
             CornerRadius="15" Padding="25" Margin="10"
             BorderBrush="{DynamicResource BorderColor}"
             BorderThickness="2"
+            MouseDown="GoToDetailPage"
             >
         <Border.Style>
             <Style TargetType="Border">
@@ -112,19 +113,47 @@
                 <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center">
 
 
-                    <!-- Chỉ còn là nút UI -->
-                    <Button Content="❤️" Width="40" Height="40" Name="btnFav"
-                            Style="{StaticResource CardActionButton}"
-                            Margin="3" />
 
+
+                    <Button x:Name="btnFav"
+        Width="40" Height="40"
+        Command="{Binding FavoriteCommand, ElementName=root}"
+        CommandParameter="{Binding DataSource, ElementName=root}"
+        Margin="3" >
+                        <Button.Style>
+                            <Style TargetType="Button" BasedOn="{StaticResource CardActionButton}">
+                                <Setter Property="Content" Value="🤍"/>
+                                <Setter Property="Foreground" Value="Gray"/>
+
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding DataSource.IsFavorited, ElementName=root}" Value="True">
+                                        <Setter Property="Content" Value="❤️"/>
+                                        <Setter Property="Foreground" Value="#FF4B4B"/>
+                                        <Setter Property="Background" Value="#FFE8E8"/>
+                                    </DataTrigger>
+
+                                    <Trigger Property="IsMouseOver" Value="True">
+                                        <Setter Property="RenderTransform">
+                                            <Setter.Value>
+                                                <ScaleTransform ScaleX="1.1" ScaleY="1.1"/>
+                                            </Setter.Value>
+                                        </Setter>
+                                    </Trigger>
+                                </Style.Triggers>
+                            </Style>
+                        </Button.Style>
+                    </Button>
+                    <!-- Chỉ còn là nút UI 
                     <Button Content="💾" Width="40" Height="40" Name="btnSave"
                             Style="{StaticResource CardActionButton}"
                             Margin="3" />
-
+                       -->
                     <Button Content="❌" Width="40" Height="40"
-                            Style="{StaticResource DeleteButton}"
-                            Margin="3"
-                            Name="btnDelete" />
+        Style="{StaticResource DeleteButton}"
+        Margin="3"
+        Name="btnDelete"
+        Command="{Binding DeleteCommand, ElementName=root}"
+        CommandParameter="{Binding DataSource, ElementName=root}" />
                 </StackPanel>
             </Grid>
 

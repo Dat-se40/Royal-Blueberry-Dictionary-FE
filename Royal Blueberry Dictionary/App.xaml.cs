@@ -46,10 +46,12 @@ namespace Royal_Blueberry_Dictionary
             serviceCollection.AddScoped<Service.SearchService>();
             serviceCollection.AddScoped<Service.PackageService>();
             serviceCollection.AddScoped<Service.NavigationService>();
-            serviceCollection.AddScoped<Service.TagService>();    
+            serviceCollection.AddScoped<Service.TagService>();
+            serviceCollection.AddScoped<Service.WordService>(); 
             // Views
             serviceCollection.AddTransient<DetailsPage>();
             serviceCollection.AddTransient<HistoryPage>();
+            serviceCollection.AddTransient<HomePage>(); 
             // View Models
             serviceCollection.AddScoped<DetailsPageViewModel>();  
             serviceCollection.AddScoped<SearchViewModel >();

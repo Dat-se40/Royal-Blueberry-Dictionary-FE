@@ -1,4 +1,8 @@
-﻿using Royal_Blueberry_Dictionary.Model;
+﻿using BlueBerryDictionary.ViewModels;
+using Microsoft.Extensions.DependencyInjection;
+using Royal_Blueberry_Dictionary.Model;
+using Royal_Blueberry_Dictionary.Service;
+using Royal_Blueberry_Dictionary.View.Pages;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,6 +17,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using NavigationService = Royal_Blueberry_Dictionary.Service.NavigationService;
 
 namespace Royal_Blueberry_Dictionary.View.User_Control
 {
@@ -21,7 +26,6 @@ namespace Royal_Blueberry_Dictionary.View.User_Control
         // =========================
         // Dependency Properties
         // =========================
-
         public static readonly DependencyProperty WordProperty =
             DependencyProperty.Register(nameof(Word), typeof(string), typeof(WordDefinitionCard), new PropertyMetadata(string.Empty));
 
@@ -49,10 +53,31 @@ namespace Royal_Blueberry_Dictionary.View.User_Control
         public static readonly DependencyProperty Example2Property =
             DependencyProperty.Register(nameof(Example2), typeof(string), typeof(WordDefinitionCard), new PropertyMetadata(string.Empty));
 
+        public static readonly DependencyProperty DataSourceProperty =
+        DependencyProperty.Register(nameof(DataSource), typeof(WordEntry), typeof(WordDefinitionCard),
+            new PropertyMetadata(null, OnDataSourceChanged));
+        public static readonly DependencyProperty DeleteCommandProperty =
+             DependencyProperty.Register(nameof(DeleteCommand), typeof(ICommand), typeof(WordDefinitionCard));
+        public static readonly DependencyProperty FavoriteCommandProperty =
+            DependencyProperty.Register(nameof(FavoriteCommand), typeof(ICommand), typeof(WordDefinitionCard)); 
+        public ICommand DeleteCommand
+        {
+            get => (ICommand)GetValue(DeleteCommandProperty);
+            set => SetValue(DeleteCommandProperty, value);
+        }
+        public ICommand FavoriteCommand 
+        {
+            get => (ICommand)GetValue(FavoriteCommandProperty); 
+            set => SetValue (FavoriteCommandProperty, value);   
+        }
         // =========================
         // CLR Wrappers
         // =========================
-
+        public WordEntry DataSource
+        {
+            get => (WordEntry)GetValue(DataSourceProperty);
+            set => SetValue(DataSourceProperty, value);
+        }
         public string Word
         {
             get => (string)GetValue(WordProperty);
@@ -106,15 +131,13 @@ namespace Royal_Blueberry_Dictionary.View.User_Control
             get => (string)GetValue(Example2Property);
             set => SetValue(Example2Property, value);
         }
-
         // =========================
         // Constructor
         // =========================
-        private WordEntry _wordEntry; 
+        
         public WordDefinitionCard()
         {
             InitializeComponent();
-            _wordEntry = new WordEntry();
         }
         public void LoadData(WordEntry wordEntry) 
         {
@@ -179,91 +202,34 @@ namespace Royal_Blueberry_Dictionary.View.User_Control
                 Example2Label.Text = text;
         }
 
-        // =========================
-        // Commented Functional/Event Logic
-        // =========================
-
-        /*
-        // Chức năng cũ:
-        // Dùng để xử lý click favorite.
-        // Liên quan tới state dữ liệu, service lưu trữ, và event nghiệp vụ.
-        // Tạm bỏ vì bản này chỉ giữ FE/UI.
-        private void FavoriteButton_Click(object sender, RoutedEventArgs e)
+        private void btnFav_Click(object sender, RoutedEventArgs e)
         {
+            DataSource.IsFavorited = !DataSource.IsFavorited; 
         }
-        */
-
-        /*
-        // Chức năng cũ:
-        // Dùng để xử lý click save/download.
-        // Liên quan tới file, service, MessageBox.
-        // Tạm bỏ vì bản này chỉ giữ FE/UI.
-        private async void btnSave_Click(object sender, RoutedEventArgs e)
+        private async void GoToDetailPage(object sender, RoutedEventArgs e)
         {
-        }
-        */
+            if (DataSource == null) return;
 
-        /*
-        // Chức năng cũ:
-        // Dùng để xử lý click delete.
-        // Liên quan tới xóa dữ liệu, xóa file, gọi service, phát event.
-        // Tạm bỏ vì bản này chỉ giữ FE/UI.
-        private void DeleteButton_Click(object sender, RoutedEventArgs e)
+            var navService = App.serviceProvider.GetRequiredService<NavigationService>();
+            var searchService = App.serviceProvider.GetRequiredService<SearchService>();
+
+            try
+            {
+                var fullDetail = await searchService.searchAWord(DataSource.Word);
+                navService.NavigateTo<DetailsPage, DetailsPageViewModel>(fullDetail);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Lỗi khi tải từ: {ex.Message}");
+            }
+        }
+        private static void OnDataSourceChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
+            if (d is WordDefinitionCard card && e.NewValue is WordEntry word)
+            {
+                card.LoadData(word); // Tận dụng hàm LoadData David đã viết
+            }
         }
-        */
 
-        /*
-        // Chức năng cũ:
-        // Dùng để cập nhật trạng thái yêu thích và đổi style nút favorite.
-        // Nếu sau này muốn làm favorite UI-only thì có thể viết lại đơn giản hơn.
-        private void OnIsFavoritedChanged()
-        {
-        }
-        */
-
-        /*
-        // Chức năng cũ:
-        // Dùng để xử lý dữ liệu Example/Note từ model cũ.
-        // Có phụ thuộc dữ liệu business/model.
-        // Bản FE hiện tại thay bằng UpdateExampleSection(...) để set UI trực tiếp.
-        private void HandleExampleAndNote()
-        {
-        }
-        */
-
-        /*
-        // Chức năng cũ:
-        // Dùng để tăng view count khi click card.
-        // Liên quan tới dữ liệu và nghiệp vụ thống kê.
-        // Tạm bỏ vì bản này chỉ giữ FE/UI.
-        private void UpdateViewCount()
-        {
-        }
-        */
-
-        /*
-        // Event cũ:
-        // public event EventHandler FavoriteClicked;
-        // public event EventHandler DeleteClicked;
-        // public event EventHandler CardClicked;
-        //
-        // Tạm bỏ toàn bộ vì đây là event nghiệp vụ / hành vi chức năng.
-        // Nếu cần thì sau này chuyển sang Command hoặc event ở layer ngoài.
-        */
-
-        /*
-        // Service / ViewModel / Model cũ:
-        // - TagService
-        // - FileStorage
-        // - Word
-        // - WordShortened
-        // - các constructor nhận model
-        //
-        // Tạm bỏ qua trong bản này theo yêu cầu.
-        // Nếu cần tái kết nối dữ liệu sau này:
-        // 1. Bind từ ViewModel
-        // 2. Hoặc truyền model từ ngoài vào rồi map ra các DependencyProperty
-        */
     }
 }

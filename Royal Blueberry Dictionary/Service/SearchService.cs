@@ -1,7 +1,8 @@
 ﻿    using Microsoft.Extensions.DependencyInjection;
     using Royal_Blueberry_Dictionary.Database;
     using Royal_Blueberry_Dictionary.Model;
-    using Royal_Blueberry_Dictionary.Service.ApiClient;
+using Royal_Blueberry_Dictionary.Repository.Interface;
+using Royal_Blueberry_Dictionary.Service.ApiClient;
     using System;
     using System.Collections.Generic;
     using System.IO;
@@ -16,6 +17,7 @@
             private readonly IBackendApiClient backendApiClient;
             private readonly AppDbContext dbContext;
             private readonly Dictionary<string, WordDetail> cache = new();
+            private readonly Dictionary<string, DateTime > timeLogs = new();    
             private readonly int cachedExpirationDate;
             private HashSet<string> _availableWords = new();
             public SearchService(IBackendApiClient backendApiClient, AppDbContext appDbContext)
@@ -40,11 +42,10 @@
                 // 2. Gọi API nếu không có trong cache hoặc cache quá hạn
                 var response = await backendApiClient.GetAsync<WordDetail>($"searching/get-detail/{word}");
 
-                if (response != null)
+                if (response != null && IsValidWordDetail(response))
                 {
                     await saveToCacheAsync(word, response);
                 }
-
                 return response;
             }
 
@@ -53,16 +54,17 @@
                 var expirationDate = DateTime.UtcNow.AddDays(-cachedExpirationDate);
 
                 var validCaches = dbContext.CachedWords
-                    .Where(cw => cw.CachedAt >= expirationDate)
-                    .ToList();
+                    .Where((cw) => cw.CachedAt >= expirationDate).ToList();
 
                 foreach (var cachedWord in validCaches)
                 {
+                    timeLogs[cachedWord.Word] = cachedWord.CachedAt; 
                     if (!string.IsNullOrEmpty(cachedWord.DataJson))
                     {
                         var detail = System.Text.Json.JsonSerializer.Deserialize<WordDetail>(cachedWord.DataJson);
                         cache[cachedWord.Word] = detail;
-                    }
+                    }else timeLogs.Remove(cachedWord.Word);
+                
                 }
 
                 var oldCaches = dbContext.CachedWords.Where(cw => cw.CachedAt < expirationDate);
@@ -92,6 +94,7 @@
                         DataJson = System.Text.Json.JsonSerializer.Serialize(detail),
                         CachedAt = DateTime.UtcNow
                     });
+                    timeLogs[word] = DateTime.UtcNow;
                 }
                 await dbContext.SaveChangesAsync();
                 _availableWords.Add(word);
@@ -145,7 +148,6 @@
             }
 
             #endregion
-
             private void loadAvailableWordList()
             {
            
@@ -158,13 +160,29 @@
             //<summary>
             // Dành cho mục đích debug, có thể dùng để xem nhanh cache hiện tại đang có những từ nào.   
             //</summary>
-            public IEnumerable<WordEntry> getHistroyCache() 
+            public IEnumerable<WordDetail> getHistroyCacheToday() 
             {
-                WordEntry wordEntry = new WordEntry();
                 foreach (var item in cache)
                 {
-                    yield return wordEntry.MapWordDetailToWordEntry(item.Value, 0, 0);
+                    // Trong ngày
+                    if (!IsValidWordDetail(item.Value) && timeLogs[item.Key].Day != DateTime.UtcNow.Day) continue;
+                    yield return item.Value;
                 }
+
             } 
+            public void RemoveWordInCache(string word) 
+            {
+                cache.Remove(word);
+                var target = dbContext.CachedWords.First(entity => entity.Word == word);
+                dbContext.CachedWords.Remove(target);   
+                dbContext.SaveChangesAsync();
+        }
+        // Cải thiện hàm này với các từ bị trỗng
+            private bool IsValidWordDetail(WordDetail wordDetail) 
+            {
+                return wordDetail.Word != string.Empty &&wordDetail.Meanings != null && wordDetail.Meanings.Count != 0;
+            }
+            
+        
         }
     }
