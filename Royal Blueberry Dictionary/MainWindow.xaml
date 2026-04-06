@@ -207,7 +207,7 @@
                             </StackPanel>
                         </Button>
 
-                        <Button Style="{StaticResource SidebarButtonStyle}" Tag="Setting">
+                        <Button Style="{StaticResource SidebarButtonStyle}" Tag="Setting" Click="SideBarNavigate">
                             <StackPanel Orientation="Horizontal">
                                 <TextBlock Text="⚙️" FontSize="20" Margin="0,0,15,0" Width="24" TextAlignment="Center"/>
                                 <TextBlock Text="Setting" FontSize="15" VerticalAlignment="Center"/>

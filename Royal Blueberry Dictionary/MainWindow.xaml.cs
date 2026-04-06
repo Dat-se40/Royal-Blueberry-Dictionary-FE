@@ -62,6 +62,10 @@ namespace Royal_Blueberry_Dictionary
                 case "Home":
                     navigationService.NavigateTo<HomePage, SearchViewModel>("hello");
                     break;
+                case "Setting":  
+                    navigationService.NavigateTo<View.Pages.SettingsPage, ViewModel.SettingsPageViewModel>(null);
+                    CloseSidebar();  // Đóng sidebar sau khi navigate
+                    break;
                 default:
                     break;
             }

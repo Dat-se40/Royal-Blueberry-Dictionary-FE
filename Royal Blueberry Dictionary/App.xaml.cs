@@ -13,7 +13,7 @@ using System.IO;
 using System.Net.WebSockets;
 using System.Windows;
 using System.Windows.Media.Animation;
-
+using AppThemeMode = Royal_Blueberry_Dictionary.Service.ThemeMode;
 namespace Royal_Blueberry_Dictionary
 {
     /// <summary>
@@ -47,17 +47,64 @@ namespace Royal_Blueberry_Dictionary
             serviceCollection.AddScoped<Service.PackageService>();
             serviceCollection.AddScoped<Service.NavigationService>();
             serviceCollection.AddScoped<Service.TagService>();
-            serviceCollection.AddScoped<Service.WordService>(); 
+            serviceCollection.AddScoped<Service.WordService>();
+            serviceCollection.AddSingleton<Service.ThemeManager>();
+            serviceCollection.AddSingleton(provider => Service.SettingsService.Instance);
+
             // Views
             serviceCollection.AddTransient<DetailsPage>();
             serviceCollection.AddTransient<HistoryPage>();
-            serviceCollection.AddTransient<HomePage>(); 
+            serviceCollection.AddTransient<HomePage>();
+            serviceCollection.AddTransient<View.Pages.SettingsPage>();
             // View Models
             serviceCollection.AddScoped<DetailsPageViewModel>();  
             serviceCollection.AddScoped<SearchViewModel >();
             serviceCollection.AddScoped<HistoryPageViewModel>();
+            serviceCollection.AddScoped<ViewModel.SettingsPageViewModel>();
             serviceProvider = serviceCollection.BuildServiceProvider();
-            
+
+            var settingsService = serviceProvider.GetRequiredService<Service.SettingsService>();
+            var themeManager = serviceProvider.GetRequiredService<Service.ThemeManager>();
+
+            // Apply saved settings
+            var settings = settingsService.CurrentSettings;
+
+            // Apply theme mode
+            var themeMode = settings.ThemeMode switch
+            {
+                "Light" => Service.ThemeMode.Light,
+                "Dark" => Service.ThemeMode.Dark,
+                "System" => Service.ThemeMode.System,
+                _ => Service.ThemeMode.Light
+            };
+            themeManager.SetThemeMode(themeMode);
+
+            // Apply color theme
+            if (!string.IsNullOrEmpty(settings.ColorTheme) && settings.ColorTheme != "default")
+            {
+                if (settings.ColorTheme == "custom" && settings.CustomColorTheme != null)
+                {
+                    themeManager.ApplyCustomColorTheme(
+                        settings.CustomColorTheme.Primary,
+                        settings.CustomColorTheme.Secondary,
+                        settings.CustomColorTheme.Accent
+                    );
+                }
+                else
+                {
+                    themeManager.ApplyColorTheme(settings.ColorTheme);
+                }
+            }
+
+            // Apply font
+            if (!string.IsNullOrEmpty(settings.FontFamily) && settings.FontFamily != "Segoe UI")
+            {
+                var fontFamily = new System.Windows.Media.FontFamily(settings.FontFamily);
+                Application.Current.Resources["AppFontFamily"] = fontFamily;
+                Application.Current.Resources["AppFontSize"] = settings.FontSize;
+            }
+
+            System.Diagnostics.Debug.WriteLine("✅ App settings applied at startup");
 
             // Ensure database is created
             using (var scope = serviceProvider.CreateScope())
@@ -76,4 +123,4 @@ namespace Royal_Blueberry_Dictionary
         }
     } 
 
-}
+    }
