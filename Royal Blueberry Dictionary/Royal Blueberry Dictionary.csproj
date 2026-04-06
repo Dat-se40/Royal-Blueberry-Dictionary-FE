@@ -11,6 +11,7 @@
 
   <ItemGroup>
     <Folder Include="Resources\Images\" />
+    <Folder Include="View\Dialogs\" />
   </ItemGroup>
 
   <ItemGroup>
