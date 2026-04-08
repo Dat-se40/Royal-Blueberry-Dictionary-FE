@@ -160,6 +160,24 @@ namespace Royal_Blueberry_Dictionary.Service
             await _tagRepo.SaveChangesAsync();
         }
 
+        /// <summary>Toàn bộ <see cref="WordEntry"/> lưu cục bộ cho user (My Words).</summary>
+        public async Task<List<WordEntry>> GetAllWordEntriesAsync(string userId = "GUEST") =>
+            await _wordRepo.GetAllAsync(GetEffectiveId(userId));
+
+        /// <summary>Tag và số quan hệ từ–tag (cho dropdown My Words).</summary>
+        public async Task<List<(Tag Tag, int WordCount)>> GetTagsWithRelationCountsAsync(string userId = "GUEST")
+        {
+            var uid = GetEffectiveId(userId);
+            var tags = await _tagRepo.GetAllTagsAsync(uid);
+            var list = new List<(Tag, int)>();
+            foreach (var t in tags.OrderBy(t => t.Name))
+            {
+                var rels = await _tagRepo.GetRelationsByTagAsync(t.Id);
+                list.Add((t, rels.Count));
+            }
+            return list;
+        }
+
         #endregion
     }
 }

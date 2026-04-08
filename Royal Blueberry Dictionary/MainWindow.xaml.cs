@@ -52,19 +52,8 @@ namespace Royal_Blueberry_Dictionary
         }
         private void SideBarNavigate(object sender, RoutedEventArgs e) 
         {
-            var button = sender as Button;
-            var tag = button.Tag.ToString();
-            switch (tag)
-            {
-                case "History":
-                    navigationService.NavigateTo<HistoryPage, HistoryPageViewModel>("Hello"); 
-                    break;
-                case "Home":
-                    navigationService.NavigateTo<HomePage, SearchViewModel>("hello");
-                    break;
-                default:
-                    break;
-            }
+            if (sender is not Button button) return;
+            navigationService.NavigateByTag(button.Tag?.ToString());
 
         }
         /// <summary>

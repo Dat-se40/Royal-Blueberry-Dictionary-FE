@@ -162,20 +162,37 @@ using Royal_Blueberry_Dictionary.Service.ApiClient;
             //</summary>
             public IEnumerable<WordDetail> getHistroyCacheToday() 
             {
-                foreach (var item in cache)
+                // Backward-compatible API: return all cached items sorted by last access (desc).
+                // The old name says "Today", but the app's History page expects a full timeline.
+                foreach (var key in timeLogs.OrderByDescending(kv => kv.Value).Select(kv => kv.Key))
                 {
-                    // Trong ngày
-                    if (!IsValidWordDetail(item.Value) && timeLogs[item.Key].Day != DateTime.UtcNow.Day) continue;
-                    yield return item.Value;
+                    if (!cache.TryGetValue(key, out var value)) continue;
+                    if (!IsValidWordDetail(value)) continue;
+                    yield return value;
                 }
-
             } 
-            public void RemoveWordInCache(string word) 
+            public async Task RemoveWordInCacheAsync(string word) 
             {
+                if (string.IsNullOrWhiteSpace(word)) return;
+                word = word.ToLower().Trim();
+
                 cache.Remove(word);
-                var target = dbContext.CachedWords.First(entity => entity.Word == word);
-                dbContext.CachedWords.Remove(target);   
-                dbContext.SaveChangesAsync();
+                timeLogs.Remove(word);
+
+                var target = dbContext.CachedWords.FirstOrDefault(entity => entity.Word == word);
+                if (target != null)
+                {
+                    dbContext.CachedWords.Remove(target);
+                    await dbContext.SaveChangesAsync();
+                }
+        }
+
+        public async Task ClearHistoryAsync()
+        {
+            cache.Clear();
+            timeLogs.Clear();
+            dbContext.CachedWords.RemoveRange(dbContext.CachedWords);
+            await dbContext.SaveChangesAsync();
         }
         // Cải thiện hàm này với các từ bị trỗng
             private bool IsValidWordDetail(WordDetail wordDetail) 

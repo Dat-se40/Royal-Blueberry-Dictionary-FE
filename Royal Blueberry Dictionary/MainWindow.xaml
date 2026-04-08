@@ -186,14 +186,14 @@
                                 <TextBlock Text="History" FontSize="15" VerticalAlignment="Center"/>
                             </StackPanel>
                         </Button>
-                        <Button Style="{StaticResource SidebarButtonStyle}" Tag="Favourite">
+                        <Button Style="{StaticResource SidebarButtonStyle}" Tag="Favourite" Click="SideBarNavigate">
                             <StackPanel Orientation="Horizontal">
                                 <TextBlock Text="⭐" FontSize="20" Margin="0,0,15,0" Width="24" TextAlignment="Center"/>
                                 <TextBlock Text="Favorite" FontSize="15" VerticalAlignment="Center"/>
                             </StackPanel>
                         </Button>
 
-                        <Button Style="{StaticResource SidebarButtonStyle}" Tag="MyWords" >
+                        <Button Style="{StaticResource SidebarButtonStyle}" Tag="MyWords" Click="SideBarNavigate">
                             <StackPanel Orientation="Horizontal">
                                 <TextBlock Text="📚" FontSize="20" Margin="0,0,15,0" Width="24" TextAlignment="Center"/>
                                 <TextBlock Text="My Words" FontSize="15" VerticalAlignment="Center"/>

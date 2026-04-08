@@ -29,49 +29,49 @@
                     <!-- [NOTE] Tất cả Button toolbar đã xóa Click handler -->
                     <!-- TODO: Gắn lại Click="ButtnNavigate_Click" khi Navigate action sẵn sàng -->
 
-                    <Button Style="{StaticResource ToolButtonStyle}" Tag="Home">
+                    <Button Style="{StaticResource ToolButtonStyle}" Tag="Home" Click="ButtnNavigate_Click">
                         <StackPanel Orientation="Horizontal">
                             <TextBlock Text="🏠" FontSize="18" Margin="0,0,8,0"/>
                             <TextBlock Text="Home" VerticalAlignment="Center"/>
                         </StackPanel>
                     </Button>
 
-                    <Button Style="{StaticResource ToolButtonStyle}" Tag="History">
+                    <Button Style="{StaticResource ToolButtonStyle}" Tag="History" Click="ButtnNavigate_Click">
                         <StackPanel Orientation="Horizontal">
                             <TextBlock Text="🕐" FontSize="18" Margin="0,0,8,0"/>
                             <TextBlock Text="History" VerticalAlignment="Center"/>
                         </StackPanel>
                     </Button>
 
-                    <Button Style="{StaticResource ToolButtonStyle}" Tag="Favourite">
+                    <Button Style="{StaticResource ToolButtonStyle}" Tag="Favourite" Click="ButtnNavigate_Click">
                         <StackPanel Orientation="Horizontal">
                             <TextBlock Text="⭐" FontSize="18" Margin="0,0,8,0"/>
                             <TextBlock Text="Favourite" VerticalAlignment="Center"/>
                         </StackPanel>
                     </Button>
 
-                    <Button Style="{StaticResource ToolButtonStyle}" Tag="MyWords">
+                    <Button Style="{StaticResource ToolButtonStyle}" Tag="MyWords" Click="ButtnNavigate_Click">
                         <StackPanel Orientation="Horizontal">
                             <TextBlock Text="📖" FontSize="18" Margin="0,0,8,0"/>
                             <TextBlock Text="My Words" VerticalAlignment="Center"/>
                         </StackPanel>
                     </Button>
 
-                    <Button Style="{StaticResource ToolButtonStyle}" Tag="Game">
+                    <Button Style="{StaticResource ToolButtonStyle}" Tag="Game" Click="ButtnNavigate_Click">
                         <StackPanel Orientation="Horizontal">
                             <TextBlock Text="🎮" FontSize="18" Margin="0,0,8,0"/>
                             <TextBlock Text="Game" VerticalAlignment="Center"/>
                         </StackPanel>
                     </Button>
 
-                    <Button Style="{StaticResource ToolButtonStyle}" Tag="Offline">
+                    <Button Style="{StaticResource ToolButtonStyle}" Tag="Offline" Click="ButtnNavigate_Click">
                         <StackPanel Orientation="Horizontal">
                             <TextBlock Text="📥" FontSize="18" Margin="0,0,8,0"/>
                             <TextBlock Text="Offline" VerticalAlignment="Center"/>
                         </StackPanel>
                     </Button>
 
-                    <Button Style="{StaticResource ToolButtonStyle}" Tag="Setting">
+                    <Button Style="{StaticResource ToolButtonStyle}" Tag="Setting" Click="ButtnNavigate_Click">
                         <StackPanel Orientation="Horizontal">
                             <TextBlock Text="⚙️" FontSize="18" Margin="0,0,8,0"/>
                             <TextBlock Text="Setting" VerticalAlignment="Center"/>
