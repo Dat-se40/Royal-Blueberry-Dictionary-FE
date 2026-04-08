@@ -1,4 +1,5 @@
 ﻿using BlueBerryDictionary.ViewModels;
+using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -51,11 +52,15 @@ namespace Royal_Blueberry_Dictionary
             // Views
             serviceCollection.AddTransient<DetailsPage>();
             serviceCollection.AddTransient<HistoryPage>();
+            serviceCollection.AddTransient<FavouriteWordsPage>();
+            serviceCollection.AddTransient<MyWordsPage>();
             serviceCollection.AddTransient<HomePage>(); 
             // View Models
             serviceCollection.AddScoped<DetailsPageViewModel>();  
             serviceCollection.AddScoped<SearchViewModel >();
             serviceCollection.AddScoped<HistoryPageViewModel>();
+            serviceCollection.AddScoped<FavouriteWordsPageViewModel>();
+            serviceCollection.AddScoped<MyWordsPageViewModel>();
             serviceProvider = serviceCollection.BuildServiceProvider();
             
 
