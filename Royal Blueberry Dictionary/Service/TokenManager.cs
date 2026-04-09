@@ -1,33 +1,21 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace Royal_Blueberry_Dictionary.Service
 {
-    public static class TokenManager
+    public class TokenManager
     {
-        private static string _jwtToken;
-
-        // Lưu vào RAM (App tắt là mất đăng nhập - dễ làm nhất)
-        public static void SaveToken(string token)
+        public static void SaveTokens(string accessToken, string refreshToken)
         {
-            _jwtToken = token;
+            File.WriteAllText("access_token.bin", accessToken);
+            File.WriteAllText("refresh_token.bin", refreshToken); 
         }
-
-        public static string GetToken()
-        {
-            return _jwtToken;
-        }
-
-        public static void ClearToken()
-        {
-            _jwtToken = null;
-        }
-
-        // Lưu ý pro: Nếu bạn đang làm WPF và muốn tắt app mở lại vẫn CÒN đăng nhập, 
-        // hãy lưu vào Properties.Settings.Default thay vì biến static.
-        // Nếu làm MAUI, hãy dùng SecureStorage.SetAsync("jwt", token).
+        public static string GetAccessToken() => File.Exists("access_token.bin") ? File.ReadAllText("access_token.bin") : null;
+        public static string GetRefreshToken() => File.Exists("refresh_token.bin") ? File.ReadAllText("refresh_token.bin") : null;
     }
 }

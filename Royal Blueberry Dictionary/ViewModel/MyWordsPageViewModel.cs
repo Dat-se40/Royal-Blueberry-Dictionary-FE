@@ -37,7 +37,7 @@ namespace Royal_Blueberry_Dictionary.ViewModel
 
     public partial class MyWordsPageViewModel : ObservableObject, INavigationAware
     {
-        private const string UserId = "GUEST";
+        private string UserId => App.UserId; 
 
         private readonly TagService _tagService;
         private readonly WordService _wordService;

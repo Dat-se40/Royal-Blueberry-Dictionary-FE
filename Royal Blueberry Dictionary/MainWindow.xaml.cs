@@ -42,6 +42,7 @@ namespace Royal_Blueberry_Dictionary
             navigationService.SetMainFrame(MainFrame);
             this.DataContext = searchViewModel;
             navigationService.NavigateTo<HomePage, SearchViewModel>("hello");
+; 
         }
         /// <summary>
         /// Toggle Sidebar (Hamburger button)
@@ -111,6 +112,13 @@ namespace Royal_Blueberry_Dictionary
         private void ForwardBtn_Click_1(object sender, RoutedEventArgs e)
         {
             navigationService.GoForward();
+        }
+
+        private async void ReloadBtn_Click(object sender, RoutedEventArgs e)
+        {
+
+            var auth = App.serviceProvider.GetRequiredService<AuthService>();
+           await auth.Login();
         }
     }
 }

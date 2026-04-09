@@ -20,7 +20,7 @@ namespace Royal_Blueberry_Dictionary.Service
         }
         public async Task<WordEntry> GetWordEntryByDetail(WordDetail detail, int meaningIdx, int defIdx) 
         {
-            var newEntry  = await WordEntryRepository.GetByWordAndMeaningAsync("GUEST",detail.Word, meaningIdx); 
+            var newEntry  = await WordEntryRepository.GetByWordAndMeaningAsync(App.UserId,detail.Word, meaningIdx); 
             
             try
             {
@@ -75,13 +75,13 @@ namespace Royal_Blueberry_Dictionary.Service
         }
 
         /// <summary>Danh sách từ đã gắn cờ yêu thích trong DB (theo user).</summary>
-        public async Task<List<WordEntry>> GetFavoritedWordsAsync(string userId = "GUEST") =>
-            await WordEntryRepository.GetFavoritedAsync(userId);
+        public async Task<List<WordEntry>> GetFavoritedWordsAsync() =>
+            await WordEntryRepository.GetFavoritedAsync(App.UserId);
 
         /// <summary>Bỏ yêu thích toàn bộ từ (không dùng toggle của <see cref="FavoriteAsync"/>).</summary>
-        public async Task ClearAllFavoritesAsync(string userId = "GUEST")
+        public async Task ClearAllFavoritesAsync()
         {
-            var list = await WordEntryRepository.GetFavoritedAsync(userId);
+            var list = await WordEntryRepository.GetFavoritedAsync(App.UserId);
             foreach (var e in list)
             {
                 e.IsFavorited = false;

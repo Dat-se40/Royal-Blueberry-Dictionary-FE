@@ -110,10 +110,9 @@ namespace Royal_Blueberry_Dictionary.Service.ApiClient
         }
         private void AttachBearerToken()
         {
-            var token = TokenManager.GetToken();
+            var token = TokenManager.GetAccessToken();
             if (!string.IsNullOrEmpty(token))
             {
-                // Cú pháp chuẩn của JWT là "Bearer chuỗi_token"
                 httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
             }
             else

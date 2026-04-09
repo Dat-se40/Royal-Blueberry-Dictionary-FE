@@ -23,7 +23,18 @@ namespace Royal_Blueberry_Dictionary
     public partial class App : Application
     {
         public static ServiceProvider serviceProvider { get; private set; }
-
+        static string userId = "GUEST"; 
+        public static string UserId { 
+            get 
+            {
+                return userId;
+            }
+            set 
+            {
+                if (value != null && value != "") userId = value;
+                else userId = "GUEST"; // mặc định
+            }
+        }
         protected override void OnStartup(StartupEventArgs e)
         {
             base.OnStartup(e);
@@ -51,7 +62,7 @@ namespace Royal_Blueberry_Dictionary
             serviceCollection.AddScoped<Service.WordService>();
             serviceCollection.AddSingleton<Service.ThemeManager>();
             serviceCollection.AddSingleton(provider => Service.SettingsService.Instance);
-
+            serviceCollection.AddSingleton<Service.AuthService>(); 
             // Views
             serviceCollection.AddTransient<DetailsPage>();
             serviceCollection.AddTransient<HistoryPage>();
@@ -59,6 +70,7 @@ namespace Royal_Blueberry_Dictionary
             serviceCollection.AddTransient<MyWordsPage>();
             serviceCollection.AddTransient<HomePage>();
             serviceCollection.AddTransient<SettingsPage>(); 
+
             // View Models
             serviceCollection.AddScoped<DetailsPageViewModel>();  
             serviceCollection.AddScoped<SearchViewModel >();

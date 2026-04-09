@@ -60,7 +60,7 @@
                     <Button Grid.Column="3" x:Name="ReloadBtn"
                             Style="{StaticResource NavButtonStyle}"
                             Margin="0,0,20,0"
-                            Foreground="{DynamicResource MainBackground}">
+                            Foreground="{DynamicResource MainBackground}" Click="ReloadBtn_Click">
                         <TextBlock Text="🔄" FontSize="16"/>
                     </Button>
 

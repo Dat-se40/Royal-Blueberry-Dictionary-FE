@@ -1,47 +1,67 @@
-﻿using System;
+﻿using Royal_Blueberry_Dictionary.Model;
+using Royal_Blueberry_Dictionary.Model.Google;
+using Royal_Blueberry_Dictionary.Service.ApiClient;
+using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
+using System.Net;
 using System.Net.Http;
 using System.Net.Http.Json;
 using System.Text;
 using System.Threading.Tasks;
+using System.Web;
 
 namespace Royal_Blueberry_Dictionary.Service
 {
     public class AuthService
     {
-        private readonly HttpClient _httpClient;
-
-        // Tạo sẵn 2 class nhỏ để hứng dữ liệu
-        public class LoginRequest { public string email { get; set; } public string password { get; set; } }
-        public class AuthResponse { public string token { get; set; } /* có thể có refreshToken, userInfo... */ }
-
-        public AuthService()
+        IBackendApiClient backendApiClient;
+        User currentUser; 
+        public AuthService(IBackendApiClient backend) 
         {
-            _httpClient = new HttpClient { BaseAddress = new Uri("http://localhost:8080/api/auth/") };
+            backendApiClient = backend; 
         }
-
-        public async Task<bool> LoginAsync(string email, string password)
+        public async Task Login()
         {
-            var request = new LoginRequest { email = email, password = password };
+            var re = await backendApiClient.GetAsync<GoogleLoginResponse>(@"auth/google/url");
 
-            // Gọi API Login của Backend
-            var response = await _httpClient.PostAsJsonAsync("login", request);
+            HttpListener listener = new HttpListener();
+            listener.Prefixes.Add(re.redirectUri + @"/");
+            listener.Start();
 
-            if (response.IsSuccessStatusCode)
+            Process.Start(new ProcessStartInfo(re.url) { UseShellExecute = true });
+
+            HttpListenerContext context = await listener.GetContextAsync();
+            var request = context.Request;
+
+            // Lấy param từ URL
+            string code = request.QueryString["code"];
+            string state = request.QueryString["state"]; 
+            // Trả lời cho trình duyệt một câu "Done!"
+            byte[] buffer = System.Text.Encoding.UTF8.GetBytes("Login successful! You can close this tab.");
+            context.Response.ContentLength64 = buffer.Length;
+            context.Response.OutputStream.Write(buffer, 0, buffer.Length);
+            listener.Stop();
+            var login = await backendApiClient.PostAsync<AuthResponse>(@"auth/google", new GoogleLoginRequest() 
             {
-                var authData = await response.Content.ReadFromJsonAsync<AuthResponse>();
-
-                // LẤY ĐƯỢC TOKEN -> CẤT ĐI (Xem Bước 2)
-                TokenManager.SaveToken(authData.token);
-                return true;
-            }
-            return false;
+                code = code , state = state
+            });
+            UpdateUser(login); 
         }
-
-        public void Logout()
+        public async Task RefreshToken()
         {
-            TokenManager.ClearToken();
+            var auth = await backendApiClient.PostAsync<AuthResponse>(@"auth/refresh_token",TokenManager.GetRefreshToken());
+            if (auth != null) UpdateUser(auth);
         }
+
+        private void UpdateUser(AuthResponse auth)
+        {
+            TokenManager.SaveTokens(auth.AccessToken, auth.RefreshToken);
+            currentUser = auth.User;
+            App.UserId = currentUser.Id;    
+        }
+        public User CurrentUser => currentUser; 
+
     }
 }
