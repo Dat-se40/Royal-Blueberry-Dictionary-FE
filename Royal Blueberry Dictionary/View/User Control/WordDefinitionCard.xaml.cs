@@ -147,8 +147,9 @@ namespace Royal_Blueberry_Dictionary.View.User_Control
             this.PartOfSpeech = wordEntry.PartOfSpeech ?? "NULL";   
             this.Definition = wordEntry.Definition ?? "NULL";   
             this.Region = "US";
-            this.Example1 = wordEntry.Example ?? string.Empty;    
-            this.Example2 = wordEntry.Note ?? string.Empty;
+            //this.Example1 = wordEntry.Example ?? string.Empty;    
+            //this.Example2 = wordEntry.Note ?? string.Empty;
+            UpdateExampleSection(wordEntry.Example,wordEntry.Note);
         }
         // =========================
         // UI Helper Methods
@@ -192,13 +193,13 @@ namespace Royal_Blueberry_Dictionary.View.User_Control
 
         public void SetExample1Label(string text)
         {
-            if (Example1Label != null)
+            if (Example1Label != null && Example1 != "")
                 Example1Label.Text = text;
         }
 
         public void SetExample2Label(string text)
         {
-            if (Example2Label != null)
+            if (Example2Label != null && Example2 != "")
                 Example2Label.Text = text;
         }
 
@@ -227,7 +228,7 @@ namespace Royal_Blueberry_Dictionary.View.User_Control
         {
             if (d is WordDefinitionCard card && e.NewValue is WordEntry word)
             {
-                card.LoadData(word); // Tận dụng hàm LoadData David đã viết
+                card.LoadData(word);
             }
         }
 

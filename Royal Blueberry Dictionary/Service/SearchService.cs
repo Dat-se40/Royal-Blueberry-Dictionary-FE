@@ -195,7 +195,7 @@ using Royal_Blueberry_Dictionary.Service.ApiClient;
             await dbContext.SaveChangesAsync();
         }
         // Cải thiện hàm này với các từ bị trỗng
-            private bool IsValidWordDetail(WordDetail wordDetail) 
+            public bool IsValidWordDetail(WordDetail wordDetail) 
             {
                 return wordDetail.Word != string.Empty &&wordDetail.Meanings != null && wordDetail.Meanings.Count != 0;
             }

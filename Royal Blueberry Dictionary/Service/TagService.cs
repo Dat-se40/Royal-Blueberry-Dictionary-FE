@@ -106,7 +106,11 @@ namespace Royal_Blueberry_Dictionary.Service
 
             await _tagRepo.SaveChangesAsync();
         }
-
+        public async Task<List<Tag>> GetAllTagsAsync(string userID = "GUEST") 
+        {
+            var re = await _tagRepo.GetAllTagsAsync(userID);
+            return re; 
+        } 
         #endregion
 
         #region Business Logic (UI Helpers)
