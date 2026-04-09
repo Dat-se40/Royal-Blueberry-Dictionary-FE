@@ -17,7 +17,8 @@ namespace Royal_Blueberry_Dictionary.Service
     public class AuthService
     {
         IBackendApiClient backendApiClient;
-        User currentUser; 
+        public User? CurrentUser => currentUser;
+        User? currentUser; 
         public AuthService(IBackendApiClient backend) 
         {
             backendApiClient = backend; 
@@ -57,11 +58,19 @@ namespace Royal_Blueberry_Dictionary.Service
 
         private void UpdateUser(AuthResponse auth)
         {
-            TokenManager.SaveTokens(auth.AccessToken, auth.RefreshToken);
-            currentUser = auth.User;
-            App.UserId = currentUser.Id;    
+            if (auth != null)
+            {
+                TokenManager.SaveTokens(auth.AccessToken, auth.RefreshToken);
+                currentUser = auth.User;
+                App.UserId = currentUser.Id;
+            }
         }
-        public User CurrentUser => currentUser; 
+        public void Logout() 
+        {
+             TokenManager.ClearToken();
+            App.UserId = "";
+            currentUser = null;
+        }
 
     }
 }
