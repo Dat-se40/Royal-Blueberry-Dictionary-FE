@@ -1,15 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
 namespace Royal_Blueberry_Dictionary.Config
 {
-    public  class ApiSettings
+    public class ApiSettings
     {
-        public string BaseUrl { get; set; }
+        public string BaseUrl { get; set; } = string.Empty;
+
         public int Timeout { get; set; }
-        public int cachedExpirationDate {get; set; }    
+
+        public int cachedExpirationDate { get; set; }
     }
 }
