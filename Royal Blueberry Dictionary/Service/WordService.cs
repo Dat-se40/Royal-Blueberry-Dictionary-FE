@@ -1,4 +1,4 @@
-﻿using BlueBerryDictionary.Helpers;
+﻿    using BlueBerryDictionary.Helpers;
 using Microsoft.EntityFrameworkCore.Migrations.Operations;
 using Royal_Blueberry_Dictionary.Database;
 using Royal_Blueberry_Dictionary.Model;

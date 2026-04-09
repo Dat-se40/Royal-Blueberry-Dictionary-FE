@@ -79,8 +79,8 @@ namespace Royal_Blueberry_Dictionary.Service
         /// </summary>
         public async Task FetchEverythingFromServerAsync(string userId)
         {
-            // 1. Tải Tags
-            var remoteTags = await _apiClient.GetAsync<List<Tag>>($"tags/user/{userId}");
+            // Thay "tags/user/{userId}" bằng "tags"
+            var remoteTags = await _apiClient.GetAsync<List<Tag>>("tags");
             if (remoteTags != null)
             {
                 foreach (var rTag in remoteTags)
@@ -93,8 +93,8 @@ namespace Royal_Blueberry_Dictionary.Service
                 }
             }
 
-            // 2. Tải Relations (Meta)
-            var remoteRels = await _apiClient.GetAsync<List<WordTagRelation>>($"relations/user/{userId}");
+            // Thay "relations/user/{userId}" bằng "relations"
+            var remoteRels = await _apiClient.GetAsync<List<WordTagRelation>>("relations");
             if (remoteRels != null)
             {
                 foreach (var rRel in remoteRels)
