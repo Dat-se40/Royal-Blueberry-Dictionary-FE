@@ -199,10 +199,98 @@ namespace Royal_Blueberry_Dictionary.ViewModel
 
         #endregion
 
-        #region Help & Support Commands (Stubs)
+        #region Help & Support Commands
 
-        // TODO: Implement when dialogs are available
+        /// <summary>
+        /// Mở dialog FAQ
+        /// </summary>
+        [RelayCommand]
+        private void OpenFAQ()
+        {
+            var dialog = new FAQDialog
+            {
+                Owner = Application.Current.MainWindow
+            };
+            dialog.ShowDialog();
+        }
 
+        /// <summary>
+        /// Mở dialog Contact Support
+        /// </summary>
+        [RelayCommand]
+        private void ContactSupport()
+        {
+            var dialog = new ContactDialog
+            {
+                Owner = Application.Current.MainWindow
+            };
+            dialog.ShowDialog();
+        }
+
+        /// <summary>
+        /// Mở dialog About
+        /// </summary>
+        [RelayCommand]
+        private void ShowAbout()
+        {
+            var dialog = new AboutDialog
+            {
+                Owner = Application.Current.MainWindow
+            };
+            dialog.ShowDialog();
+        }
+
+        /// <summary>
+        /// Mở dialog Terms of Service
+        /// </summary>
+        [RelayCommand]
+        private void ShowTerms()
+        {
+            var dialog = new TermsDialog
+            {
+                Owner = Application.Current.MainWindow
+            };
+            dialog.ShowDialog();
+        }
+
+        /// <summary>
+        /// Mở dialog Licenses
+        /// </summary>
+        [RelayCommand]
+        private void ShowLicenses()
+        {
+            var dialog = new LicensesDialog
+            {
+                Owner = Application.Current.MainWindow
+            };
+            dialog.ShowDialog();
+        }
+        /// <summary>
+        /// Mở dialog Rate App
+        /// </summary>
+        [RelayCommand]
+        private void RateApp()
+        {
+            var dialog = new RateAppDialog
+            {
+                Owner = Application.Current.MainWindow
+            };
+            dialog.ShowDialog();
+        }
+
+        /// <summary>
+        /// Mở dialog Report Bug
+        /// </summary>
+        [RelayCommand]
+        private void ReportBug()
+        {
+            var dialog = new ReportBugDialog
+            {
+                Owner = Application.Current.MainWindow
+            };
+            dialog.ShowDialog();
+        }
         #endregion
+
     }
 }

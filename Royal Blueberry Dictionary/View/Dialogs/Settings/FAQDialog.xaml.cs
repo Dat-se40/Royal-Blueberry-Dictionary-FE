@@ -1,0 +1,341 @@
+﻿using System;
+using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Input;
+using System.Windows.Media;
+
+namespace Royal_Blueberry_Dictionary.View.Dialogs.Settings
+{
+    /// <summary>
+    /// FAQ Dialog - Hiển thị câu hỏi thường gặp với tab navigation
+    /// </summary>
+    public partial class FAQDialog : Window
+    {
+        #region Constructor
+
+        public FAQDialog()
+        {
+            InitializeComponent();
+            LoadSearchFAQ(); // Load tab mặc định
+            ApplyGlobalFont();
+        }
+
+        #endregion
+
+        #region Event Handlers
+
+        /// <summary>
+        /// Đóng dialog
+        /// </summary>
+        private void Close_Click(object sender, RoutedEventArgs e)
+        {
+            this.Close();
+        }
+
+        /// <summary>
+        /// Cho phép kéo window bằng header
+        /// </summary>
+        private void Header_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            if (e.ChangedButton == MouseButton.Left)
+            {
+                this.DragMove();
+            }
+        }
+
+        /// <summary>
+        /// Xử lý khi user click vào tab
+        /// </summary>
+        private void Tab_Click(object sender, RoutedEventArgs e)
+        {
+            if (sender is Button button && button.Tag is string tag)
+            {
+                // Reset all tabs
+                foreach (var child in TabsPanel.Children)
+                {
+                    if (child is Button btn)
+                    {
+                        btn.Style = (Style)FindResource("TabButtonStyle");
+                    }
+                }
+
+                // Set active tab
+                button.Style = (Style)FindResource("ActiveTabStyle");
+
+                // Load content
+                LoadContent(tag);
+            }
+        }
+
+        #endregion
+
+        #region Content Loading
+
+        /// <summary>
+        /// Load nội dung theo tag
+        /// </summary>
+        private void LoadContent(string tag)
+        {
+            ContentPanel.Children.Clear();
+
+            switch (tag)
+            {
+                case "search":
+                    LoadSearchFAQ();
+                    break;
+                case "manage":
+                    LoadManageFAQ();
+                    break;
+                case "theme":
+                    LoadThemeFAQ();
+                    break;
+                case "sync":
+                    LoadSyncFAQ();
+                    break;
+                case "bugs":
+                    LoadBugsFAQ();
+                    break;
+            }
+        }
+
+        #endregion
+
+        #region FAQ Content Methods
+
+        // ========== SEARCH FAQ ==========
+        private void LoadSearchFAQ()
+        {
+            AddSection("🔍 ABOUT LOOKUP");
+
+            AddQuestion("Q1: Why can't I find a word?");
+            AddAnswer("There are several reasons why a word may not be found:");
+            AddBullet("✅ Check spelling – the app will suggest similar words");
+            AddBullet("✅ Try a simpler base word (e.g., \"running\" → \"run\")");
+            AddBullet("✅ Check your Internet connection (for online lookup)");
+            AddBullet("✅ Some rare words may not be available in the database");
+
+            AddQuestion("Q2: Why can't audio be played?");
+            AddAnswer("Please check the following:"); AddBullet("✅ Check your speaker/headphones");
+            AddBullet("✅ Check your Internet connection (audio is streamed from the server)");
+            AddBullet("✅ Try playing again or restart the app");
+            AddBullet("✅ Some rare words may not have audio");
+
+            AddQuestion("Q3: How does offline mode work?");
+            AddAnswer("Downloaded words are stored at:");
+            AddAnswer("C:\\Users\\[YourName]\\AppData\\Local\\RoyalBlueberryDictionary\\Data\\");
+            AddAnswer("Only downloaded words can be searched offline. The entire dictionary is not downloaded because it is too large.");
+        }
+
+        // ========== MANAGE FAQ ==========
+        private void LoadManageFAQ()
+        {
+            AddSection("📚 ABOUT VOCABULARY MANAGEMENT");
+
+            AddQuestion("Q4: Is there a limit to the number of words in My Words?");
+            AddAnswer("No limit! However, the app may become slower if you have more than 10,000 words.");
+            AddAnswer("Recommendation: Use tags to organize words instead of saving too many.");
+
+            AddQuestion("Q5: How can I back up my data?");
+            AddAnswer("Method 1: Sign in with Google (Recommended)");
+            AddBullet("• Data is automatically backed up to Google Drive");
+            AddBullet("• The safest option!");
+            AddAnswer("Method 2: Manual copy");
+            AddBullet("• Go to the folder: C:\\Users\\[YourName]\\AppData\\Local\\RoyalBlueberryDictionary\\");
+            AddBullet("• Copy the entire Data/ folder");
+            AddBullet("• Paste it to another device using the same path");
+
+            AddQuestion("Q6: I accidentally deleted a word. Can it be restored?");
+            AddAnswer("❌ There is no undo feature");
+            AddAnswer("✅ If you have synced with Google Drive:");
+            AddBullet("1. Sign out");
+            AddBullet("2. Sign in again");
+            AddBullet("3. Choose \"Keep cloud data\"");
+
+            AddQuestion("Q7: Is there a limit to the number of tags?");
+            AddAnswer("There is no limit to the number of tags. Each word can have multiple tags.");
+            AddAnswer("Recommendation: Create 5–10 main tags (e.g., IELTS, TOEIC, Daily).");
+        }
+
+        // ========== THEME FAQ ==========
+        private void LoadThemeFAQ()
+        {
+            AddSection("🎨 ABOUT INTERFACE");
+
+            AddQuestion("Q8: Is the custom theme saved when the app is closed?");
+            AddAnswer("✅ Yes, it is automatically saved in settings.json");
+            AddAnswer("✅ The theme is reloaded when the app restarts");
+
+            AddQuestion("Q9: How can I reset to the default colors?");
+            AddAnswer("1. Go to Settings");
+            AddAnswer("2. Click \"Color Theme\" → \"Default\"");
+            AddAnswer("3. Confirm \"Yes\"");
+
+            AddQuestion("Q10: Does the Light/Dark toggle affect custom themes?");
+            AddAnswer("✅ Yes! Custom themes automatically adapt to Dark mode");
+            AddAnswer("Colors will be darkened to match");
+
+            AddQuestion("Q11: Is the font applied across the entire app?");
+            AddAnswer("✅ Yes, it applies to all text in the app");
+            AddAnswer("⚠️ Some icons (emojis) are not affected");
+        }
+
+        // ========== SYNC FAQ ==========
+        private void LoadSyncFAQ()
+        {
+            AddSection("☁️ ABOUT SYNC");
+
+            AddQuestion("Q12: How long does syncing take?");
+            AddAnswer("First time (data merge): 10–30 seconds (depending on the number of words)");
+            AddAnswer("Next times (incremental sync): 1–5 seconds");
+            AddAnswer("Uploading 1 new word: < 1 second");
+
+            AddQuestion("Q13: Where is the data stored on Google Drive?");
+            AddAnswer("Folder: RoyalBlueberryDictionary/Users/[email]/");
+            AddAnswer("Files:");
+            AddBullet("• MyWords.json (vocabulary)");
+            AddBullet("• Tags.json (tags)");
+            AddBullet("• Settings.json (settings)");
+
+            AddQuestion("Q14: Can I use multiple devices?");
+            AddAnswer("✅ Yes! Sign in with the same Google account");
+            AddAnswer("Data is automatically synced across devices");
+            AddAnswer("⚠️ It is recommended to use only one device at a time (to avoid conflicts)");
+
+            AddQuestion("Q15: Can I use the app without Internet?");
+            AddAnswer("✅ You can look up words (if they are downloaded for offline use)");
+            AddAnswer("✅ View My Words, History, and Favorites");
+            AddAnswer("❌ Sync is not available");
+            AddAnswer("❌ Online word lookup is not available");
+
+            AddQuestion("Q16: What should I do if I get a \"Sync failed\" error?");
+            AddAnswer("Method 1: Check your connection");
+            AddBullet("• Open a browser and try accessing google.com");
+            AddBullet("• Check if a firewall is blocking the app");
+            AddAnswer("Method 2: Sign out and sign in again");
+            AddBullet("1. Sign out");
+            AddBullet("2. Restart the app");
+            AddBullet("3. Sign in again");
+            AddBullet("4. Choose \"Merge data\"");
+        }
+
+        // ========== BUGS FAQ ==========
+        private void LoadBugsFAQ()
+        {
+            AddSection("🐛 TECHNICAL ISSUES");
+
+            AddQuestion("Q17: The app doesn't open or closes immediately");
+            AddBullet("• Restart your PC");
+            AddBullet("• Reinstall Royal Blueberry Dictionary if it still fails");
+
+            AddQuestion("Q18: The app is slow or laggy");
+            AddBullet("• Too many saved words (>10,000)");
+            AddBullet("• Delete old words or tags");
+            AddBullet("• Use filters instead of loading all");
+            AddBullet("• Restart the app after cleaning");
+
+            AddQuestion("Q19: Cannot sign in with Google");
+            AddBullet("• Ensure default browser is Chrome, Edge, or Firefox");
+            AddBullet("• Sign in to Google in that browser first");
+            AddBullet("• Clear Google cookies");
+
+            AddQuestion("Q20: Icons or images do not appear");
+            AddBullet("• Do not delete Resources/ files");
+            AddBullet("• Reinstall the app if visuals are missing");
+            AddBullet("• If colors look wrong, change theme in Settings");
+
+            AddQuestion("Q21: No sound or audio not playing");
+            AddBullet("• Check speaker or headphone");
+            AddBullet("• Ensure volume is not muted");
+            AddBullet("• Verify Internet connection");
+            AddBullet("• Some words have no audio");
+            AddBullet("• Restart app to reset the audio player");
+
+            AddQuestion("Q22: Found a bug or something not working?");
+            AddBullet("• Report at: https://github.com/Dat-se40/BlueBerry-Dictionary/issues");
+            AddBullet("• Or email: labotanique117@gmail.com");
+        }
+
+        #endregion
+
+        #region Helper Methods
+
+        /// <summary>
+        /// Thêm section header
+        /// </summary>
+        private void AddSection(string text)
+        {
+            var textBlock = new TextBlock
+            {
+                Text = text,
+                Style = (Style)FindResource("SectionHeaderStyle")
+            };
+            ContentPanel.Children.Add(textBlock);
+        }
+
+        /// <summary>
+        /// Thêm câu hỏi
+        /// </summary>
+        private void AddQuestion(string text)
+        {
+            var textBlock = new TextBlock
+            {
+                Text = text,
+                Style = (Style)FindResource("QuestionStyle")
+            };
+            ContentPanel.Children.Add(textBlock);
+        }
+
+        /// <summary>
+        /// Thêm câu trả lời
+        /// </summary>
+        private void AddAnswer(string text)
+        {
+            var textBlock = new TextBlock
+            {
+                Text = text,
+                Style = (Style)FindResource("AnswerStyle")
+            };
+            ContentPanel.Children.Add(textBlock);
+        }
+
+        /// <summary>
+        /// Thêm bullet point
+        /// </summary>
+        private void AddBullet(string text)
+        {
+            var textBlock = new TextBlock
+            {
+                Text = text,
+                Style = (Style)FindResource("BulletStyle")
+            };
+            ContentPanel.Children.Add(textBlock);
+        }
+
+        /// <summary>
+        /// Apply font từ App.Current.Resources
+        /// </summary>
+        private void ApplyGlobalFont()
+        {
+            try
+            {
+                if (Application.Current.Resources.Contains("AppFontFamily"))
+                {
+                    this.FontFamily = (FontFamily)Application.Current.Resources["AppFontFamily"];
+                }
+
+                if (Application.Current.Resources.Contains("AppFontSize"))
+                {
+                    this.FontSize = (double)Application.Current.Resources["AppFontSize"];
+                }
+
+                System.Diagnostics.Debug.WriteLine($"✅ Applied font to {this.GetType().Name}");
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"⚠️ Apply font to dialog error: {ex.Message}");
+            }
+        }
+
+        #endregion
+    }
+}

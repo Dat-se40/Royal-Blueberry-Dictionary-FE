@@ -159,7 +159,6 @@
                     </StackPanel>
 
                     <!-- User Guide -->
-                    <!-- TODO: Bind Command when UserGuideDialog is available -->
                     <Border BorderBrush="{DynamicResource BorderColor}"
                             BorderThickness="0,0,0,1"
                             Padding="0,15">
@@ -217,13 +216,14 @@
 
                             <Button Grid.Column="1"
                                     Style="{StaticResource SecondaryButtonStyle}"
-                                    IsEnabled="False"
-                                    ToolTip="Coming soon">
+                                    Command="{Binding OpenFAQCommand}"
+                                    IsEnabled="True">
                                 <StackPanel Orientation="Horizontal">
                                     <TextBlock Text="❓" FontSize="16" Margin="0,0,8,0" />
                                     <TextBlock Text="View" />
                                 </StackPanel>
                             </Button>
+
                         </Grid>
                     </Border>
 
@@ -251,8 +251,8 @@
 
                             <Button Grid.Column="1"
                                     Style="{StaticResource SecondaryButtonStyle}"
-                                    IsEnabled="False"
-                                    ToolTip="Coming soon">
+                                    Command="{Binding ContactSupportCommand}"
+                                    IsEnabled="True">
                                 <StackPanel Orientation="Horizontal">
                                     <TextBlock Text="📧" FontSize="16" Margin="0,0,8,0" />
                                     <TextBlock Text="Contact" />
@@ -285,8 +285,8 @@
 
                             <Button Grid.Column="1"
                                     Style="{StaticResource SecondaryButtonStyle}"
-                                    IsEnabled="False"
-                                    ToolTip="Coming soon">
+                                    Command="{Binding ReportBugCommand}"
+                                    IsEnabled="True">
                                 <StackPanel Orientation="Horizontal">
                                     <TextBlock Text="🐛" FontSize="16" Margin="0,0,8,0" />
                                     <TextBlock Text="Report a Bug" />
@@ -319,8 +319,8 @@
 
                             <Button Grid.Column="1"
                                     Style="{StaticResource SecondaryButtonStyle}"
-                                    IsEnabled="False"
-                                    ToolTip="Coming soon">
+                                    Command="{Binding RateAppCommand}"
+                                    IsEnabled="True">
                                 <StackPanel Orientation="Horizontal">
                                     <TextBlock Text="⭐" FontSize="16" Margin="0,0,8,0" />
                                     <TextBlock Text="Rating" />
@@ -353,8 +353,8 @@
 
                             <Button Grid.Column="1"
                                     Style="{StaticResource SecondaryButtonStyle}"
-                                    IsEnabled="False"
-                                    ToolTip="Coming soon">
+                                    Command="{Binding ShowAboutCommand}"
+                                    IsEnabled="True">
                                 <StackPanel Orientation="Horizontal">
                                     <TextBlock Text="ℹ️" FontSize="16" Margin="0,0,8,0" />
                                     <TextBlock Text="View" />
@@ -387,8 +387,8 @@
 
                             <Button Grid.Column="1"
                                     Style="{StaticResource SecondaryButtonStyle}"
-                                    IsEnabled="False"
-                                    ToolTip="Coming soon">
+                                    Command="{Binding ShowTermsCommand}"
+                                    IsEnabled="True">
                                 <StackPanel Orientation="Horizontal">
                                     <TextBlock Text="📄" FontSize="16" Margin="0,0,8,0" />
                                     <TextBlock Text="View" />
@@ -419,8 +419,8 @@
 
                             <Button Grid.Column="1"
                                     Style="{StaticResource SecondaryButtonStyle}"
-                                    IsEnabled="False"
-                                    ToolTip="Coming soon">
+                                    Command="{Binding ShowLicensesCommand}"
+                                    IsEnabled="True">
                                 <StackPanel Orientation="Horizontal">
                                     <TextBlock Text="⚖️" FontSize="16" Margin="0,0,8,0" />
                                     <TextBlock Text="View" />
