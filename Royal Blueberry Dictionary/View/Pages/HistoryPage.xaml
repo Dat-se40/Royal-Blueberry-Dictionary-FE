@@ -30,39 +30,42 @@
                 <Border.Effect>
                     <DropShadowEffect BlurRadius="16" ShadowDepth="4" Opacity="0.1" Color="Black"/>
                 </Border.Effect>
-                <Grid>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*"/>
-                        <ColumnDefinition Width="Auto"/>
-                    </Grid.ColumnDefinitions>
+                <StackPanel>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
 
-                    <!-- Title Section -->
-                    <StackPanel Grid.Column="0" Orientation="Horizontal">
-                        <TextBlock Text="🕐"
+                        <!-- Title Section -->
+                        <StackPanel Grid.Column="0" Orientation="Horizontal">
+                            <TextBlock Text="🕐"
                                    FontSize="48"
                                    VerticalAlignment="Center"
                                    Foreground="{DynamicResource TextColor}"
                                    Margin="0,-8,15,0"/>
-                        <TextBlock Text="History"
+                            <TextBlock Text="History"
                                    FontSize="40"
                                    FontWeight="Bold"
                                    Foreground="{DynamicResource TextColor}"
                                    VerticalAlignment="Center"
                                    Margin="0,-3,0,0"/>
-                    </StackPanel>
-
-                    <!-- [NOTE] Clear All Button: Command đã bị xóa -->
-                    <!-- TODO: Gắn lại Command="{Binding ClearAllCommand}" khi ViewModel sẵn sàng -->
-                    <Button Grid.Column="1"
-                            Style="{StaticResource ClearButtonStyle}"
-                            VerticalAlignment="Center">
-                        <StackPanel Orientation="Horizontal">
-                            <TextBlock Text="🗑️" FontSize="16" Margin="0,0,8,0"/>
-                            <TextBlock Text="Delete All"/>
                         </StackPanel>
-                    </Button>
 
-                </Grid>
+                        <!-- [NOTE] Clear All Button: Command đã bị xóa -->
+                        <!-- TODO: Gắn lại Command="{Binding ClearAllCommand}" khi ViewModel sẵn sàng -->
+                        <Button Grid.Column="1"
+                            Style="{StaticResource ClearButtonStyle}"
+                            VerticalAlignment="Center"
+                            Command="{Binding ClearAllCommand}">
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Text="🗑️" FontSize="16" Margin="0,0,8,0"/>
+                                <TextBlock Text="Delete All"/>
+                            </StackPanel>
+                        </Button>
+
+                    </Grid>
+                </StackPanel>
             </Border>
 
             <!-- ================================= -->
@@ -70,6 +73,12 @@
             <!-- ================================= -->
             <StackPanel Grid.Row="1">
                 <ItemsControl ItemsSource="{Binding HistoryWords}">
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <!-- Chia thẻ theo lưới giống HistoryPage cũ -->
+                            <UniformGrid Columns="3" Margin="0,0,0,30"/>
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
                     <ItemsControl.ItemTemplate>
                         <DataTemplate>
                             <uc:WordDefinitionCard DataSource="{Binding}" Margin="0,0,0,10" 

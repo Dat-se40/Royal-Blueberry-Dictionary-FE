@@ -28,7 +28,7 @@ namespace Royal_Blueberry_Dictionary.ViewModel
 
         public void OnNavigatedFrom()
         {
-            throw new NotImplementedException();
+            // Nothing to cleanup for now
         }
 
         private async Task GetDataAsync()
@@ -56,13 +56,20 @@ namespace Royal_Blueberry_Dictionary.ViewModel
             _ = GetDataAsync(); 
         }
         [RelayCommand]
-        public void RemoveFromHistory(WordEntry? wordEntry)
+        public async Task RemoveFromHistory(WordEntry? wordEntry)
         {
             if (wordEntry == null) return;
-            _searchService.RemoveWordInCache(wordEntry.Word);
+            await _searchService.RemoveWordInCacheAsync(wordEntry.Word);
             HistoryWords.Remove(wordEntry);
 
             Console.WriteLine($"[History]: Đã xóa từ {wordEntry.Word}");
+        }
+        [RelayCommand]
+        public async Task ClearAll()
+        {
+            await _searchService.ClearHistoryAsync();
+            HistoryWords.Clear();
+            Console.WriteLine("[History]: Đã xóa toàn bộ lịch sử");
         }
         [RelayCommand]
         public async Task FavoriteAsync(WordEntry? wordEntry)
