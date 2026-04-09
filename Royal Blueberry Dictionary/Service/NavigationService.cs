@@ -67,6 +67,9 @@ namespace Royal_Blueberry_Dictionary.Service
                 case "MyWords":
                     NavigateTo<MyWordsPage, MyWordsPageViewModel>(null);
                     break;
+                case "Setting":
+                    NavigateTo<SettingsPage, SettingsPageViewModel>(null);
+                    break; 
             }
         }
     }

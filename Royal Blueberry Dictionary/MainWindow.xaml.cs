@@ -31,6 +31,9 @@ namespace Royal_Blueberry_Dictionary
         private SearchViewModel searchViewModel;
         private NavigationService navigationService;
         private HomePage homePage;
+        public bool CanGoBack  => MainFrame.CanGoBack;
+        public bool CanGoForward => MainFrame.CanGoForward;     
+
         public MainWindow()
         {
             InitializeComponent();
@@ -99,6 +102,15 @@ namespace Royal_Blueberry_Dictionary
         private void Overlay_MouseDown(object sender, MouseButtonEventArgs e)
         {
             CloseSidebar();
+        }
+        private void BackBtn_Click_1(object sender, RoutedEventArgs e)
+        {
+            navigationService.GoBack();
+        }
+
+        private void ForwardBtn_Click_1(object sender, RoutedEventArgs e)
+        {
+            navigationService.GoForward();
         }
     }
 }
