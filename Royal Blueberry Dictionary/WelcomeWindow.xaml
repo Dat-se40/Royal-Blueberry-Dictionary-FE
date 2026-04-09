@@ -1,0 +1,755 @@
+<Window x:Class="Royal_Blueberry_Dictionary.WelcomeWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:conv="clr-namespace:Royal_Blueberry_Dictionary.Converters"
+        xmlns:uc="clr-namespace:Royal_Blueberry_Dictionary.View.User_Control"
+        mc:Ignorable="d"
+        Title="Royal Blueberry Dictionary"
+        Width="1000"
+        Height="650"
+        WindowStartupLocation="CenterScreen"
+        WindowStyle="None"
+        ResizeMode="NoResize"
+        AllowsTransparency="True"
+        Background="Transparent"
+        UseLayoutRounding="True"
+        SnapsToDevicePixels="True">
+
+    <Window.Resources>
+        <DropShadowEffect x:Key="WelcomeWindowShadow"
+                          BlurRadius="28"
+                          ShadowDepth="0"
+                          Opacity="0.18"
+                          Color="#12285D" />
+
+        <conv:BoolToVisibilityConverter x:Key="BoolToVisibility" />
+        <conv:StringNullOrEmptyToVisibilityConverter x:Key="StringToVisibility" />
+
+        <Style x:Key="AuthTextBoxStyle" TargetType="TextBox">
+            <Setter Property="Background" Value="#FDFEFF" />
+            <Setter Property="Foreground" Value="{DynamicResource TextColor}" />
+            <Setter Property="BorderBrush" Value="#C8D7FF" />
+            <Setter Property="BorderThickness" Value="1.5" />
+            <Setter Property="Padding" Value="12,8" />
+            <Setter Property="FontSize" Value="12" />
+            <Setter Property="Margin" Value="0,5,0,0" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="TextBox">
+                        <Border x:Name="InputBorder"
+                                Background="{TemplateBinding Background}"
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                CornerRadius="12">
+                            <ScrollViewer x:Name="PART_ContentHost"
+                                          Margin="{TemplateBinding Padding}" />
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsKeyboardFocused" Value="True">
+                                <Setter TargetName="InputBorder" Property="BorderBrush" Value="{DynamicResource ButtonColor}" />
+                                <Setter TargetName="InputBorder" Property="Background" Value="#FFFFFF" />
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="AuthPasswordBoxStyle" TargetType="PasswordBox">
+            <Setter Property="Background" Value="#FDFEFF" />
+            <Setter Property="Foreground" Value="{DynamicResource TextColor}" />
+            <Setter Property="BorderBrush" Value="#C8D7FF" />
+            <Setter Property="BorderThickness" Value="1.5" />
+            <Setter Property="Padding" Value="12,8" />
+            <Setter Property="FontSize" Value="12" />
+            <Setter Property="Margin" Value="0,5,0,0" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="PasswordBox">
+                        <Border x:Name="InputBorder"
+                                Background="{TemplateBinding Background}"
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                CornerRadius="12">
+                            <ScrollViewer x:Name="PART_ContentHost"
+                                          Margin="{TemplateBinding Padding}" />
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsKeyboardFocused" Value="True">
+                                <Setter TargetName="InputBorder" Property="BorderBrush" Value="{DynamicResource ButtonColor}" />
+                                <Setter TargetName="InputBorder" Property="Background" Value="#FFFFFF" />
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="InfoPanelStyle" TargetType="Border">
+            <Setter Property="Padding" Value="12,11" />
+            <Setter Property="CornerRadius" Value="14" />
+            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="Background" Value="#16FFFFFF" />
+            <Setter Property="BorderBrush" Value="#24FFFFFF" />
+        </Style>
+
+        <Style x:Key="SectionLabelStyle" TargetType="TextBlock">
+            <Setter Property="FontWeight" Value="SemiBold" />
+            <Setter Property="Foreground" Value="{DynamicResource TextColor}" />
+            <Setter Property="FontSize" Value="12" />
+        </Style>
+
+        <Style x:Key="EntryActionButtonStyle" TargetType="Button">
+            <Setter Property="Height" Value="70" />
+            <Setter Property="Margin" Value="0,0,0,12" />
+            <Setter Property="Padding" Value="16,13" />
+            <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+            <Setter Property="VerticalContentAlignment" Value="Stretch" />
+            <Setter Property="BorderThickness" Value="1.5" />
+            <Setter Property="Background" Value="#FFFFFF" />
+            <Setter Property="BorderBrush" Value="#C6D6FF" />
+            <Setter Property="Cursor" Value="Hand" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="ButtonBorder"
+                                Background="{TemplateBinding Background}"
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                CornerRadius="16"
+                                Padding="{TemplateBinding Padding}">
+                            <ContentPresenter HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                              VerticalAlignment="{TemplateBinding VerticalContentAlignment}" />
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="ButtonBorder" Property="Background" Value="#F5F8FF" />
+                                <Setter TargetName="ButtonBorder" Property="BorderBrush" Value="{DynamicResource ButtonColor}" />
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter TargetName="ButtonBorder" Property="Opacity" Value="0.94" />
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="GoogleActionButtonStyle" TargetType="Button" BasedOn="{StaticResource EntryActionButtonStyle}">
+            <Setter Property="Height" Value="48" />
+            <Setter Property="Margin" Value="0,10,0,0" />
+            <Setter Property="Padding" Value="14,8" />
+        </Style>
+
+        <Style x:Key="WindowControlButtonStyle" TargetType="Button">
+            <Setter Property="Width" Value="40" />
+            <Setter Property="Height" Value="40" />
+            <Setter Property="Margin" Value="0,0,6,0" />
+            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="Foreground" Value="White" />
+            <Setter Property="BorderThickness" Value="0" />
+            <Setter Property="Cursor" Value="Hand" />
+            <Setter Property="FontFamily" Value="Segoe MDL2 Assets" />
+            <Setter Property="FontSize" Value="13" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="WindowButtonBorder"
+                                Background="{TemplateBinding Background}"
+                                CornerRadius="12">
+                            <ContentPresenter HorizontalAlignment="Center"
+                                              VerticalAlignment="Center" />
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="WindowButtonBorder" Property="Background" Value="#22FFFFFF" />
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter TargetName="WindowButtonBorder" Property="Background" Value="#30FFFFFF" />
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="CloseWindowButtonStyle" TargetType="Button" BasedOn="{StaticResource WindowControlButtonStyle}">
+            <Setter Property="Margin" Value="0" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="CloseButtonBorder"
+                                Background="#18FFFFFF"
+                                CornerRadius="12">
+                            <ContentPresenter HorizontalAlignment="Center"
+                                              VerticalAlignment="Center" />
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="CloseButtonBorder" Property="Background" Value="#E5484D" />
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter TargetName="CloseButtonBorder" Property="Opacity" Value="0.92" />
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </Window.Resources>
+
+    <Grid>
+        <Border x:Name="WindowShell"
+                Margin="8"
+                Background="#F8FBFF"
+                BorderBrush="#C8D7FF"
+                BorderThickness="1"
+                CornerRadius="22"
+                Effect="{StaticResource WelcomeWindowShadow}">
+
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="58" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+
+                <Border Grid.Row="0"
+                        Background="{DynamicResource NavbarBackground}"
+                        BorderBrush="#24FFFFFF"
+                        BorderThickness="0,0,0,1"
+                        CornerRadius="22,22,0,0"
+                        MouseLeftButtonDown="TitleBar_OnMouseLeftButtonDown">
+                    <Grid Margin="16,0,8,0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+
+                        <Border Width="30"
+                                Height="30"
+                                CornerRadius="10"
+                                Background="#18FFFFFF"
+                                BorderBrush="#26FFFFFF"
+                                BorderThickness="1"
+                                VerticalAlignment="Center">
+                            <TextBlock Text="BB"
+                                       FontSize="14"
+                                       FontWeight="Bold"
+                                       Foreground="White"
+                                       HorizontalAlignment="Center"
+                                       VerticalAlignment="Center" />
+                        </Border>
+
+                        <StackPanel Grid.Column="1"
+                                    Margin="10,0,0,0"
+                                    VerticalAlignment="Center">
+                            <TextBlock Text="Royal Blueberry Dictionary"
+                                       FontSize="13"
+                                       FontWeight="SemiBold"
+                                       Foreground="White" />
+                            <TextBlock Text="Secure entry"
+                                       Margin="0,1,0,0"
+                                       FontSize="10"
+                                       Foreground="White"
+                                       Opacity="0.72" />
+                        </StackPanel>
+
+                        <StackPanel Grid.Column="2"
+                                    Orientation="Horizontal"
+                                    VerticalAlignment="Center">
+                            <Button Click="MinimizeButton_OnClick"
+                                    Style="{StaticResource WindowControlButtonStyle}"
+                                    ToolTip="Minimize">
+                                <TextBlock Text="&#xE921;" />
+                            </Button>
+
+                            <Button Click="CloseButton_OnClick"
+                                    Style="{StaticResource CloseWindowButtonStyle}"
+                                    ToolTip="Close">
+                                <TextBlock Text="&#xE8BB;" />
+                            </Button>
+                        </StackPanel>
+                    </Grid>
+                </Border>
+
+                <Grid Grid.Row="1" Margin="14,14,14,14">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="262" />
+                        <ColumnDefinition Width="14" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+
+                    <Border Grid.Column="0"
+                            Background="{DynamicResource NavbarBackground}"
+                            CornerRadius="20"
+                            Padding="20">
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="*" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                            </Grid.RowDefinitions>
+
+                            <Border Width="72"
+                                    Height="72"
+                                    CornerRadius="22"
+                                    Background="#1CFFFFFF"
+                                    BorderBrush="#2BFFFFFF"
+                                    BorderThickness="1.2">
+                                <TextBlock Text="BB"
+                                           FontSize="24"
+                                           FontWeight="Bold"
+                                           Foreground="White"
+                                           HorizontalAlignment="Center"
+                                           VerticalAlignment="Center" />
+                            </Border>
+
+                            <TextBlock Grid.Row="1"
+                                       Margin="0,18,0,8"
+                                       Text="Welcome to Royal Blueberry"
+                                       FontSize="24"
+                                       FontWeight="Bold"
+                                       Foreground="White"
+                                       TextWrapping="Wrap" />
+
+                            <TextBlock Grid.Row="2"
+                                       Text="Sign in for a synced account, create one in a few steps, or keep things local with guest mode."
+                                       FontSize="12"
+                                       Foreground="White"
+                                       Opacity="0.9"
+                                       TextWrapping="Wrap"
+                                       LineHeight="18" />
+
+                            <Border Grid.Row="4" Style="{StaticResource InfoPanelStyle}">
+                                <StackPanel>
+                                    <TextBlock Text="Secure account access"
+                                               Foreground="White"
+                                               FontWeight="SemiBold" />
+                                    <TextBlock Text="Email sign-in and Google sign-in are both available from this entry window."
+                                               Margin="0,6,0,0"
+                                               Foreground="White"
+                                               Opacity="0.8"
+                                               TextWrapping="Wrap"
+                                               LineHeight="17" />
+                                </StackPanel>
+                            </Border>
+
+                            <Border Grid.Row="5"
+                                    Margin="0,10,0,0"
+                                    Style="{StaticResource InfoPanelStyle}">
+                                <StackPanel>
+                                    <TextBlock Text="Guest mode stays lightweight"
+                                               Foreground="White"
+                                               FontWeight="SemiBold" />
+                                    <TextBlock Text="You can enter immediately, keep data local on this device, and sign in later from Account."
+                                               Margin="0,6,0,0"
+                                               Foreground="White"
+                                               Opacity="0.8"
+                                               TextWrapping="Wrap"
+                                               LineHeight="17" />
+                                </StackPanel>
+                            </Border>
+                        </Grid>
+                    </Border>
+
+                    <Border Grid.Column="2"
+                            Background="#FBFDFF"
+                            BorderBrush="#D7E3FF"
+                            BorderThickness="1"
+                            CornerRadius="20"
+                            Padding="22">
+                        <Grid MaxWidth="540">
+                                <Grid>
+                                    <Grid.Style>
+                                        <Style TargetType="Grid">
+                                            <Setter Property="Visibility" Value="Visible" />
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding IsChoiceMode}" Value="False">
+                                                    <Setter Property="Visibility" Value="Collapsed" />
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </Grid.Style>
+
+                                    <StackPanel Margin="0,2,0,2">
+                                        <TextBlock Text="ENTRY"
+                                                   FontSize="11"
+                                                   FontWeight="Bold"
+                                                   Foreground="{DynamicResource ButtonColor}" />
+
+                                        <TextBlock Text="{Binding ChoiceTitle}"
+                                                   Margin="0,10,0,0"
+                                                   FontSize="26"
+                                                   FontWeight="Bold"
+                                                   Foreground="{DynamicResource TextColor}"
+                                                   TextWrapping="Wrap" />
+
+                                        <TextBlock Text="{Binding ChoiceSubtitle}"
+                                                   Margin="0,8,0,20"
+                                                   FontSize="13"
+                                                   Foreground="{DynamicResource TextColor}"
+                                                   Opacity="0.8"
+                                                   TextWrapping="Wrap"
+                                                   LineHeight="18" />
+
+                                        <Border Padding="18,16"
+                                                Margin="0,0,0,16"
+                                                CornerRadius="14"
+                                                Background="#F4F8FF"
+                                                BorderBrush="#C8D7FF"
+                                                BorderThickness="1"
+                                                Visibility="{Binding HasActiveSession, Converter={StaticResource BoolToVisibility}}">
+                                            <StackPanel>
+                                                <TextBlock Text="Saved session"
+                                                           FontSize="11"
+                                                           FontWeight="Bold"
+                                                           Foreground="{DynamicResource ButtonColor}" />
+                                                <TextBlock Text="{Binding CurrentDisplayName}"
+                                                           Margin="0,6,0,0"
+                                                           FontSize="16"
+                                                           FontWeight="SemiBold"
+                                                           Foreground="{DynamicResource TextColor}" />
+                                                <TextBlock Text="{Binding CurrentEmail}"
+                                                           Margin="0,6,0,0"
+                                                           Foreground="{DynamicResource TextColor}"
+                                                           Opacity="0.74" />
+                                            </StackPanel>
+                                        </Border>
+
+                                        <Button Command="{Binding ContinueWithSavedSessionCommand}"
+                                                Style="{StaticResource SearchButtonStyle}"
+                                                Height="46"
+                                                Margin="0,0,0,12"
+                                                Visibility="{Binding HasActiveSession, Converter={StaticResource BoolToVisibility}}">
+                                            <TextBlock Text="{Binding ContinueButtonText}"
+                                                       FontSize="13"
+                                                       FontWeight="SemiBold" />
+                                        </Button>
+
+                                        <Button Command="{Binding OpenLoginCommand}"
+                                                Style="{StaticResource EntryActionButtonStyle}">
+                                            <Grid>
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="*" />
+                                                    <ColumnDefinition Width="Auto" />
+                                                </Grid.ColumnDefinitions>
+
+                                                <StackPanel>
+                                                    <TextBlock Text="{Binding LoginChoiceText}"
+                                                               FontSize="15"
+                                                               FontWeight="SemiBold"
+                                                               Foreground="{DynamicResource TextColor}" />
+                                                    <TextBlock Text="Email password or Google sign-in"
+                                                               Margin="0,3,0,0"
+                                                               FontSize="12"
+                                                               Foreground="{DynamicResource TextColor}"
+                                                               Opacity="0.66" />
+                                                </StackPanel>
+
+                                                <Border Grid.Column="1"
+                                                        Width="34"
+                                                        Height="34"
+                                                        Margin="12,0,0,0"
+                                                        CornerRadius="17"
+                                                        Background="#F1F5FF"
+                                                        BorderBrush="#C6D6FF"
+                                                        BorderThickness="1"
+                                                        VerticalAlignment="Center">
+                                                    <TextBlock Text="&#xE72A;"
+                                                               FontFamily="Segoe MDL2 Assets"
+                                                               FontSize="13"
+                                                               Foreground="{DynamicResource ButtonColor}"
+                                                               HorizontalAlignment="Center"
+                                                               VerticalAlignment="Center" />
+                                                </Border>
+                                            </Grid>
+                                        </Button>
+
+                                        <Button Command="{Binding OpenRegisterCommand}"
+                                                Style="{StaticResource EntryActionButtonStyle}">
+                                            <Grid>
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="*" />
+                                                    <ColumnDefinition Width="Auto" />
+                                                </Grid.ColumnDefinitions>
+
+                                                <StackPanel>
+                                                    <TextBlock Text="{Binding RegisterChoiceText}"
+                                                               FontSize="15"
+                                                               FontWeight="SemiBold"
+                                                               Foreground="{DynamicResource TextColor}" />
+                                                    <TextBlock Text="Create an account and keep your session ready"
+                                                               Margin="0,3,0,0"
+                                                               FontSize="12"
+                                                               Foreground="{DynamicResource TextColor}"
+                                                               Opacity="0.66" />
+                                                </StackPanel>
+
+                                                <Border Grid.Column="1"
+                                                        Width="34"
+                                                        Height="34"
+                                                        Margin="12,0,0,0"
+                                                        CornerRadius="17"
+                                                        Background="#F1F5FF"
+                                                        BorderBrush="#C6D6FF"
+                                                        BorderThickness="1"
+                                                        VerticalAlignment="Center">
+                                                    <TextBlock Text="&#xE710;"
+                                                               FontFamily="Segoe MDL2 Assets"
+                                                               FontSize="13"
+                                                               Foreground="{DynamicResource ButtonColor}"
+                                                               HorizontalAlignment="Center"
+                                                               VerticalAlignment="Center" />
+                                                </Border>
+                                            </Grid>
+                                        </Button>
+
+                                        <Button Command="{Binding ContinueAsGuestCommand}"
+                                                Style="{StaticResource EntryActionButtonStyle}"
+                                                Margin="0">
+                                            <Grid>
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="*" />
+                                                    <ColumnDefinition Width="Auto" />
+                                                </Grid.ColumnDefinitions>
+
+                                                <StackPanel>
+                                                    <TextBlock Text="Continue as guest"
+                                                               FontSize="15"
+                                                               FontWeight="SemiBold"
+                                                               Foreground="{DynamicResource TextColor}" />
+                                                    <TextBlock Text="Use the app locally on this device without signing in"
+                                                               Margin="0,3,0,0"
+                                                               FontSize="12"
+                                                               Foreground="{DynamicResource TextColor}"
+                                                               Opacity="0.66" />
+                                                </StackPanel>
+
+                                                <Border Grid.Column="1"
+                                                        Width="34"
+                                                        Height="34"
+                                                        Margin="12,0,0,0"
+                                                        CornerRadius="17"
+                                                        Background="#F1F5FF"
+                                                        BorderBrush="#C6D6FF"
+                                                        BorderThickness="1"
+                                                        VerticalAlignment="Center">
+                                                    <TextBlock Text="&#xE716;"
+                                                               FontFamily="Segoe MDL2 Assets"
+                                                               FontSize="13"
+                                                               Foreground="{DynamicResource ButtonColor}"
+                                                               HorizontalAlignment="Center"
+                                                               VerticalAlignment="Center" />
+                                                </Border>
+                                            </Grid>
+                                        </Button>
+
+                                        <TextBlock Text="Guest mode keeps the app usable right away. You can still sign in later from the Account section inside the main app."
+                                                   Margin="0,14,0,0"
+                                                   FontSize="12"
+                                                   Foreground="{DynamicResource TextColor}"
+                                                   Opacity="0.66"
+                                                   TextWrapping="Wrap"
+                                                   LineHeight="18" />
+                                    </StackPanel>
+                                </Grid>
+
+                                <Grid>
+                                    <Grid.Style>
+                                        <Style TargetType="Grid">
+                                            <Setter Property="Visibility" Value="Collapsed" />
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding IsChoiceMode}" Value="False">
+                                                    <Setter Property="Visibility" Value="Visible" />
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </Grid.Style>
+
+                                    <StackPanel Margin="0,2,0,2">
+                                        <Grid Margin="0,0,0,16">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="Auto" />
+                                                <ColumnDefinition Width="*" />
+                                            </Grid.ColumnDefinitions>
+
+                                            <Button Command="{Binding BackToChoiceCommand}"
+                                                    Width="102"
+                                                    Height="36"
+                                                    HorizontalAlignment="Left"
+                                                    Style="{StaticResource SecondaryButtonStyle}">
+                                                <TextBlock Text="Back"
+                                                            FontWeight="SemiBold"
+                                                            VerticalAlignment="Center"
+                                                            TextAlignment="Center" />
+                                            </Button>
+
+                                            <Border Grid.Column="1"
+                                                    HorizontalAlignment="Right"
+                                                    Height="36"
+                                                    Padding="12,0"
+                                                    CornerRadius="999"
+                                                    Background="#EFF4FF"
+                                                    BorderBrush="#C8D7FF"
+                                                    BorderThickness="1">
+                                                <TextBlock Text="{Binding AuthTitle}"
+                                                           FontSize="10"
+                                                           FontWeight="SemiBold"
+                                                           Foreground="{DynamicResource ButtonColor}"
+                                                           VerticalAlignment="Center"
+                                                           TextAlignment="Center" />
+                                            </Border>
+                                        </Grid>
+
+                                        <TextBlock Text="{Binding AuthTitle}"
+                                                   FontSize="24"
+                                                   FontWeight="Bold"
+                                                   Foreground="{DynamicResource TextColor}"
+                                                   TextWrapping="Wrap" />
+
+                                        <TextBlock Text="{Binding AuthSubtitle}"
+                                                   Margin="0,6,0,14"
+                                                   FontSize="12"
+                                                   Foreground="{DynamicResource TextColor}"
+                                                   Opacity="0.78"
+                                                   TextWrapping="Wrap"
+                                                   LineHeight="17" />
+
+                                        <StackPanel>
+                                            <StackPanel.Style>
+                                                <Style TargetType="StackPanel">
+                                                    <Setter Property="Visibility" Value="Collapsed" />
+                                                    <Style.Triggers>
+                                                        <DataTrigger Binding="{Binding IsLoginMode}" Value="True">
+                                                            <Setter Property="Visibility" Value="Visible" />
+                                                        </DataTrigger>
+                                                    </Style.Triggers>
+                                                </Style>
+                                            </StackPanel.Style>
+
+                                            <TextBlock Text="Email"
+                                                       Style="{StaticResource SectionLabelStyle}" />
+                                            <TextBox Text="{Binding LoginEmail, UpdateSourceTrigger=PropertyChanged}"
+                                                     Style="{StaticResource AuthTextBoxStyle}" />
+                                            <TextBlock Text="{Binding LoginEmailError}"
+                                                       Foreground="#B91C1C"
+                                                       Margin="0,6,0,0"
+                                                       Visibility="{Binding LoginEmailError, Converter={StaticResource StringToVisibility}}" />
+
+                                            <TextBlock Text="Password"
+                                                       Margin="0,12,0,0"
+                                                       Style="{StaticResource SectionLabelStyle}" />
+                                            <PasswordBox x:Name="LoginPasswordBox"
+                                                         PasswordChanged="LoginPasswordBox_OnPasswordChanged"
+                                                         Style="{StaticResource AuthPasswordBoxStyle}" />
+                                            <TextBlock Text="{Binding LoginPasswordError}"
+                                                       Foreground="#B91C1C"
+                                                       Margin="0,6,0,0"
+                                                       Visibility="{Binding LoginPasswordError, Converter={StaticResource StringToVisibility}}" />
+                                        </StackPanel>
+
+                                        <StackPanel>
+                                            <StackPanel.Style>
+                                                <Style TargetType="StackPanel">
+                                                    <Setter Property="Visibility" Value="Collapsed" />
+                                                    <Style.Triggers>
+                                                        <DataTrigger Binding="{Binding IsRegisterMode}" Value="True">
+                                                            <Setter Property="Visibility" Value="Visible" />
+                                                        </DataTrigger>
+                                                    </Style.Triggers>
+                                                </Style>
+                                            </StackPanel.Style>
+
+                                            <TextBlock Text="Display name"
+                                                       Style="{StaticResource SectionLabelStyle}" />
+                                            <TextBox Text="{Binding RegisterDisplayName, UpdateSourceTrigger=PropertyChanged}"
+                                                     Style="{StaticResource AuthTextBoxStyle}" />
+                                            <TextBlock Text="{Binding RegisterDisplayNameError}"
+                                                       Foreground="#B91C1C"
+                                                       Margin="0,6,0,0"
+                                                       Visibility="{Binding RegisterDisplayNameError, Converter={StaticResource StringToVisibility}}" />
+
+                                            <TextBlock Text="Email"
+                                                       Margin="0,12,0,0"
+                                                       Style="{StaticResource SectionLabelStyle}" />
+                                            <TextBox Text="{Binding RegisterEmail, UpdateSourceTrigger=PropertyChanged}"
+                                                     Style="{StaticResource AuthTextBoxStyle}" />
+                                            <TextBlock Text="{Binding RegisterEmailError}"
+                                                       Foreground="#B91C1C"
+                                                       Margin="0,6,0,0"
+                                                       Visibility="{Binding RegisterEmailError, Converter={StaticResource StringToVisibility}}" />
+
+                                            <TextBlock Text="Password"
+                                                       Margin="0,12,0,0"
+                                                       Style="{StaticResource SectionLabelStyle}" />
+                                            <PasswordBox x:Name="RegisterPasswordBox"
+                                                         PasswordChanged="RegisterPasswordBox_OnPasswordChanged"
+                                                         Style="{StaticResource AuthPasswordBoxStyle}" />
+                                            <TextBlock Text="{Binding RegisterPasswordError}"
+                                                       Foreground="#B91C1C"
+                                                       Margin="0,6,0,0"
+                                                       Visibility="{Binding RegisterPasswordError, Converter={StaticResource StringToVisibility}}" />
+                                        </StackPanel>
+
+                                        <Button Height="44"
+                                                Margin="0,18,0,0"
+                                                Command="{Binding SubmitAuthCommand}"
+                                                Style="{StaticResource SearchButtonStyle}">
+                                            <TextBlock Text="{Binding SubmitButtonText}"
+                                                        FontSize="14"
+                                                        FontWeight="SemiBold"
+                                                        VerticalAlignment="Center"
+                                                        TextAlignment="Center" />
+                                        </Button>
+
+                                        <Button Height="48"
+                                                Command="{Binding SignInWithGoogleCommand}"
+                                                Style="{StaticResource GoogleActionButtonStyle}">
+                                            <StackPanel Orientation="Horizontal"
+                                                        HorizontalAlignment="Center"
+                                                        VerticalAlignment="Center">
+                                                <Border Width="24"
+                                                        Height="24"
+                                                        CornerRadius="12"
+                                                        Background="White"
+                                                        BorderBrush="#E2E8F0"
+                                                        BorderThickness="1"
+                                                        Margin="0,0,10,0"
+                                                        VerticalAlignment="Center">
+                                                    <TextBlock Text="G"
+                                                                FontWeight="Bold"
+                                                                Foreground="#DB4437"
+                                                                HorizontalAlignment="Center"
+                                                                VerticalAlignment="Center" />
+                                                </Border>
+
+                                                <TextBlock Text="{Binding GoogleButtonText}"
+                                                           FontSize="12"
+                                                           FontWeight="SemiBold"
+                                                           Foreground="{DynamicResource TextColor}"
+                                                           VerticalAlignment="Center"
+                                                           TextAlignment="Center" />
+                                            </StackPanel>
+                                        </Button>
+                                    </StackPanel>
+                                </Grid>
+                            </Grid>
+                    </Border>
+                </Grid>
+            </Grid>
+        </Border>
+
+        <uc:StatusToast HorizontalAlignment="Right"
+                        VerticalAlignment="Top"
+                        Margin="0,74,26,0"
+                        Panel.ZIndex="20"
+                        Message="{Binding StatusMessage}"
+                        IsError="{Binding IsStatusError}" />
+    </Grid>
+</Window>
