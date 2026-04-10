@@ -14,7 +14,7 @@ namespace Royal_Blueberry_Dictionary.Repository.Implement
             _context = context;
         }
 
-        public static string GetEffectiveId(string userId = "") => string.IsNullOrEmpty(userId) ? "GUEST" : userId;
+        public static string GetEffectiveId(string userId = "") => App.UserId;
 
         public async Task<WordEntry?> GetByIdAsync(string id) =>
             await _context.WordEntries.FirstOrDefaultAsync(e => e.Id == id);

@@ -1,17 +1,22 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Net.Http;
 
 namespace Royal_Blueberry_Dictionary.Service.ApiClient
 {
     public interface IBackendApiClient
     {
-        //CRUD : T: kiểu dữ liệu mình lấy hoặc gửi, endpoint
-        Task<T> GetAsync<T>(string endpoint);
-        Task<T> PostAsync<T>(string endpoint, object data);
-        Task<T> PutAsync<T>(string endpoint, object data);
-        Task DeleteAsync(string endpoint);  
+        Task<ApiResponse<T>> SendAsync<T>(
+            HttpMethod method,
+            string endpoint,
+            object? data = null,
+            bool includeAuthHeader = true,
+            bool retryOnUnauthorized = true);
+
+        Task<T?> GetAsync<T>(string endpoint, bool includeAuthHeader = true);
+
+        Task<T?> PostAsync<T>(string endpoint, object data, bool includeAuthHeader = true);
+
+        Task<T?> PutAsync<T>(string endpoint, object data, bool includeAuthHeader = true);
+
+        Task DeleteAsync(string endpoint);
     }
 }

@@ -42,7 +42,7 @@ namespace Royal_Blueberry_Dictionary.View.Dialogs
                 var repo = App.serviceProvider.GetService<ITagRepository>();
                 if (repo != null)
                 {
-                    return repo.GetAllTagsAsync(UserId).GetAwaiter().GetResult();
+                    return repo.GetAllTagsAsync().GetAwaiter().GetResult();
                 }
             }
             catch
@@ -98,7 +98,7 @@ namespace Royal_Blueberry_Dictionary.View.Dialogs
             if(result != null && result == true) 
             {
                 var tagService = App.serviceProvider.GetRequiredService<TagService>();
-                var tags = await tagService.GetAllTagsAsync(UserId);
+                var tags = await tagService.GetAllTagsAsync();
                 Tags.Clear();
                 Tags.AddRange(tags);    
             }

@@ -1,28 +1,23 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Text.Json.Serialization;
-using System.Threading.Tasks;
 
 namespace Royal_Blueberry_Dictionary.Model
 {
     public class User
     {
         [JsonPropertyName("id")]
-        public string Id { get; set; }
+        public string Id { get; set; } = string.Empty;
 
         [JsonPropertyName("displayName")]
-        public string Name { get; set; }
+        public string Name { get; set; } = string.Empty;
 
         [JsonPropertyName("email")]
-        public string Email { get; set; }
+        public string Email { get; set; } = string.Empty;
 
         [JsonPropertyName("avatarUrl")]
-        public string AvatarUrl { get; set; } // Sửa lại Property Name cho chuẩn C#
+        public string AvatarUrl { get; set; } = string.Empty;
 
         [JsonPropertyName("role")]
-        public string Role { get; set; }
+        public string Role { get; set; } = string.Empty;
 
         public override string ToString()
         {

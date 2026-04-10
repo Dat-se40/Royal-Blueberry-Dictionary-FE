@@ -46,7 +46,7 @@ namespace Royal_Blueberry_Dictionary.Service
 
         private async Task SyncTagsToServerAsync(string userId)
         {
-            var dirtyTags = await _tagRepo.GetDirtyTagsAsync(userId);
+            var dirtyTags = await _tagRepo.GetDirtyTagsAsync();
             foreach (var tag in dirtyTags)
             {
                 var response = await _apiClient.PostAsync<Tag>("tags/sync", tag);
@@ -106,9 +106,9 @@ namespace Royal_Blueberry_Dictionary.Service
 
             await _tagRepo.SaveChangesAsync();
         }
-        public async Task<List<Tag>> GetAllTagsAsync(string userID = "GUEST") 
+        public async Task<List<Tag>> GetAllTagsAsync() 
         {
-            var re = await _tagRepo.GetAllTagsAsync(userID);
+            var re = await _tagRepo.GetAllTagsAsync();
             return re; 
         } 
         #endregion
@@ -172,7 +172,7 @@ namespace Royal_Blueberry_Dictionary.Service
         public async Task<List<(Tag Tag, int WordCount)>> GetTagsWithRelationCountsAsync(string userId = "GUEST")
         {
             var uid = GetEffectiveId(userId);
-            var tags = await _tagRepo.GetAllTagsAsync(uid);
+            var tags = await _tagRepo.GetAllTagsAsync();
             var list = new List<(Tag, int)>();
             foreach (var t in tags.OrderBy(t => t.Name))
             {

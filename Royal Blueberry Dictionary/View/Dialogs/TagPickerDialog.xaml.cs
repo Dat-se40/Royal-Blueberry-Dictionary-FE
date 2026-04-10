@@ -203,7 +203,7 @@ namespace Royal_Blueberry_Dictionary.View.Dialogs
                 return;
             }
 
-            var existing = await _tagRepository.GetAllTagsAsync(_userId);
+            var existing = await _tagRepository.GetAllTagsAsync();
             if (existing.Any(t => t.Name.Equals(tagName, StringComparison.OrdinalIgnoreCase)))
             {
                 MessageBox.Show("This tag already exists!", "Error",

@@ -7,8 +7,8 @@ namespace Royal_Blueberry_Dictionary.Repository.Interface
     {
         // Tag Operations
         Task<Tag?> GetTagByIdAsync(string id);
-        Task<List<Tag>> GetAllTagsAsync(string userId);
-        Task<List<Tag>> GetDirtyTagsAsync(string userId);
+        Task<List<Tag>> GetAllTagsAsync();
+        Task<List<Tag>> GetDirtyTagsAsync();
         Task AddTagAsync(Tag tag);
         Task UpdateTagAsync(Tag tag);
         Task DeleteTagAsync(string id);

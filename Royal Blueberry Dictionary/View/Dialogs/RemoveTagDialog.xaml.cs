@@ -31,7 +31,7 @@ namespace Royal_Blueberry_Dictionary.View.Dialogs
 
         private async Task LoadTagsAsync()
         {
-            var allTags = await _tagRepository.GetAllTagsAsync(_userId);
+            var allTags = await _tagRepository.GetAllTagsAsync();
             if (allTags == null || allTags.Count == 0)
             {
                 MessageBox.Show("There are no tags to delete yet!", "Notification",
