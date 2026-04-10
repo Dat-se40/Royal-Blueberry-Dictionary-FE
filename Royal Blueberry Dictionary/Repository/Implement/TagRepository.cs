@@ -73,5 +73,19 @@ namespace Royal_Blueberry_Dictionary.Repository.Implement
         }
 
         public async Task SaveChangesAsync() => await _context.SaveChangesAsync();
+
+        public async Task DeleteRelationsByWordAsync(string userId, string word, int meaningIndex)
+        {
+            var relations = await _context.WordTagRelations
+                .Where(r => r.UserId == App.UserId &&
+                            r.Word.ToLower() == word.ToLower() &&
+                            r.MeaningIndex == meaningIndex)
+                .ToListAsync();
+
+            if (relations.Count > 0)
+            {
+                _context.WordTagRelations.RemoveRange(relations);
+            }
+        }
     }
 }

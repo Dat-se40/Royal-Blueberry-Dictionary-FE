@@ -33,23 +33,21 @@ namespace Royal_Blueberry_Dictionary.ViewModel
 
         private async Task GetDataAsync()
         {
-            var result = new List<WordEntry>();
             var cacheList = _searchService.getHistroyCacheToday().ToList();
 
-            // Dùng foreach cơ bản để await tuần tự
-            foreach (var dt in cacheList)
-            {
-                var res = await _wordService.GetWordEntryByDetail(dt, 0, 0);
-                if (res != null) result.Add(res);
-            }
+            var tasks = cacheList.Select(dt => _wordService.GetWordEntryByDetail(dt, 0, 0));
+            var results = await Task.WhenAll(tasks);
 
             HistoryWords.Clear();
-            foreach (var item in result)
+            foreach (var item in results)
             {
-                HistoryWords.Add(item);
+                if (item != null)
+                {
+                    HistoryWords.Add(item);
+                }
             }
 
-            Console.WriteLine("[History page]:" + HistoryWords.Count);
+            Console.WriteLine("[History page]: " + HistoryWords.Count);
         }
         public void OnNavigatedTo(object parameter)
         {

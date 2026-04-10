@@ -157,45 +157,55 @@ using Royal_Blueberry_Dictionary.Service.ApiClient;
                _availableWords.UnionWith(fileWords);
                Console.WriteLine($"Loaded {_availableWords.Count} available words for suggestions.");   
             }
-            //<summary>
-            // Dành cho mục đích debug, có thể dùng để xem nhanh cache hiện tại đang có những từ nào.   
-            //</summary>
-            public IEnumerable<WordDetail> getHistroyCacheToday() 
-            {
-                // Backward-compatible API: return all cached items sorted by last access (desc).
-                // The old name says "Today", but the app's History page expects a full timeline.
-                foreach (var key in timeLogs.OrderByDescending(kv => kv.Value).Select(kv => kv.Key))
-                {
-                    if (!cache.TryGetValue(key, out var value)) continue;
-                    if (!IsValidWordDetail(value)) continue;
-                    yield return value;
-                }
-            } 
-            public async Task RemoveWordInCacheAsync(string word) 
-            {
-                if (string.IsNullOrWhiteSpace(word)) return;
-                word = word.ToLower().Trim();
+        /// <summary>
+        /// Lấy ra lịch sử tìm kiếm chỉ trong ngày hôm nay (UTC).
+        /// </summary>
+        public IEnumerable<WordDetail> getHistroyCacheToday()
+        {
+            var today = DateTime.UtcNow.Date; 
+            var sortedLogs = timeLogs.OrderByDescending(kv => kv.Value).ToList();
 
-                cache.Remove(word);
-                timeLogs.Remove(word);
-
-                var target = dbContext.CachedWords.FirstOrDefault(entity => entity.Word == word);
-                if (target != null)
+            foreach (var kv in sortedLogs)
+            {
+                if (kv.Value.Date == today)
                 {
-                    dbContext.CachedWords.Remove(target);
-                    await dbContext.SaveChangesAsync();
+                    if (cache.TryGetValue(kv.Key, out var value) && IsValidWordDetail(value))
+                    {
+                        yield return value;
+                    }
                 }
+            }
+        }
+        public async Task RemoveWordInCacheAsync(string word)
+        {
+            if (string.IsNullOrWhiteSpace(word)) return;
+            word = word.ToLower().Trim(); 
+            cache.Remove(word);
+            timeLogs.Remove(word);
+            var targets = dbContext.CachedWords
+                                   .Where(entity => entity.Word.ToLower() == word)
+                                   .ToList();
+            if (targets.Any())
+            {
+                dbContext.CachedWords.RemoveRange(targets);
+                await dbContext.SaveChangesAsync();
+            }
         }
 
         public async Task ClearHistoryAsync()
         {
             cache.Clear();
             timeLogs.Clear();
-            dbContext.CachedWords.RemoveRange(dbContext.CachedWords);
-            await dbContext.SaveChangesAsync();
+
+            var allCaches = dbContext.CachedWords.ToList(); 
+            if (allCaches.Any())
+            {
+                dbContext.CachedWords.RemoveRange(allCaches);
+                await dbContext.SaveChangesAsync();
+            }
         }
         // Cải thiện hàm này với các từ bị trỗng
-            public bool IsValidWordDetail(WordDetail wordDetail) 
+        public bool IsValidWordDetail(WordDetail wordDetail) 
             {
                 return wordDetail.Word != string.Empty &&wordDetail.Meanings != null && wordDetail.Meanings.Count != 0;
             }

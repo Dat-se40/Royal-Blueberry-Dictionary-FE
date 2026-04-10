@@ -396,11 +396,25 @@ namespace Royal_Blueberry_Dictionary.ViewModel
         [RelayCommand]
         public async Task Pull()
         {
-            var tagService = App.serviceProvider.GetRequiredService<TagService>();
-            if (tagService != null) 
+            try
             {
-                StatusMessage = "Get data from service";
-                await tagService.FetchEverythingFromServerAsync(App.UserId);
+                var tagService = App.serviceProvider.GetRequiredService<TagService>();
+                if (tagService != null)
+                {
+                    // Cập nhật trạng thái cho người dùng biết
+                    StatusMessage = "Syncing tags and fetching missing words... This might take a moment.";
+
+                    // Gọi hàm Pull (bao gồm cả tải Tags, Relations và bù WordEntry thiếu)
+                    await tagService.FetchEverythingFromServerAsync(App.UserId);
+                    IsStatusError = true;
+                    StatusMessage = "Sync completed successfully!";
+                }
+            }
+            catch (Exception ex)
+            {
+                IsStatusError = false; 
+                StatusMessage = $"Sync failed: {ex.Message}";
+                MessageBox.Show($"❌ Error during Pull: {ex.Message}", "Sync Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 
@@ -410,8 +424,10 @@ namespace Royal_Blueberry_Dictionary.ViewModel
             var tagService = App.serviceProvider.GetRequiredService<TagService>();
             if (tagService != null)
             {
+                IsStatusError = true;
                 StatusMessage = "Sync all with server";
                 await tagService.SyncAllWithServerAsync(App.UserId);
+                
             }
         }
         private async Task EnsureSessionLoadedAsync()
