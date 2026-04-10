@@ -1,7 +1,9 @@
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using Microsoft.Extensions.DependencyInjection;
 using Royal_Blueberry_Dictionary.Config;
 using Royal_Blueberry_Dictionary.Model.Auth;
+using Royal_Blueberry_Dictionary.Repository.Implement;
 using Royal_Blueberry_Dictionary.Service;
 using Royal_Blueberry_Dictionary.View.Dialogs;
 using Royal_Blueberry_Dictionary.View.Pages;
@@ -391,7 +393,27 @@ namespace Royal_Blueberry_Dictionary.ViewModel
             SetStatus("Logged out successfully.", false);
             navigationService.NavigateTo<HomePage, SearchViewModel>("home");
         }
+        [RelayCommand]
+        public async Task Pull()
+        {
+            var tagService = App.serviceProvider.GetRequiredService<TagService>();
+            if (tagService != null) 
+            {
+                StatusMessage = "Get data from service";
+                await tagService.FetchEverythingFromServerAsync(App.UserId);
+            }
+        }
 
+        [RelayCommand]
+        public async Task Push() 
+        {
+            var tagService = App.serviceProvider.GetRequiredService<TagService>();
+            if (tagService != null)
+            {
+                StatusMessage = "Sync all with server";
+                await tagService.SyncAllWithServerAsync(App.UserId);
+            }
+        }
         private async Task EnsureSessionLoadedAsync()
         {
             if (authService.IsAuthenticated)

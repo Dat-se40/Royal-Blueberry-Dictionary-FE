@@ -345,7 +345,9 @@
                                         <ColumnDefinition Width="*"/>
                                         <ColumnDefinition Width="*"/>
                                         <ColumnDefinition Width="*"/>
-                                    </Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="*"/>
+                                        </Grid.ColumnDefinitions>
 
                                     <Button Grid.Column="0" Height="50" Margin="0,0,10,0" Command="{Binding ReloadProfileCommand}" Style="{StaticResource SecondaryButtonStyle}">
                                         <TextBlock Text="Reload account" FontWeight="SemiBold"/>
@@ -353,10 +355,16 @@
                                     <Button Grid.Column="1" Height="50" Margin="10,0,10,0" Command="{Binding RefreshSessionCommand}" Style="{StaticResource SecondaryButtonStyle}">
                                         <TextBlock Text="{Binding RefreshSessionText}" FontWeight="SemiBold"/>
                                     </Button>
-                                    <Button Grid.Column="2" Height="50" Margin="10,0,0,0" Command="{Binding LogoutCommand}" Style="{StaticResource DangerButtonStyle}">
+                                    <Button Grid.Column="4" Height="50" Margin="10,0,0,0" Command="{Binding LogoutCommand}" Style="{StaticResource DangerButtonStyle}">
                                         <TextBlock Text="Log out" FontWeight="SemiBold"/>
                                     </Button>
-                                </Grid>
+                                        <Button Grid.Column="3" Height="50" Margin="10,0,10,0" Style="{StaticResource SecondaryButtonStyle}" Command="{Binding PushCommand}">
+                                        <TextBlock Text="Push" FontWeight="SemiBold" />
+                                    </Button>
+                                        <Button Grid.Column="2" Height="50" Margin="10,0,0,0" Style="{StaticResource SecondaryButtonStyle}"  Command="{Binding PullCommand}">
+                                            <TextBlock Text="Pull" FontWeight="SemiBold"/>
+                                        </Button>
+                                    </Grid>
                             </StackPanel>
                         </Grid>
                     </Grid>
