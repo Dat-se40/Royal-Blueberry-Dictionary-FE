@@ -1,0 +1,258 @@
+﻿<Window x:Class="Royal_Blueberry_Dictionary.View.Dialogs.Settings.CustomThemeDialog"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
+        Title="Custom Color Theme"
+        Width="520"
+        Height="680"
+        WindowStartupLocation="CenterOwner"
+        Background="Transparent"
+        ResizeMode="NoResize"
+        WindowStyle="None"
+        AllowsTransparency="True">
+
+    <Window.Resources>
+        <!-- Modern Color Picker Style -->
+        <Style TargetType="xctk:ColorPicker">
+            <Setter Property="Height" Value="52"/>
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Background" Value="{DynamicResource SearchBackground}"/>
+            <Setter Property="Foreground" Value="{DynamicResource TextColor}"/>
+            <Setter Property="ShowStandardColors" Value="True"/>
+            <Setter Property="ShowRecentColors" Value="True"/>
+            <Setter Property="UsingAlphaChannel" Value="False"/>
+            <Setter Property="Margin" Value="0,0,0,24"/>
+        </Style>
+
+        <!-- Glassmorphism Effect -->
+        <Style x:Key="GlassCard" TargetType="Border">
+            <Setter Property="Background" Value="{DynamicResource CardBackground}"/>
+            <Setter Property="Opacity" Value="0.98"/>
+            <Setter Property="BorderBrush" Value="{DynamicResource BorderColor}"/>
+            <Setter Property="BorderThickness" Value="2"/>
+            <Setter Property="CornerRadius" Value="24"/>
+            <Setter Property="Effect">
+                <Setter.Value>
+                    <DropShadowEffect BlurRadius="30" ShadowDepth="0" Opacity="0.3" Color="Black"/>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+
+        <!-- Close Button Hover Effect -->
+        <Style x:Key="ModernCloseButton" TargetType="Button">
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="Foreground" Value="{DynamicResource TextColor}"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Width" Value="48"/>
+            <Setter Property="Height" Value="48"/>
+            <Setter Property="FontSize" Value="24"/>
+            <Setter Property="FontWeight" Value="Light"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}"
+                                CornerRadius="12">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="#20FF0000"/>
+                    <Setter Property="Foreground" Value="#FF3333"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
+        <!-- Label Style -->
+        <Style x:Key="ColorLabel" TargetType="TextBlock">
+            <Setter Property="FontSize" Value="15"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="Foreground" Value="{DynamicResource TextColor}"/>
+            <Setter Property="Margin" Value="0,0,0,12"/>
+        </Style>
+
+        <!-- Apply Button -->
+        <Style x:Key="ModernApplyButton" TargetType="Button">
+            <Setter Property="Background">
+                <Setter.Value>
+                    <LinearGradientBrush StartPoint="0,0" EndPoint="1,0">
+                        <GradientStop Color="#667EEA" Offset="0"/>
+                        <GradientStop Color="#764BA2" Offset="1"/>
+                    </LinearGradientBrush>
+                </Setter.Value>
+            </Setter>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Padding" Value="0,16"/>
+            <Setter Property="FontSize" Value="16"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}"
+                                CornerRadius="14"
+                                Padding="{TemplateBinding Padding}">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background">
+                        <Setter.Value>
+                            <LinearGradientBrush StartPoint="0,0" EndPoint="1,0">
+                                <GradientStop Color="#5568D3" Offset="0"/>
+                                <GradientStop Color="#6A42A0" Offset="1"/>
+                            </LinearGradientBrush>
+                        </Setter.Value>
+                    </Setter>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+    </Window.Resources>
+
+    <Border Style="{StaticResource GlassCard}">
+        <Grid Margin="36">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+
+            <!-- Header -->
+            <Grid Grid.Row="0" Margin="0,0,0,32">
+                <StackPanel Orientation="Horizontal">
+                    <Border Background="#20667EEA"
+                            Width="56" Height="56"
+                            CornerRadius="16"
+                            Margin="0,0,16,0">
+                        <TextBlock Text="🎨"
+                                   FontSize="32"
+                                   HorizontalAlignment="Center"
+                                   VerticalAlignment="Center"/>
+                    </Border>
+                    <StackPanel VerticalAlignment="Center">
+                        <TextBlock Text="Custom Color Theme"
+                                   FontSize="24"
+                                   FontWeight="Bold"
+                                   Foreground="{DynamicResource TextColor}"/>
+                        <TextBlock Text="Create your unique color palette"
+                                   FontSize="13"
+                                   Foreground="{DynamicResource TextColor}"
+                                   Opacity="0.7"
+                                   Margin="0,4,0,0"/>
+                    </StackPanel>
+                </StackPanel>
+
+                <Button Content="✕"
+                        Style="{StaticResource ModernCloseButton}"
+                        HorizontalAlignment="Right"
+                        VerticalAlignment="Top"
+                        Click="Close_Click"/>
+            </Grid>
+
+            <!-- Description -->
+            <Border Grid.Row="1"
+                    Background="#15667EEA"
+                    BorderBrush="#30667EEA"
+                    BorderThickness="1"
+                    CornerRadius="12"
+                    Padding="16,12"
+                    Margin="0,0,0,24">
+                <TextBlock Text="💡 Tip: Choose 3 colors that complement each other for the best result"
+                           FontSize="13"
+                           Foreground="{DynamicResource TextColor}"
+                           TextWrapping="Wrap"/>
+            </Border>
+
+            <!-- Color Pickers -->
+            <StackPanel Grid.Row="2">
+                <!-- Primary Color -->
+                <Border Background="#10667EEA"
+                        CornerRadius="16"
+                        Padding="20,18"
+                        Margin="0,0,0,16">
+                    <StackPanel>
+                        <StackPanel Orientation="Horizontal" Margin="0,0,0,12">
+                            <TextBlock Text="●"
+                                       FontSize="20"
+                                       Foreground="#667EEA"
+                                       Margin="0,0,8,0"
+                                       VerticalAlignment="Center"/>
+                            <TextBlock Text="Primary Color" Style="{StaticResource ColorLabel}" Margin="0"/>
+                        </StackPanel>
+                        <TextBlock Text="Main brand color for buttons and highlights"
+                                   FontSize="12"
+                                   Foreground="{DynamicResource TextColor}"
+                                   Opacity="0.6"
+                                   Margin="0,0,0,12"/>
+                        <xctk:ColorPicker x:Name="PrimaryColorPicker"
+                                          SelectedColor="#667EEA"/>
+                    </StackPanel>
+                </Border>
+
+                <!-- Secondary Color -->
+                <Border Background="#10764BA2"
+                        CornerRadius="16"
+                        Padding="20,18"
+                        Margin="0,0,0,16">
+                    <StackPanel>
+                        <StackPanel Orientation="Horizontal" Margin="0,0,0,12">
+                            <TextBlock Text="●"
+                                       FontSize="20"
+                                       Foreground="#764BA2"
+                                       Margin="0,0,8,0"
+                                       VerticalAlignment="Center"/>
+                            <TextBlock Text="Secondary Color" Style="{StaticResource ColorLabel}" Margin="0"/>
+                        </StackPanel>
+                        <TextBlock Text="Supporting color for gradients and hover effects"
+                                   FontSize="12"
+                                   Foreground="{DynamicResource TextColor}"
+                                   Opacity="0.6"
+                                   Margin="0,0,0,12"/>
+                        <xctk:ColorPicker x:Name="SecondaryColorPicker"
+                                          SelectedColor="#764BA2"/>
+                    </StackPanel>
+                </Border>
+
+                <!-- Accent Color -->
+                <Border Background="#10F093FB"
+                        CornerRadius="16"
+                        Padding="20,18">
+                    <StackPanel>
+                        <StackPanel Orientation="Horizontal" Margin="0,0,0,12">
+                            <TextBlock Text="●"
+                                       FontSize="20"
+                                       Foreground="#F093FB"
+                                       Margin="0,0,8,0"
+                                       VerticalAlignment="Center"/>
+                            <TextBlock Text="Accent Color" Style="{StaticResource ColorLabel}" Margin="0"/>
+                        </StackPanel>
+                        <TextBlock Text="Accent for text and dark UI elements"
+                                   FontSize="12"
+                                   Foreground="{DynamicResource TextColor}"
+                                   Opacity="0.6"
+                                   Margin="0,0,0,12"/>
+                        <xctk:ColorPicker x:Name="AccentColorPicker"
+                                          SelectedColor="#F093FB"/>
+                    </StackPanel>
+                </Border>
+            </StackPanel>
+
+            <!-- Apply Button -->
+            <Button Grid.Row="3"
+                    Content="✓ Apply Custom Theme"
+                    Style="{StaticResource ModernApplyButton}"
+                    Margin="0,24,0,0"
+                    Click="Apply_Click"/>
+        </Grid>
+    </Border>
+</Window>

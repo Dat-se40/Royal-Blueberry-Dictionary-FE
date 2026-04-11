@@ -42,16 +42,18 @@
                             Click="HamburgerBtn_Click"/>
 
                     <Button Grid.Column="1" x:Name="BackBtn"
-                            Style="{StaticResource NavButtonStyle}"
-                            IsEnabled="False"
-                            Margin="0,0,8,0">
+        Click="BackBtn_Click_1"
+        Style="{StaticResource NavButtonStyle}"
+        IsEnabled="{Binding ElementName=MainFrame, Path=CanGoBack}"
+        Margin="0,0,8,0">
                         <TextBlock Text="◀" FontSize="16" FontWeight="Bold"/>
                     </Button>
 
                     <Button Grid.Column="2" x:Name="ForwardBtn"
-                            Style="{StaticResource NavButtonStyle}"
-                            IsEnabled="False"
-                            Margin="0,0,8,0">
+        Click="ForwardBtn_Click_1"
+        Style="{StaticResource NavButtonStyle}"
+        IsEnabled="{Binding ElementName=MainFrame, Path=CanGoForward}"
+        Margin="0,0,8,0">
                         <TextBlock Text="▶" FontSize="16" FontWeight="Bold"/>
                     </Button>
 
@@ -186,14 +188,14 @@
                                 <TextBlock Text="History" FontSize="15" VerticalAlignment="Center"/>
                             </StackPanel>
                         </Button>
-                        <Button Style="{StaticResource SidebarButtonStyle}" Tag="Favourite">
+                        <Button Style="{StaticResource SidebarButtonStyle}" Tag="Favourite" Click="SideBarNavigate">
                             <StackPanel Orientation="Horizontal">
                                 <TextBlock Text="⭐" FontSize="20" Margin="0,0,15,0" Width="24" TextAlignment="Center"/>
                                 <TextBlock Text="Favorite" FontSize="15" VerticalAlignment="Center"/>
                             </StackPanel>
                         </Button>
 
-                        <Button Style="{StaticResource SidebarButtonStyle}" Tag="MyWords" >
+                        <Button Style="{StaticResource SidebarButtonStyle}" Tag="MyWords" Click="SideBarNavigate">
                             <StackPanel Orientation="Horizontal">
                                 <TextBlock Text="📚" FontSize="20" Margin="0,0,15,0" Width="24" TextAlignment="Center"/>
                                 <TextBlock Text="My Words" FontSize="15" VerticalAlignment="Center"/>
@@ -207,7 +209,7 @@
                             </StackPanel>
                         </Button>
 
-                        <Button Style="{StaticResource SidebarButtonStyle}" Tag="Setting">
+                        <Button Style="{StaticResource SidebarButtonStyle}" Tag="Setting" Click="SideBarNavigate">
                             <StackPanel Orientation="Horizontal">
                                 <TextBlock Text="⚙️" FontSize="20" Margin="0,0,15,0" Width="24" TextAlignment="Center"/>
                                 <TextBlock Text="Setting" FontSize="15" VerticalAlignment="Center"/>

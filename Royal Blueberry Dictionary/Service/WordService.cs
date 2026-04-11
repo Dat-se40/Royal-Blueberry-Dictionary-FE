@@ -1,4 +1,4 @@
-﻿using BlueBerryDictionary.Helpers;
+﻿    using BlueBerryDictionary.Helpers;
 using Microsoft.EntityFrameworkCore.Migrations.Operations;
 using Royal_Blueberry_Dictionary.Database;
 using Royal_Blueberry_Dictionary.Model;
@@ -46,6 +46,8 @@ namespace Royal_Blueberry_Dictionary.Service
         {
             await WordEntryRepository.DeleteAsync(ID); 
         }
+
+        public Task DeleteWordEntryAsync(string id) => WordEntryRepository.DeleteAsync(id);
         public static WordEntry MapWordDetailToWordEntry(WordDetail detail, int meaningIdx, int defIdx)
         {
             var meaning = detail.Meanings[meaningIdx];
@@ -70,6 +72,21 @@ namespace Royal_Blueberry_Dictionary.Service
             wordEntry.IsFavorited = !wordEntry.IsFavorited;
             await SmartUpdate(wordEntry); 
             
+        }
+
+        /// <summary>Danh sách từ đã gắn cờ yêu thích trong DB (theo user).</summary>
+        public async Task<List<WordEntry>> GetFavoritedWordsAsync(string userId = "GUEST") =>
+            await WordEntryRepository.GetFavoritedAsync(userId);
+
+        /// <summary>Bỏ yêu thích toàn bộ từ (không dùng toggle của <see cref="FavoriteAsync"/>).</summary>
+        public async Task ClearAllFavoritesAsync(string userId = "GUEST")
+        {
+            var list = await WordEntryRepository.GetFavoritedAsync(userId);
+            foreach (var e in list)
+            {
+                e.IsFavorited = false;
+                await SmartUpdate(e);
+            }
         }
         public async Task SmartUpdate(WordEntry wordEntry) 
         {

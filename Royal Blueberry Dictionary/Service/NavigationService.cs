@@ -1,4 +1,7 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
+using BlueBerryDictionary.ViewModels;
+using Royal_Blueberry_Dictionary.View.Pages;
+using Royal_Blueberry_Dictionary.ViewModel;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -47,6 +50,28 @@ namespace Royal_Blueberry_Dictionary.Service
             }
         }
         public void SetMainFrame(Frame frame) => _mainFrame = frame;   
+
+        public void NavigateByTag(string? tag)
+        {
+            switch (tag)
+            {
+                case "Home":
+                    NavigateTo<HomePage, SearchViewModel>("home");
+                    break;
+                case "History":
+                    NavigateTo<HistoryPage, HistoryPageViewModel>(null);
+                    break;
+                case "Favourite":
+                    NavigateTo<FavouriteWordsPage, FavouriteWordsPageViewModel>(null);
+                    break;
+                case "MyWords":
+                    NavigateTo<MyWordsPage, MyWordsPageViewModel>(null);
+                    break;
+                case "Setting":
+                    NavigateTo<SettingsPage, SettingsPageViewModel>(null);
+                    break; 
+            }
+        }
     }
     public interface INavigationAware
     {

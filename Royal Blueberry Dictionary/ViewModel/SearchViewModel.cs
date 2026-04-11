@@ -76,12 +76,11 @@ namespace Royal_Blueberry_Dictionary.ViewModel
                 Console.WriteLine($"Searching : {wordToSearch}");
                 IsSearching = true;
                 var result = await _searchService.searchAWord(wordToSearch);
-                if (result != null)
+                if (result != null && _searchService.IsValidWordDetail(result))
                 {
                     SearchResult = result;
-
+                    NavigateToDetailsPage(result);
                 }
-                NavigateToDetailsPage(result);
             }
             finally
             {

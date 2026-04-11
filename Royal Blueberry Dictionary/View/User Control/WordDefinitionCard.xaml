@@ -210,7 +210,7 @@
                                        FontStyle="Italic"
                                        FontSize="12"
                                        TextWrapping="Wrap"
-                                       Visibility="{Binding Example2 ,Converter={StaticResource StringToVi}}"
+                                       Visibility="{Binding Example1 ,Converter={StaticResource StringToVi}}"
                                        Foreground="{DynamicResource SearchPlaceholder}" />
                         </StackPanel>
 

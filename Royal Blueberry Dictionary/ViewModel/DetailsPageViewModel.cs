@@ -4,6 +4,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Royal_Blueberry_Dictionary;
 using Royal_Blueberry_Dictionary.Model;
 using Royal_Blueberry_Dictionary.Service;
+using Royal_Blueberry_Dictionary.View.Dialogs;
 using Royal_Blueberry_Dictionary.View.Pages;
 using System.Reflection.Metadata;
 using System.Runtime.CompilerServices;
@@ -20,7 +21,8 @@ namespace BlueBerryDictionary.ViewModels
         private readonly NavigationService _navigationService;
         private readonly SearchService _searchService;
         private readonly MediaPlayer _mediaPlayer = new();
-        private WordEntry snapShot = new(); 
+        private readonly WordService _wordService;
+        private WordEntry? _snapshot;
         #endregion
 
         #region Observable Properties
@@ -43,22 +45,21 @@ namespace BlueBerryDictionary.ViewModels
         private string _ukAudioUrl = string.Empty;
 
         [ObservableProperty]
-        private bool _isFavorite;
+        private bool _isFavorited;
 
         [ObservableProperty]
         private ImageSource? _wordImage;
 
         [ObservableProperty]
         private bool _hasWordImage;
-
-        public bool IsFavorited => snapShot.IsFavorited;
         #endregion
 
         #region Constructor
-        public DetailsPageViewModel(NavigationService navigationService, SearchService searchService)
+        public DetailsPageViewModel(NavigationService navigationService, SearchService searchService, WordService wordService)
         {
             _navigationService = navigationService;
             _searchService = searchService;
+            _wordService = wordService;
         }
         #endregion
 
@@ -70,7 +71,7 @@ namespace BlueBerryDictionary.ViewModels
         {
             if (parameter is WordDetail detail)
             {
-                ApplyDetail(detail);
+                await ApplyDetailAsync(detail);
                 return;
             }
 
@@ -81,7 +82,7 @@ namespace BlueBerryDictionary.ViewModels
                     var loaded = await _searchService.searchAWord(word);
                     if (loaded != null)
                     {
-                        ApplyDetail(loaded);
+                        await ApplyDetailAsync(loaded);
                     }
                 }
                 catch (Exception ex)
@@ -112,18 +113,26 @@ namespace BlueBerryDictionary.ViewModels
         /// <summary>
         /// Apply WordDetail data lên view properties
         /// </summary>
-        private void ApplyDetail(WordDetail detail)
+        private async Task ApplyDetailAsync(WordDetail detail)
         {
-                WordDetail = detail;
-                WordTitle = detail.Word.ToUpper(); // Hoặc CapitalizeFirstLetter
-                PhoneticUs = detail.Phonetic ?? "/n/a/";
-                PhoneticUk = detail.Phonetic ?? "/n/a/";
-                UsAudioUrl = detail.AudioUs;
-                UkAudioUrl = detail.AudioUk;
-                HasWordImage = !string.IsNullOrEmpty(detail.ImageUrl);
+            WordDetail = detail;
+            WordTitle = (detail.Word ?? string.Empty).ToUpperInvariant();
+            PhoneticUs = string.IsNullOrWhiteSpace(detail.Phonetic) ? "/n/a/" : detail.Phonetic;
+            PhoneticUk = string.IsNullOrWhiteSpace(detail.Phonetic) ? "/n/a/" : detail.Phonetic;
+            UsAudioUrl = detail.AudioUs ?? string.Empty;
+            UkAudioUrl = detail.AudioUk ?? string.Empty;
 
-                // Load ảnh async nếu cần
-                //_ = LoadImageAsync(detail.ImageUrl);
+            LoadWordImage(detail.ImageUrl);
+
+            try
+            {
+                _snapshot = await _wordService.GetWordEntryByDetail(detail, 0, 0);
+                IsFavorited = _snapshot?.IsFavorited ?? false;
+            }
+            catch
+            {
+                IsFavorited = false;
+            }
         }
 
         /// <summary>
@@ -206,26 +215,69 @@ namespace BlueBerryDictionary.ViewModels
         }
 
         [RelayCommand]
-        private void ToggleFavorite()
+        private async Task FavoriteAsync()
         {
-            IsFavorite = !IsFavorite;
-            // TODO: Persist to database
+            if (WordDetail == null) return;
+
+            _snapshot ??= await _wordService.GetWordEntryByDetail(WordDetail, 0, 0);
+            if (_snapshot == null) return;
+
+            await _wordService.FavoriteAsync(_snapshot);
+            IsFavorited = _snapshot.IsFavorited;
         }
 
         [RelayCommand]
-        private void SaveWord()
+        private async Task SaveWord()
         {
-            if (WordDetail?.Word == null)
-                return;
+            if (WordDetail == null) return;
 
-            // TODO: Implement save logic
-            MessageBox.Show("Word saved to favorites", "Success");
+            try
+            {
+                var dialog = new MeaningSelectorDialog(WordDetail)
+                {
+                    Owner = Application.Current?.MainWindow
+                };
+
+                if (dialog.ShowDialog() != true || dialog.SelectedEntry == null)
+                    return;
+
+                var entry = dialog.SelectedEntry;
+                entry.UserId ??= "GUEST";
+
+                await _wordService.SmartUpdate(entry);
+
+                if (dialog.SelectedTag != null)
+                {
+                    var tagService = App.serviceProvider.GetRequiredService<TagService>();
+                    await tagService.LinkWordToTagAsync(entry.UserId, entry.Word, entry.MeaningIndex, dialog.SelectedTag.Id);
+                }
+
+                MessageBox.Show($"✅ Saved '{entry.Word}' to My Words", "Completed successfully",
+                    MessageBoxButton.OK, MessageBoxImage.Information);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"❌ Error: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
         }
 
         [RelayCommand]
         private void OpenNote()
         {
-            // TODO: Open note editor dialog
+            if (WordDetail == null) return;
+
+            try
+            {
+                var dialog = new NoteWriterDialog(WordDetail, meaningIndex: _snapshot?.MeaningIndex ?? 0, definitionIndex: 0)
+                {
+                    Owner = Application.Current?.MainWindow
+                };
+                dialog.ShowDialog();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"❌ Error: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
         }
 
         [RelayCommand]
@@ -269,13 +321,7 @@ namespace BlueBerryDictionary.ViewModels
             }
         }
         [RelayCommand]
-        private async Task FavoriteAsync() 
-        {
-            var wordService = App.serviceProvider.GetRequiredService<WordService>();
-            snapShot = await wordService.GetWordEntryByDetail(WordDetail, 0, 0);
-            snapShot.IsFavorited =!snapShot.IsFavorited;
-            await wordService.FavoriteAsync(snapShot); 
-        }
+        private Task ToggleFavorite() => FavoriteAsync();
         #endregion
     }
 }

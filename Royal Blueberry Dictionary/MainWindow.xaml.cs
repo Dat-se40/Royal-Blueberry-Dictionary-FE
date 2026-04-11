@@ -31,6 +31,9 @@ namespace Royal_Blueberry_Dictionary
         private SearchViewModel searchViewModel;
         private NavigationService navigationService;
         private HomePage homePage;
+        public bool CanGoBack  => MainFrame.CanGoBack;
+        public bool CanGoForward => MainFrame.CanGoForward;     
+
         public MainWindow()
         {
             InitializeComponent();
@@ -52,19 +55,8 @@ namespace Royal_Blueberry_Dictionary
         }
         private void SideBarNavigate(object sender, RoutedEventArgs e) 
         {
-            var button = sender as Button;
-            var tag = button.Tag.ToString();
-            switch (tag)
-            {
-                case "History":
-                    navigationService.NavigateTo<HistoryPage, HistoryPageViewModel>("Hello"); 
-                    break;
-                case "Home":
-                    navigationService.NavigateTo<HomePage, SearchViewModel>("hello");
-                    break;
-                default:
-                    break;
-            }
+            if (sender is not Button button) return;
+            navigationService.NavigateByTag(button.Tag?.ToString());
 
         }
         /// <summary>
@@ -110,6 +102,15 @@ namespace Royal_Blueberry_Dictionary
         private void Overlay_MouseDown(object sender, MouseButtonEventArgs e)
         {
             CloseSidebar();
+        }
+        private void BackBtn_Click_1(object sender, RoutedEventArgs e)
+        {
+            navigationService.GoBack();
+        }
+
+        private void ForwardBtn_Click_1(object sender, RoutedEventArgs e)
+        {
+            navigationService.GoForward();
         }
     }
 }

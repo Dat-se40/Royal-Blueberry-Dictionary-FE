@@ -79,8 +79,8 @@ namespace Royal_Blueberry_Dictionary.Service
         /// </summary>
         public async Task FetchEverythingFromServerAsync(string userId)
         {
-            // 1. Tải Tags
-            var remoteTags = await _apiClient.GetAsync<List<Tag>>($"tags/user/{userId}");
+            // Thay "tags/user/{userId}" bằng "tags"
+            var remoteTags = await _apiClient.GetAsync<List<Tag>>("tags");
             if (remoteTags != null)
             {
                 foreach (var rTag in remoteTags)
@@ -93,8 +93,8 @@ namespace Royal_Blueberry_Dictionary.Service
                 }
             }
 
-            // 2. Tải Relations (Meta)
-            var remoteRels = await _apiClient.GetAsync<List<WordTagRelation>>($"relations/user/{userId}");
+            // Thay "relations/user/{userId}" bằng "relations"
+            var remoteRels = await _apiClient.GetAsync<List<WordTagRelation>>("relations");
             if (remoteRels != null)
             {
                 foreach (var rRel in remoteRels)
@@ -106,7 +106,11 @@ namespace Royal_Blueberry_Dictionary.Service
 
             await _tagRepo.SaveChangesAsync();
         }
-
+        public async Task<List<Tag>> GetAllTagsAsync(string userID = "GUEST") 
+        {
+            var re = await _tagRepo.GetAllTagsAsync(userID);
+            return re; 
+        } 
         #endregion
 
         #region Business Logic (UI Helpers)
@@ -158,6 +162,24 @@ namespace Royal_Blueberry_Dictionary.Service
             };
             await _tagRepo.AddRelationAsync(relation);
             await _tagRepo.SaveChangesAsync();
+        }
+
+        /// <summary>Toàn bộ <see cref="WordEntry"/> lưu cục bộ cho user (My Words).</summary>
+        public async Task<List<WordEntry>> GetAllWordEntriesAsync(string userId = "GUEST") =>
+            await _wordRepo.GetAllAsync(GetEffectiveId(userId));
+
+        /// <summary>Tag và số quan hệ từ–tag (cho dropdown My Words).</summary>
+        public async Task<List<(Tag Tag, int WordCount)>> GetTagsWithRelationCountsAsync(string userId = "GUEST")
+        {
+            var uid = GetEffectiveId(userId);
+            var tags = await _tagRepo.GetAllTagsAsync(uid);
+            var list = new List<(Tag, int)>();
+            foreach (var t in tags.OrderBy(t => t.Name))
+            {
+                var rels = await _tagRepo.GetRelationsByTagAsync(t.Id);
+                list.Add((t, rels.Count));
+            }
+            return list;
         }
 
         #endregion

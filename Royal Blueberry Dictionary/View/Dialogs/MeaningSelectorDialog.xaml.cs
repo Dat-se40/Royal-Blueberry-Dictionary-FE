@@ -91,7 +91,18 @@ namespace Royal_Blueberry_Dictionary.View.Dialogs
         {
             SelectedTag = TagsList.SelectedItem as Tag;
         }
-
+        public async void CreateTagButton_Click(object sender, RoutedEventArgs e) 
+        {
+            TagPickerDialog tagPickerDialog = new TagPickerDialog(); 
+            var result = tagPickerDialog.ShowDialog();   
+            if(result != null && result == true) 
+            {
+                var tagService = App.serviceProvider.GetRequiredService<TagService>();
+                var tags = await tagService.GetAllTagsAsync(UserId);
+                Tags.Clear();
+                Tags.AddRange(tags);    
+            }
+        }
         private void SaveButton_Click(object sender, RoutedEventArgs e)
         {
             SaveSelectionAndClose(applyTag: true);
