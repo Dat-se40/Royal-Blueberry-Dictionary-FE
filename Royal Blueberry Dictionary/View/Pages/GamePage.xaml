@@ -1,0 +1,87 @@
+﻿<Page x:Class="Royal_Blueberry_Dictionary.View.Pages.GamePage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+      xmlns:local="clr-namespace:Royal_Blueberry_Dictionary.View.Pages"
+      xmlns:conv="clr-namespace:Royal_Blueberry_Dictionary.Converters"
+      mc:Ignorable="d"
+      d:DesignHeight="600" d:DesignWidth="1000"
+      Background="{DynamicResource MainBackground}">
+
+    <Page.Resources>
+        <conv:BoolToVisibilityConverter x:Key="BoolToVis" />
+
+        <Storyboard x:Key="FlipToBackPhase1" Completed="FlipToBackPhase1_Completed">
+            <DoubleAnimation Storyboard.TargetName="FlipTransform" Storyboard.TargetProperty="ScaleX" From="1" To="0" Duration="0:0:0.2" />
+        </Storyboard>
+        <Storyboard x:Key="FlipToBackPhase2" Completed="AnimationCompleted">
+            <DoubleAnimation Storyboard.TargetName="FlipTransform" Storyboard.TargetProperty="ScaleX" From="0" To="1" Duration="0:0:0.2" />
+        </Storyboard>
+        <Storyboard x:Key="FlipToFrontPhase1" Completed="FlipToFrontPhase1_Completed">
+            <DoubleAnimation Storyboard.TargetName="FlipTransform" Storyboard.TargetProperty="ScaleX" From="1" To="0" Duration="0:0:0.2" />
+        </Storyboard>
+        <Storyboard x:Key="FlipToFrontPhase2" Completed="AnimationCompleted">
+            <DoubleAnimation Storyboard.TargetName="FlipTransform" Storyboard.TargetProperty="ScaleX" From="0" To="1" Duration="0:0:0.2" />
+        </Storyboard>
+    </Page.Resources>
+
+    <Grid>
+        <ScrollViewer x:Name="GameSelectionPanel" Visibility="Visible">
+            <StackPanel Margin="30">
+                <TextBlock Text="🎮 Game Mode" FontSize="36" FontWeight="Bold" HorizontalAlignment="Center" Foreground="{DynamicResource TextColor}"/>
+                <Border Background="{DynamicResource CardBackground}" CornerRadius="20" Padding="30" MouseDown="GameCard_Click" Cursor="Hand" Margin="0,20">
+                    <TextBlock Text="Bắt đầu học với Flashcard" HorizontalAlignment="Center" Foreground="{DynamicResource TextColor}"/>
+                </Border>
+            </StackPanel>
+        </ScrollViewer>
+
+        <Grid x:Name="GamePlayPanel" Visibility="Collapsed">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+
+            <Border Grid.Row="0" Background="{DynamicResource CardBackground}" Padding="20,15">
+                <DockPanel>
+                    <Button Content="✕ Thoát" Click="ExitGame_Click" Style="{StaticResource SearchButtonStyle}"/>
+                    <TextBlock Text="{Binding ProgressText}" DockPanel.Dock="Right" VerticalAlignment="Center" FontWeight="Bold" Foreground="{DynamicResource TextColor}"/>
+                </DockPanel>
+            </Border>
+
+            <Grid Grid.Row="1">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+
+                <Viewbox Grid.Row="0" Margin="30">
+                    <Border x:Name="FlashcardBorder" Width="700" Height="450" CornerRadius="25" Background="{DynamicResource CardBackground}" MouseDown="FlipCard_Click" BorderBrush="{DynamicResource BorderColor}" BorderThickness="2">
+                        <Border.RenderTransform>
+                            <ScaleTransform x:Name="FlipTransform" CenterX="350" CenterY="225" />
+                        </Border.RenderTransform>
+                        <Grid>
+                            <StackPanel x:Name="CardFront" VerticalAlignment="Center" HorizontalAlignment="Center">
+                                <TextBlock Text="{Binding CurrentCard.Word}" FontSize="48" FontWeight="Bold" Foreground="{DynamicResource TextColor}" HorizontalAlignment="Center"/>
+                                <TextBlock Text="{Binding CurrentCard.Phonetic}" FontSize="20" Opacity="0.7" Foreground="{DynamicResource TextColor}" HorizontalAlignment="Center"/>
+                            </StackPanel>
+
+                            <StackPanel x:Name="CardBack" Visibility="Collapsed" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="40">
+                                <TextBlock Text="{Binding CurrentCard.PartOfSpeech}" Foreground="CornflowerBlue" FontWeight="Bold" HorizontalAlignment="Center" Margin="0,0,0,10"/>
+                                <TextBlock Text="{Binding CurrentCard.Definition}" FontSize="24" TextWrapping="Wrap" TextAlignment="Center" Foreground="{DynamicResource TextColor}"/>
+                                <TextBlock Text="{Binding CurrentCard.Example}" FontSize="16" FontStyle="Italic" Margin="0,15" Opacity="0.7" Foreground="{DynamicResource TextColor}" TextAlignment="Center" TextWrapping="Wrap"/>
+                            </StackPanel>
+                        </Grid>
+                    </Border>
+                </Viewbox>
+
+                <UniformGrid Grid.Row="2" Columns="3" Margin="30">
+                    <Button Content="❌ Bỏ qua" Click="SkipCard_Click" Margin="5"/>
+                    <Button Content="◀ Trước" Click="PreviousCard_Click" IsEnabled="{Binding CanGoBack}" Margin="5"/>
+                    <Button Content="{Binding NextButtonText}" Click="NextCard_Click" Margin="5" Background="{DynamicResource ToolButtonActive}" Foreground="White"/>
+                </UniformGrid>
+            </Grid>
+        </Grid>
+    </Grid>
+</Page>
