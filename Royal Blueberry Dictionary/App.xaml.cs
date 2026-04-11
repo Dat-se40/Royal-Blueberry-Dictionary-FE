@@ -7,6 +7,7 @@ using Royal_Blueberry_Dictionary.Database;
 using Royal_Blueberry_Dictionary.Service.ApiClient;
 using Royal_Blueberry_Dictionary.View.Pages;
 using Royal_Blueberry_Dictionary.ViewModel;
+using System.IO;
 using System.Windows;
 
 namespace Royal_Blueberry_Dictionary
@@ -28,9 +29,13 @@ namespace Royal_Blueberry_Dictionary
             base.OnStartup(e);
 
             var serviceCollection = new ServiceCollection();
+            var dbFolder = Path.Combine(
+    Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
+    "RoyalBlueberryDictionary"
+);
+            Directory.CreateDirectory(dbFolder);
             serviceCollection.AddDbContext<AppDbContext>(options =>
-                options.UseSqlite("Data Source=blueberry.db"));
-
+                options.UseSqlite($"Data Source={Path.Combine(dbFolder, "blueberry.db")}"));
             var config = new ConfigurationBuilder()
                 .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
                 .Build();
@@ -64,6 +69,7 @@ namespace Royal_Blueberry_Dictionary
             serviceCollection.AddTransient<HomePage>();
             serviceCollection.AddTransient<SettingsPage>();
             serviceCollection.AddTransient<AccountPage>();
+            serviceCollection.AddTransient<GamePage>(); 
 
             serviceCollection.AddScoped<DetailsPageViewModel>();
             serviceCollection.AddScoped<SearchViewModel>();
@@ -73,6 +79,7 @@ namespace Royal_Blueberry_Dictionary
             serviceCollection.AddScoped<SettingsPageViewModel>();
             serviceCollection.AddScoped<AccountPageViewModel>();
             serviceCollection.AddTransient<WelcomeWindowViewModel>();
+            serviceCollection.AddTransient<GameViewModel>();
 
             serviceProvider = serviceCollection.BuildServiceProvider();
 

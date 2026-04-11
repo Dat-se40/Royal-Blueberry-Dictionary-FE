@@ -73,6 +73,7 @@ namespace Royal_Blueberry_Dictionary.ViewModel
 
         private async Task LoadDataCoreAsync()
         {
+            await _wordService.CleanUpData(); 
             _allEntries = await _tagService.GetAllWordEntriesAsync(UserId);
 
             TagRows.Clear();
@@ -152,7 +153,6 @@ namespace Royal_Blueberry_Dictionary.ViewModel
                 words = words.Where(w =>
                         string.Equals(w.PartOfSpeech, SelectedPartOfSpeech, StringComparison.OrdinalIgnoreCase))
                     .ToList();
-
             var filterParts = new List<string>();
             if (SelectedTag != null) filterParts.Add(SelectedTag.Name);
             if (!string.IsNullOrEmpty(SelectedLetter) && !string.Equals(SelectedLetter, "ALL", StringComparison.OrdinalIgnoreCase))
@@ -261,9 +261,8 @@ namespace Royal_Blueberry_Dictionary.ViewModel
                     .GetRequiredService<ITagRepository>();
 
                 await tagRepo.DeleteRelationsByWordAsync(UserId, wordEntry.Word, wordEntry.MeaningIndex);
-                await tagRepo.SaveChangesAsync();
-
                 await _wordService.DeleteWordEntryAsync(wordEntry.Id);
+                await tagRepo.SaveChangesAsync();
 
                 var savedTag = SelectedTag;
                 var savedLetter = SelectedLetter;

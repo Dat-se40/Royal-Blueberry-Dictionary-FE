@@ -86,6 +86,9 @@ namespace Royal_Blueberry_Dictionary.Service
                 case "MyWords":
                     NavigateTo<MyWordsPage, MyWordsPageViewModel>(null);
                     break;
+                case "Game":
+                    NavigateTo<GamePage, GameViewModel>(null);
+                    break;
                 case "Account":
                     NavigateTo<AccountPage, AccountPageViewModel>(null);
                     break;

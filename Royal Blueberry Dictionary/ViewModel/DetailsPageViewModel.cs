@@ -249,7 +249,7 @@ namespace BlueBerryDictionary.ViewModels
                 if (dialog.SelectedTag != null)
                 {
                     var tagService = App.serviceProvider.GetRequiredService<TagService>();
-                    await tagService.LinkWordToTagAsync(entry.UserId, entry.Word, entry.MeaningIndex, dialog.SelectedTag.Id);
+                    await tagService.LinkWordToTagAsync(entry.UserId, entry.Word, entry.MeaningIndex, dialog.SelectedTag.Id,entry.IsFavorited, entry.Note);
                 }
 
                 MessageBox.Show($"✅ Saved '{entry.Word}' to My Words", "Completed successfully",

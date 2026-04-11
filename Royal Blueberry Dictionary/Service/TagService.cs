@@ -193,7 +193,7 @@ namespace Royal_Blueberry_Dictionary.Service
         /// <summary>
         /// Gắn tag cho một từ. Tạo một bản ghi Relation (Meta).
         /// </summary>
-        public async Task LinkWordToTagAsync(string userId, string word, int meaningIndex, string tagId)
+        public async Task LinkWordToTagAsync(string userId, string word, int meaningIndex, string tagId, bool isFavourite, string note)
         {
             var relation = new WordTagRelation
             {
@@ -201,6 +201,8 @@ namespace Royal_Blueberry_Dictionary.Service
                 Word = word,
                 MeaningIndex = meaningIndex,
                 TagId = tagId,
+                IsFavourite = isFavourite,
+                Note = note ,
                 IsDirty = true
             };
             await _tagRepo.AddRelationAsync(relation);
