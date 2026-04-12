@@ -1,27 +1,40 @@
-﻿using System;
+﻿using Royal_Blueberry_Dictionary.Service;
+using Royal_Blueberry_Dictionary.ViewModel;
+using System;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media.Animation;
-using Royal_Blueberry_Dictionary.ViewModel;
+using Royal_Blueberry_Dictionary.Service;
+using Royal_Blueberry_Dictionary.Model;
 
 namespace Royal_Blueberry_Dictionary.View.Pages
 {
     public partial class GamePage : Page
     {
-        private GameViewModel _viewModel;
+        private readonly GameViewModel _viewModel;
+        private readonly Service.WordService _wordService;
 
-        public GamePage()
+        public GamePage(GameViewModel viewModel, Service.WordService wordService)
         {
             InitializeComponent();
             _viewModel = new GameViewModel();
+            _wordService = wordService;
             this.DataContext = _viewModel;
         }
 
-        private void GameCard_Click(object sender, MouseButtonEventArgs e)
+        private async void GameCard_Click(object sender, MouseButtonEventArgs e)
         {
-            // Tạm thời dùng dữ liệu giả để test, bạn sẽ thay bằng logic lấy từ WordService sau
-            _viewModel.StartGame(new System.Collections.Generic.List<Model.WordEntry>(), "Tất cả từ");
+            var userWords = await _wordService.GetAllWordsAsync();
+            if (userWords == null || userWords.Count == 0)
+            {
+                userWords = new List<Model.WordEntry>
+                {
+                    new Model.WordEntry { Word = "Blueberry", Phonetic = "/ˈbluː.bər.i/", PartOfSpeech = "Noun", Definition = "Quả việt quất", Example = "Blueberries are healthy." },
+                    new Model.WordEntry { Word = "Dictionary", Phonetic = "/ˈdɪk.ʃən.ər.i/", PartOfSpeech = "Noun", Definition = "Từ điển", Example = "I use a dictionary." }
+                };
+            }
+            _viewModel.StartGame(userWords, "My Vocabulary");
 
             GameSelectionPanel.Visibility = Visibility.Collapsed;
             GamePlayPanel.Visibility = Visibility.Visible;
@@ -33,7 +46,8 @@ namespace Royal_Blueberry_Dictionary.View.Pages
             _viewModel.IsAnimating = true;
 
             string sbName = !_viewModel.IsFlipped ? "FlipToBackPhase1" : "FlipToFrontPhase1";
-            ((Storyboard)FindResource(sbName)).Begin();
+            var sb = (Storyboard)FindResource(sbName);
+            if (sb != null) sb.Begin();
         }
 
         private void NextCard_Click(object sender, RoutedEventArgs e)

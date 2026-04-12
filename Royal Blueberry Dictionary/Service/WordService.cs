@@ -38,6 +38,11 @@ namespace Royal_Blueberry_Dictionary.Service
             }
             return newEntry;
         }
+
+        public async Task<List<WordEntry>> GetAllWordsAsync()
+        {
+            return await WordEntryRepository.GetAllAsync(App.UserId);
+        }
         public async Task<WordEntry> GetWordEntryByID (string ID) 
         {
             var res = await WordEntryRepository.GetByIdAsync(ID);

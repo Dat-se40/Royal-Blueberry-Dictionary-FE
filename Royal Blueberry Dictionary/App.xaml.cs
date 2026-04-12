@@ -78,8 +78,8 @@ namespace Royal_Blueberry_Dictionary
             serviceCollection.AddScoped<MyWordsPageViewModel>();
             serviceCollection.AddScoped<SettingsPageViewModel>();
             serviceCollection.AddScoped<AccountPageViewModel>();
+            serviceCollection.AddScoped<GameViewModel>();
             serviceCollection.AddTransient<WelcomeWindowViewModel>();
-            serviceCollection.AddTransient<GameViewModel>();
 
             serviceProvider = serviceCollection.BuildServiceProvider();
 
