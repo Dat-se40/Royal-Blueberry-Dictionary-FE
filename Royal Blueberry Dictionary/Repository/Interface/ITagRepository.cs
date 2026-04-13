@@ -7,8 +7,8 @@ namespace Royal_Blueberry_Dictionary.Repository.Interface
     {
         // Tag Operations
         Task<Tag?> GetTagByIdAsync(string id);
-        Task<List<Tag>> GetAllTagsAsync(string userId);
-        Task<List<Tag>> GetDirtyTagsAsync(string userId);
+        Task<List<Tag>> GetAllTagsAsync();
+        Task<List<Tag>> GetDirtyTagsAsync();
         Task AddTagAsync(Tag tag);
         Task UpdateTagAsync(Tag tag);
         Task DeleteTagAsync(string id);
@@ -19,7 +19,10 @@ namespace Royal_Blueberry_Dictionary.Repository.Interface
         Task<List<WordTagRelation>> GetDirtyRelationsAsync(string userId);
         Task AddRelationAsync(WordTagRelation relation);
         Task RemoveRelationAsync(string tagId, string word, int meaningIndex);
-
+        /// <summary>
+        /// Cascade delete toàn bộ WordTagRelation của một word+meaningIndex
+        /// </summary>
+        Task DeleteRelationsByWordAsync(string userId, string word, int meaningIndex);
         Task SaveChangesAsync();
     }
 }

@@ -15,18 +15,17 @@ namespace Royal_Blueberry_Dictionary.Repository.Implement
             _context = context;
         }
 
-        private string GetEffectiveId(string userId) => string.IsNullOrEmpty(userId) ? "GUEST" : userId;
         public async Task<Tag?> GetTagByIdAsync(string id) => await _context.Tags.FindAsync(id);
 
-        public async Task<List<Tag>> GetAllTagsAsync(string userId) =>
-            await _context.Tags.Where(t => t.UserId == GetEffectiveId(userId)).ToListAsync();
+        public async Task<List<Tag>> GetAllTagsAsync() =>
+            await _context.Tags.Where(t => t.UserId == App.UserId).ToListAsync();
 
-        public async Task<List<Tag>> GetDirtyTagsAsync(string userId) =>
-            await _context.Tags.Where(t => t.UserId == GetEffectiveId(userId) && t.IsDirty).ToListAsync();
+        public async Task<List<Tag>> GetDirtyTagsAsync() =>
+            await _context.Tags.Where(t => t.UserId == App.UserId && t.IsDirty).ToListAsync();
 
         public async Task AddTagAsync(Tag tag)
         {
-            tag.UserId = GetEffectiveId(tag.UserId);
+            tag.UserId = App.UserId;
             tag.IsDirty = true;
             await _context.Tags.AddAsync(tag);
         }
@@ -48,16 +47,16 @@ namespace Royal_Blueberry_Dictionary.Repository.Implement
 
         public async Task<List<WordTagRelation>> GetRelationsByWordAsync(string userId, string word, int meaningIndex) =>
             await _context.WordTagRelations.Where(r =>
-                r.UserId == GetEffectiveId(userId) &&
+                r.UserId == App.UserId &&
                 r.Word.ToLower() == word.ToLower() &&
                 r.MeaningIndex == meaningIndex).ToListAsync();
 
         public async Task<List<WordTagRelation>> GetDirtyRelationsAsync(string userId) =>
-            await _context.WordTagRelations.Where(r => r.UserId == GetEffectiveId(userId) && r.IsDirty).ToListAsync();
+            await _context.WordTagRelations.Where(r => r.UserId == App.UserId && r.IsDirty).ToListAsync();
 
         public async Task AddRelationAsync(WordTagRelation relation)
         {
-            relation.UserId = GetEffectiveId(relation.UserId);
+            relation.UserId = App.UserId;
             relation.IsDirty = true;
             // Kiểm tra trùng lặp trước khi add
             var exists = await _context.WordTagRelations.AnyAsync(r =>
@@ -74,5 +73,19 @@ namespace Royal_Blueberry_Dictionary.Repository.Implement
         }
 
         public async Task SaveChangesAsync() => await _context.SaveChangesAsync();
+
+        public async Task DeleteRelationsByWordAsync(string userId, string word, int meaningIndex)
+        {
+            var relations = await _context.WordTagRelations
+                .Where(r => r.UserId == App.UserId &&
+                            r.Word.ToLower() == word.ToLower() &&
+                            r.MeaningIndex == meaningIndex)
+                .ToListAsync();
+
+            if (relations.Count > 0)
+            {
+                _context.WordTagRelations.RemoveRange(relations);
+            }
+        }
     }
 }

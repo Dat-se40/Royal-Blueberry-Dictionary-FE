@@ -1,6 +1,8 @@
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using Microsoft.Extensions.DependencyInjection;
 using Royal_Blueberry_Dictionary.Model;
+using Royal_Blueberry_Dictionary.Repository.Interface;
 using Royal_Blueberry_Dictionary.Service;
 using Royal_Blueberry_Dictionary.View.Dialogs;
 using System;
@@ -37,7 +39,7 @@ namespace Royal_Blueberry_Dictionary.ViewModel
 
     public partial class MyWordsPageViewModel : ObservableObject, INavigationAware
     {
-        private const string UserId = "GUEST";
+        private string UserId => App.UserId; 
 
         private readonly TagService _tagService;
         private readonly WordService _wordService;
@@ -71,6 +73,7 @@ namespace Royal_Blueberry_Dictionary.ViewModel
 
         private async Task LoadDataCoreAsync()
         {
+            await _wordService.CleanUpData(); 
             _allEntries = await _tagService.GetAllWordEntriesAsync(UserId);
 
             TagRows.Clear();
@@ -150,7 +153,6 @@ namespace Royal_Blueberry_Dictionary.ViewModel
                 words = words.Where(w =>
                         string.Equals(w.PartOfSpeech, SelectedPartOfSpeech, StringComparison.OrdinalIgnoreCase))
                     .ToList();
-
             var filterParts = new List<string>();
             if (SelectedTag != null) filterParts.Add(SelectedTag.Name);
             if (!string.IsNullOrEmpty(SelectedLetter) && !string.Equals(SelectedLetter, "ALL", StringComparison.OrdinalIgnoreCase))
@@ -244,26 +246,44 @@ namespace Royal_Blueberry_Dictionary.ViewModel
         private async Task DeleteWordEntryAsync(WordEntry? wordEntry)
         {
             if (wordEntry == null) return;
+
             var result = MessageBox.Show(
-                $"Are you sure you want to delete this entry for '{wordEntry.Word}'?",
-                "Confirmation",
+                $"Are you sure you want to delete '{wordEntry.Word}'?\n\nThis will also remove it from all tags.",
+                "Confirm Delete",
                 MessageBoxButton.YesNo,
                 MessageBoxImage.Question);
+
             if (result != MessageBoxResult.Yes) return;
 
-            var savedTag = SelectedTag;
-            var savedLetter = SelectedLetter;
-            var savedPos = SelectedPartOfSpeech;
+            try
+            {
+                var tagRepo = App.serviceProvider
+                    .GetRequiredService<ITagRepository>();
 
-            await _wordService.DeleteWordEntryAsync(wordEntry.Id);
+                await tagRepo.DeleteRelationsByWordAsync(UserId, wordEntry.Word, wordEntry.MeaningIndex);
+                await _wordService.DeleteWordEntryAsync(wordEntry.Id);
+                await tagRepo.SaveChangesAsync();
 
-            await LoadDataCoreAsync();
-            SelectedTag = savedTag != null && TagRows.Any(r => r.Tag.Id == savedTag.Id) ? savedTag : null;
-            SelectedLetter = savedLetter;
-            SelectedPartOfSpeech = savedPos;
-            foreach (var item in AlphabetItems)
-                item.IsActive = string.Equals(item.Letter, SelectedLetter, StringComparison.OrdinalIgnoreCase);
-            await ApplyFiltersAsync();
+                var savedTag = SelectedTag;
+                var savedLetter = SelectedLetter;
+                var savedPos = SelectedPartOfSpeech;
+
+                await LoadDataCoreAsync();
+
+                SelectedTag = savedTag != null && TagRows.Any(r => r.Tag.Id == savedTag.Id) ? savedTag : null;
+                SelectedLetter = savedLetter;
+                SelectedPartOfSpeech = savedPos;
+
+                await ApplyFiltersAsync();
+
+                MessageBox.Show($"✅ Deleted '{wordEntry.Word}", "Success",
+                    MessageBoxButton.OK, MessageBoxImage.Information);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"❌ Error deleting entry: {ex.Message}", "Error",
+                    MessageBoxButton.OK, MessageBoxImage.Error);
+            }
         }
 
         [RelayCommand]

@@ -46,7 +46,7 @@ namespace Royal_Blueberry_Dictionary.Service
 
         private async Task SyncTagsToServerAsync(string userId)
         {
-            var dirtyTags = await _tagRepo.GetDirtyTagsAsync(userId);
+            var dirtyTags = await _tagRepo.GetDirtyTagsAsync();
             foreach (var tag in dirtyTags)
             {
                 var response = await _apiClient.PostAsync<Tag>("tags/sync", tag);
@@ -79,7 +79,9 @@ namespace Royal_Blueberry_Dictionary.Service
         /// </summary>
         public async Task FetchEverythingFromServerAsync(string userId)
         {
-            // Thay "tags/user/{userId}" bằng "tags"
+            string uid = GetEffectiveId(userId);
+
+            // 1. Tải Tags từ Server
             var remoteTags = await _apiClient.GetAsync<List<Tag>>("tags");
             if (remoteTags != null)
             {
@@ -93,7 +95,7 @@ namespace Royal_Blueberry_Dictionary.Service
                 }
             }
 
-            // Thay "relations/user/{userId}" bằng "relations"
+            // 2. Tải Relations từ Server
             var remoteRels = await _apiClient.GetAsync<List<WordTagRelation>>("relations");
             if (remoteRels != null)
             {
@@ -104,11 +106,52 @@ namespace Royal_Blueberry_Dictionary.Service
                 }
             }
 
+            // Lưu Tags và Relations xuống Local DB trước
             await _tagRepo.SaveChangesAsync();
+
+            // 3. (MỚI) Rà soát và tải WordEntry còn thiếu dựa trên Relations vừa đồng bộ
+            await FetchMissingWordsForRelationsAsync(uid);
         }
-        public async Task<List<Tag>> GetAllTagsAsync(string userID = "GUEST") 
+        /// <summary>
+        /// Hàm helper: Kiểm tra Relation và tải WordEntry thiếu từ API
+        /// </summary>
+        private async Task FetchMissingWordsForRelationsAsync(string uid)
         {
-            var re = await _tagRepo.GetAllTagsAsync(userID);
+            // Lấy các từ đã có ở Local để đối chiếu (tránh tải lại)
+            var localEntries = await _wordRepo.GetAllAsync(uid);
+            var existingKeys = new HashSet<string>(
+                localEntries.Select(e => $"{e.Word}_{e.MeaningIndex}"),
+                StringComparer.OrdinalIgnoreCase);
+
+            var allTags = await _tagRepo.GetAllTagsAsync();
+
+            foreach (var tag in allTags)
+            {
+                var relations = await _tagRepo.GetRelationsByTagAsync(tag.Id);
+
+                foreach (var rel in relations)
+                {
+                    var key = $"{rel.Word}_{rel.MeaningIndex}";
+
+                    // Nếu Relation tham chiếu đến một từ chưa có ở Local DB -> Tải về
+                    if (!existingKeys.Contains(key))
+                    {
+                        var detail = await _searchService.searchAWord(rel.Word);
+                        if (detail != null)
+                        {
+                            var newEntry = WordService.MapWordDetailToWordEntry(detail, rel.MeaningIndex, 0);
+                            newEntry.UserId = uid;
+
+                            await _wordRepo.AddAsync(newEntry);
+                            existingKeys.Add(key); 
+                        }
+                    }
+                }
+            }
+        }
+        public async Task<List<Tag>> GetAllTagsAsync() 
+        {
+            var re = await _tagRepo.GetAllTagsAsync();
             return re; 
         } 
         #endregion
@@ -150,7 +193,7 @@ namespace Royal_Blueberry_Dictionary.Service
         /// <summary>
         /// Gắn tag cho một từ. Tạo một bản ghi Relation (Meta).
         /// </summary>
-        public async Task LinkWordToTagAsync(string userId, string word, int meaningIndex, string tagId)
+        public async Task LinkWordToTagAsync(string userId, string word, int meaningIndex, string tagId, bool isFavourite, string note)
         {
             var relation = new WordTagRelation
             {
@@ -158,6 +201,8 @@ namespace Royal_Blueberry_Dictionary.Service
                 Word = word,
                 MeaningIndex = meaningIndex,
                 TagId = tagId,
+                IsFavourite = isFavourite,
+                Note = note ,
                 IsDirty = true
             };
             await _tagRepo.AddRelationAsync(relation);
@@ -172,7 +217,7 @@ namespace Royal_Blueberry_Dictionary.Service
         public async Task<List<(Tag Tag, int WordCount)>> GetTagsWithRelationCountsAsync(string userId = "GUEST")
         {
             var uid = GetEffectiveId(userId);
-            var tags = await _tagRepo.GetAllTagsAsync(uid);
+            var tags = await _tagRepo.GetAllTagsAsync();
             var list = new List<(Tag, int)>();
             foreach (var t in tags.OrderBy(t => t.Name))
             {

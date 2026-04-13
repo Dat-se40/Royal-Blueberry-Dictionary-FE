@@ -34,6 +34,7 @@ namespace Royal_Blueberry_Dictionary.ViewModel
 
         private async Task LoadFavoritesAsync()
         {
+            await _wordService.CleanUpData(); 
             _allFavorites = await _wordService.GetFavoritedWordsAsync();
             ApplyFilter();
         }

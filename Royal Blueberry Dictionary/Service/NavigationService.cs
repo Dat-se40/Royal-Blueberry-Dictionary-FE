@@ -1,55 +1,74 @@
-﻿using Microsoft.Extensions.DependencyInjection;
 using BlueBerryDictionary.ViewModels;
+using Microsoft.Extensions.DependencyInjection;
 using Royal_Blueberry_Dictionary.View.Pages;
 using Royal_Blueberry_Dictionary.ViewModel;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Controls;
 
 namespace Royal_Blueberry_Dictionary.Service
 {
     public class NavigationService
     {
-        private readonly Dictionary<Type, object> _viewModelCache = new();
-        private readonly IServiceProvider _sp;
-        private Frame _mainFrame; 
-        public NavigationService(IServiceProvider sp)
-        {
-            _sp = sp;
-        }   
-        public void NavigateTo<View,ViewModel>(object param) where View : Page 
-                                                             where ViewModel : class 
-        {
-            if (!_viewModelCache.TryGetValue(typeof(ViewModel) , out var viewModel)) 
-            {
-                _viewModelCache[typeof(ViewModel)] = viewModel = _sp.GetRequiredService<ViewModel>();   
-            }
-            var view = _sp.GetRequiredService<View>();  
-            view.DataContext = viewModel;
-            if (viewModel is INavigationAware nav) nav.OnNavigatedTo(param);
-            _mainFrame.Navigate(view);  
-        }
-        public void ClearCache<ViewModel>() => _viewModelCache.Remove(typeof(ViewModel));   
+        private readonly Dictionary<Type, object> viewModelCache = new();
+        private readonly IServiceProvider serviceProvider;
+        private Frame? mainFrame;
 
-        public void GoBack() 
+        public NavigationService(IServiceProvider serviceProvider)
         {
-            if (_mainFrame.CanGoBack) 
+            this.serviceProvider = serviceProvider;
+        }
+
+        public void NavigateTo<TView, TViewModel>(object? parameter) where TView : Page
+                                                                 where TViewModel : class
+        {
+            if (mainFrame == null)
             {
-                _mainFrame.GoBack();    
+                throw new InvalidOperationException("Main frame has not been initialized.");
+            }
+
+            if (!viewModelCache.TryGetValue(typeof(TViewModel), out var viewModel))
+            {
+                viewModel = serviceProvider.GetRequiredService<TViewModel>();
+                viewModelCache[typeof(TViewModel)] = viewModel;
+            }
+
+            var view = serviceProvider.GetRequiredService<TView>();
+            view.DataContext = viewModel;
+
+            if (viewModel is INavigationAware navigationAware)
+            {
+                navigationAware.OnNavigatedTo(parameter!);
+            }
+
+            mainFrame.Navigate(view);
+        }
+
+        public void ClearCache<TViewModel>()
+        {
+            viewModelCache.Remove(typeof(TViewModel));
+        }
+
+        public void GoBack()
+        {
+            if (mainFrame?.CanGoBack == true)
+            {
+                mainFrame.GoBack();
             }
         }
-        public void GoForward() 
+
+        public void GoForward()
         {
-            if (_mainFrame.CanGoForward) 
+            if (mainFrame?.CanGoForward == true)
             {
-                _mainFrame.GoForward();    
+                mainFrame.GoForward();
             }
         }
-        public void SetMainFrame(Frame frame) => _mainFrame = frame;   
+
+        public void SetMainFrame(Frame frame)
+        {
+            mainFrame = frame;
+        }
 
         public void NavigateByTag(string? tag)
         {
@@ -67,15 +86,22 @@ namespace Royal_Blueberry_Dictionary.Service
                 case "MyWords":
                     NavigateTo<MyWordsPage, MyWordsPageViewModel>(null);
                     break;
+                case "Game":
+                    NavigateTo<GamePage, GameViewModel>(null);
+                    break;
+                case "Account":
+                    NavigateTo<AccountPage, AccountPageViewModel>(null);
+                    break;
                 case "Setting":
                     NavigateTo<SettingsPage, SettingsPageViewModel>(null);
-                    break; 
+                    break;
             }
         }
     }
+
     public interface INavigationAware
     {
         void OnNavigatedTo(object parameter);
-        void OnNavigatedFrom(); 
+        void OnNavigatedFrom();
     }
 }

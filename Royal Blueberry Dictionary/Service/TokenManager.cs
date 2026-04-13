@@ -1,33 +1,56 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.IO;
 
 namespace Royal_Blueberry_Dictionary.Service
 {
-    public static class TokenManager
+    public class TokenManager
     {
-        private static string _jwtToken;
+        private const string AccessTokenPath = "access_token.bin";
+        private const string RefreshTokenPath = "refresh_token.bin";
 
-        // Lưu vào RAM (App tắt là mất đăng nhập - dễ làm nhất)
-        public static void SaveToken(string token)
+        public static event EventHandler? TokensChanged;
+
+        public static void SaveTokens(string accessToken, string refreshToken)
         {
-            _jwtToken = token;
+            File.WriteAllText(AccessTokenPath, accessToken);
+            File.WriteAllText(RefreshTokenPath, refreshToken);
+            RaiseTokensChanged();
         }
 
-        public static string GetToken()
+        public static string? GetAccessToken() =>
+            File.Exists(AccessTokenPath) ? File.ReadAllText(AccessTokenPath) : null;
+
+        public static string? GetRefreshToken() =>
+            File.Exists(RefreshTokenPath) ? File.ReadAllText(RefreshTokenPath) : null;
+
+        public static bool HasStoredTokens() =>
+            !string.IsNullOrWhiteSpace(GetAccessToken()) &&
+            !string.IsNullOrWhiteSpace(GetRefreshToken());
+
+        public static void ClearTokens()
         {
-            return _jwtToken;
+            var hasChanges = false;
+
+            if (File.Exists(AccessTokenPath))
+            {
+                File.Delete(AccessTokenPath);
+                hasChanges = true;
+            }
+
+            if (File.Exists(RefreshTokenPath))
+            {
+                File.Delete(RefreshTokenPath);
+                hasChanges = true;
+            }
+
+            if (hasChanges)
+            {
+                RaiseTokensChanged();
+            }
         }
 
-        public static void ClearToken()
+        private static void RaiseTokensChanged()
         {
-            _jwtToken = null;
+            TokensChanged?.Invoke(null, EventArgs.Empty);
         }
-
-        // Lưu ý pro: Nếu bạn đang làm WPF và muốn tắt app mở lại vẫn CÒN đăng nhập, 
-        // hãy lưu vào Properties.Settings.Default thay vì biến static.
-        // Nếu làm MAUI, hãy dùng SecureStorage.SetAsync("jwt", token).
     }
 }

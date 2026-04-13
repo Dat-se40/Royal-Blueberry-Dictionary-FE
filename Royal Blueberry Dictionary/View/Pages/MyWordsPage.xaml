@@ -422,7 +422,7 @@
                                                                                Foreground="{DynamicResource TextColor}"
                                                                                Opacity="0.7">
                                                                         <Run Text="{Binding WordCount, Mode=OneWay}" />
-                                                                        <Run Text=" từ" />
+                                                                        <Run Text=" words" />
                                                                     </TextBlock>
                                                                 </StackPanel>
                                                             </Grid>

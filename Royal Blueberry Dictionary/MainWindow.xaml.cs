@@ -1,70 +1,72 @@
-﻿using Microsoft.Extensions.DependencyInjection;
-using Royal_Blueberry_Dictionary.Model;
+using Microsoft.Extensions.DependencyInjection;
 using Royal_Blueberry_Dictionary.Service;
 using Royal_Blueberry_Dictionary.View.Pages;
 using Royal_Blueberry_Dictionary.ViewModel;
-using System.Net.Http;
-using System.Net.WebSockets;
-using System.Text;
-using System.Text.Json;
-using System.Text.Json.Nodes;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 using NavigationService = Royal_Blueberry_Dictionary.Service.NavigationService;
 
 namespace Royal_Blueberry_Dictionary
 {
-    /// <summary>
-    /// Interaction logic for MainWindow.xaml
-    /// </summary>
     public partial class MainWindow : Window
     {
-        private bool _isSidebarOpen = false;
-        private SearchViewModel searchViewModel;
-        private NavigationService navigationService;
-        private HomePage homePage;
-        public bool CanGoBack  => MainFrame.CanGoBack;
-        public bool CanGoForward => MainFrame.CanGoForward;     
+        private bool isSidebarOpen;
+        private readonly SearchViewModel searchViewModel;
+        private readonly NavigationService navigationService;
+        private readonly AuthService authService;
 
         public MainWindow()
         {
             InitializeComponent();
+
             searchViewModel = App.serviceProvider.GetRequiredService<SearchViewModel>();
             navigationService = App.serviceProvider.GetRequiredService<NavigationService>();
+            authService = App.serviceProvider.GetRequiredService<AuthService>();
+
             navigationService.SetMainFrame(MainFrame);
-            this.DataContext = searchViewModel;
-            navigationService.NavigateTo<HomePage, SearchViewModel>("hello");
+            DataContext = searchViewModel;
+
+            Closed += MainWindow_Closed;
+            authService.AuthStateChanged += OnAuthStateChanged;
+
+            navigationService.NavigateTo<HomePage, SearchViewModel>("home");
+            RefreshAuthSummary();
         }
-        /// <summary>
-        /// Toggle Sidebar (Hamburger button)
-        /// </summary>
+
+        private void MainWindow_Closed(object? sender, EventArgs e)
+        {
+            authService.AuthStateChanged -= OnAuthStateChanged;
+        }
+
         private void HamburgerBtn_Click(object sender, RoutedEventArgs e)
         {
-            if (_isSidebarOpen)
+            if (isSidebarOpen)
+            {
                 CloseSidebar();
+            }
             else
+            {
                 OpenSidebar();
+            }
         }
-        private void SideBarNavigate(object sender, RoutedEventArgs e) 
-        {
-            if (sender is not Button button) return;
-            navigationService.NavigateByTag(button.Tag?.ToString());
 
+        private void SideBarNavigate(object sender, RoutedEventArgs e)
+        {
+            if (sender is not Button button)
+            {
+                return;
+            }
+
+            navigationService.NavigateByTag(button.Tag?.ToString());
+            CloseSidebar();
         }
-        /// <summary>
-        /// Open Sidebar with animation
-        /// </summary>
+
         private void OpenSidebar()
         {
-            _isSidebarOpen = true;
+            isSidebarOpen = true;
             Overlay.Visibility = Visibility.Visible;
 
             var animation = new DoubleAnimation
@@ -78,12 +80,9 @@ namespace Royal_Blueberry_Dictionary
             Sidebar.RenderTransform.BeginAnimation(TranslateTransform.XProperty, animation);
         }
 
-        /// <summary>
-        /// Close Sidebar with animation
-        /// </summary>
         private void CloseSidebar()
         {
-            _isSidebarOpen = false;
+            isSidebarOpen = false;
 
             var animation = new DoubleAnimation
             {
@@ -93,16 +92,15 @@ namespace Royal_Blueberry_Dictionary
                 EasingFunction = new CubicEase { EasingMode = EasingMode.EaseIn }
             };
 
-            animation.Completed += (s, e) => Overlay.Visibility = Visibility.Collapsed;
+            animation.Completed += (_, _) => Overlay.Visibility = Visibility.Collapsed;
             Sidebar.RenderTransform.BeginAnimation(TranslateTransform.XProperty, animation);
         }
-        /// <summary>
-        /// Close sidebar when clicking overlay
-        /// </summary>
+
         private void Overlay_MouseDown(object sender, MouseButtonEventArgs e)
         {
             CloseSidebar();
         }
+
         private void BackBtn_Click_1(object sender, RoutedEventArgs e)
         {
             navigationService.GoBack();
@@ -111,6 +109,29 @@ namespace Royal_Blueberry_Dictionary
         private void ForwardBtn_Click_1(object sender, RoutedEventArgs e)
         {
             navigationService.GoForward();
+        }
+
+        private void ReloadBtn_Click(object sender, RoutedEventArgs e)
+        {
+            MainFrame.NavigationService?.Refresh();
+        }
+
+        private void OnAuthStateChanged(object? sender, EventArgs e)
+        {
+            Dispatcher.Invoke(RefreshAuthSummary);
+        }
+
+        private void RefreshAuthSummary()
+        {
+            if (authService.IsAuthenticated)
+            {
+                SidebarUserStatus.Text = authService.CurrentUser?.Name ?? "Signed in";
+                SidebarUserHint.Text = authService.CurrentUser?.Email ?? "Authenticated with JWT";
+                return;
+            }
+
+            SidebarUserStatus.Text = "Guest mode";
+            SidebarUserHint.Text = "Open Account to sign in or create an account";
         }
     }
 }

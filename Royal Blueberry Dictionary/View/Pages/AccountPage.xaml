@@ -1,0 +1,383 @@
+<Page x:Class="Royal_Blueberry_Dictionary.View.Pages.AccountPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+      xmlns:conv="clr-namespace:Royal_Blueberry_Dictionary.Converters"
+      xmlns:uc="clr-namespace:Royal_Blueberry_Dictionary.View.User_Control"
+      mc:Ignorable="d"
+      d:DesignHeight="820"
+      d:DesignWidth="1200"
+      Background="{DynamicResource MainBackground}">
+
+    <Page.Resources>
+        <conv:BoolToVisibilityConverter x:Key="BoolToVisibility"/>
+        <conv:StringNullOrEmptyToVisibilityConverter x:Key="StringToVisibility"/>
+
+        <Style x:Key="AuthTextBoxStyle" TargetType="TextBox">
+            <Setter Property="Background" Value="{DynamicResource SearchBackground}"/>
+            <Setter Property="Foreground" Value="{DynamicResource TextColor}"/>
+            <Setter Property="BorderBrush" Value="{DynamicResource BorderColor}"/>
+            <Setter Property="BorderThickness" Value="2"/>
+            <Setter Property="Padding" Value="14,10"/>
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="Margin" Value="0,6,0,0"/>
+        </Style>
+
+        <Style x:Key="AuthPasswordBoxStyle" TargetType="PasswordBox">
+            <Setter Property="Background" Value="{DynamicResource SearchBackground}"/>
+            <Setter Property="Foreground" Value="{DynamicResource TextColor}"/>
+            <Setter Property="BorderBrush" Value="{DynamicResource BorderColor}"/>
+            <Setter Property="BorderThickness" Value="2"/>
+            <Setter Property="Padding" Value="14,10"/>
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="Margin" Value="0,6,0,0"/>
+        </Style>
+
+        <Style x:Key="AuthModeButtonStyle" TargetType="Button" BasedOn="{StaticResource SecondaryButtonStyle}">
+            <Setter Property="Padding" Value="18,10"/>
+            <Setter Property="Margin" Value="0,0,10,0"/>
+        </Style>
+    </Page.Resources>
+
+    <Grid>
+        <ScrollViewer VerticalScrollBarVisibility="Auto">
+            <StackPanel MaxWidth="1120" Margin="30">
+                <Border Style="{StaticResource CardStyle}" Margin="0,0,0,28">
+                    <StackPanel Orientation="Horizontal">
+                        <Border Width="58" Height="58" CornerRadius="16" Background="{DynamicResource NavbarBackground}" Margin="0,0,16,0">
+                            <TextBlock Text="ID"
+                                       FontSize="20"
+                                       FontWeight="Bold"
+                                       Foreground="White"
+                                       HorizontalAlignment="Center"
+                                       VerticalAlignment="Center"/>
+                        </Border>
+                         <StackPanel>
+                              <TextBlock Text="Account" FontSize="32" FontWeight="Bold" Foreground="{DynamicResource TextColor}"/>
+                            <TextBlock Text="{Binding PageSubtitle}"
+                                        FontSize="15"
+                                        Foreground="{DynamicResource TextColor}"
+                                        Opacity="0.82"
+                                        TextWrapping="Wrap"/>
+                        </StackPanel>
+                    </StackPanel>
+                </Border>
+
+                <Border Style="{StaticResource CardStyle}" Padding="0" CornerRadius="28">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="330"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+
+                    <Border Grid.Column="0"
+                            Background="{DynamicResource NavbarBackground}"
+                            CornerRadius="28,0,0,28"
+                            Padding="26">
+                        <StackPanel VerticalAlignment="Center">
+                            <Grid Width="82" Height="82">
+                                <Border Width="82" Height="82" CornerRadius="41" Background="#1FFFFFFF" BorderBrush="#33FFFFFF" BorderThickness="2">
+                                    <TextBlock Text="{Binding SidebarInitial}"
+                                               FontSize="28"
+                                               FontWeight="Bold"
+                                               Foreground="White"
+                                               HorizontalAlignment="Center"
+                                               VerticalAlignment="Center"/>
+                                </Border>
+                                <Image Source="{Binding AvatarImage}"
+                                       Stretch="UniformToFill"
+                                       Visibility="{Binding HasAvatarImage, Converter={StaticResource BoolToVisibility}}">
+                                    <Image.Clip>
+                                        <EllipseGeometry Center="41,41" RadiusX="41" RadiusY="41"/>
+                                    </Image.Clip>
+                                </Image>
+                            </Grid>
+                            <TextBlock Text="{Binding SidebarTitle}" FontSize="28" FontWeight="Bold" Foreground="White" Margin="0,22,0,10"/>
+                            <TextBlock Text="{Binding SidebarDescription}"
+                                       FontSize="14"
+                                       Foreground="White"
+                                       Opacity="0.92"
+                                       TextWrapping="Wrap"
+                                       LineHeight="22"/>
+                            <Border Margin="0,24,0,0" Padding="14,10" CornerRadius="14" Background="#1AFFFFFF" BorderBrush="#2FFFFFFF" BorderThickness="1">
+                                <StackPanel>
+                                    <TextBlock Text="Status" FontSize="12" Foreground="White" Opacity="0.72"/>
+                                    <TextBlock Text="{Binding SessionState}" FontSize="16" FontWeight="SemiBold" Foreground="White"/>
+                                </StackPanel>
+                            </Border>
+                            <Border Margin="0,16,0,0" Padding="14,10" CornerRadius="14" Background="#1AFFFFFF" BorderBrush="#2FFFFFFF" BorderThickness="1">
+                                <StackPanel>
+                                    <TextBlock Text="Session" FontSize="12" Foreground="White" Opacity="0.72"/>
+                                    <TextBlock Text="{Binding SidebarSessionSummary}" FontSize="13" Foreground="White" TextWrapping="Wrap"/>
+                                </StackPanel>
+                            </Border>
+                        </StackPanel>
+                    </Border>
+
+                    <Grid Grid.Column="1" Margin="34,30,34,30">
+                        <Grid>
+                            <Grid.Style>
+                                <Style TargetType="Grid">
+                                    <Setter Property="Visibility" Value="Collapsed"/>
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding IsAuthenticated}" Value="False">
+                                            <Setter Property="Visibility" Value="Visible"/>
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </Grid.Style>
+
+                            <StackPanel>
+                                <TextBlock Text="Welcome back" FontSize="26" FontWeight="Bold" Foreground="{DynamicResource TextColor}"/>
+                                <TextBlock Text="Sign in with your Blueberry account, create a new one, or continue without signing in."
+                                           Margin="0,8,0,22"
+                                           FontSize="14"
+                                           TextWrapping="Wrap"
+                                           Foreground="{DynamicResource TextColor}"
+                                           Opacity="0.78"/>
+
+                                <StackPanel Orientation="Horizontal" Margin="0,0,0,18">
+                                    <Button Command="{Binding SwitchToLoginCommand}">
+                                        <Button.Style>
+                                            <Style TargetType="Button" BasedOn="{StaticResource AuthModeButtonStyle}">
+                                                <Style.Triggers>
+                                                    <DataTrigger Binding="{Binding IsLoginMode}" Value="True">
+                                                        <Setter Property="Background" Value="{DynamicResource ToolButtonActive}"/>
+                                                        <Setter Property="Foreground" Value="White"/>
+                                                    </DataTrigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </Button.Style>
+                                        <TextBlock Text="Sign in"/>
+                                    </Button>
+                                    <Button Command="{Binding SwitchToRegisterCommand}">
+                                        <Button.Style>
+                                            <Style TargetType="Button" BasedOn="{StaticResource AuthModeButtonStyle}">
+                                                <Style.Triggers>
+                                                    <DataTrigger Binding="{Binding IsRegisterMode}" Value="True">
+                                                        <Setter Property="Background" Value="{DynamicResource ToolButtonActive}"/>
+                                                        <Setter Property="Foreground" Value="White"/>
+                                                    </DataTrigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </Button.Style>
+                                        <TextBlock Text="Create account"/>
+                                    </Button>
+                                </StackPanel>
+
+                                <StackPanel>
+                                    <StackPanel.Style>
+                                        <Style TargetType="StackPanel">
+                                            <Setter Property="Visibility" Value="Collapsed"/>
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding IsLoginMode}" Value="True">
+                                                    <Setter Property="Visibility" Value="Visible"/>
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </StackPanel.Style>
+
+                                    <TextBlock Text="Email" FontWeight="SemiBold" Foreground="{DynamicResource TextColor}"/>
+                                    <TextBox Text="{Binding LoginEmail, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource AuthTextBoxStyle}"/>
+                                    <TextBlock Text="{Binding LoginEmailError}"
+                                               Foreground="#B91C1C"
+                                               Margin="0,6,0,0"
+                                               Visibility="{Binding LoginEmailError, Converter={StaticResource StringToVisibility}}"/>
+
+                                    <TextBlock Text="Password" FontWeight="SemiBold" Foreground="{DynamicResource TextColor}" Margin="0,18,0,0"/>
+                                    <PasswordBox x:Name="LoginPasswordBox"
+                                                 PasswordChanged="LoginPasswordBox_OnPasswordChanged"
+                                                 Style="{StaticResource AuthPasswordBoxStyle}"/>
+                                    <TextBlock Text="{Binding LoginPasswordError}"
+                                               Foreground="#B91C1C"
+                                               Margin="0,6,0,0"
+                                               Visibility="{Binding LoginPasswordError, Converter={StaticResource StringToVisibility}}"/>
+                                </StackPanel>
+
+                                <StackPanel>
+                                    <StackPanel.Style>
+                                        <Style TargetType="StackPanel">
+                                            <Setter Property="Visibility" Value="Collapsed"/>
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding IsRegisterMode}" Value="True">
+                                                    <Setter Property="Visibility" Value="Visible"/>
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </StackPanel.Style>
+
+                                    <TextBlock Text="Display name" FontWeight="SemiBold" Foreground="{DynamicResource TextColor}"/>
+                                    <TextBox Text="{Binding RegisterDisplayName, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource AuthTextBoxStyle}"/>
+                                    <TextBlock Text="{Binding RegisterDisplayNameError}"
+                                               Foreground="#B91C1C"
+                                               Margin="0,6,0,0"
+                                               Visibility="{Binding RegisterDisplayNameError, Converter={StaticResource StringToVisibility}}"/>
+
+                                    <TextBlock Text="Email" FontWeight="SemiBold" Foreground="{DynamicResource TextColor}" Margin="0,18,0,0"/>
+                                    <TextBox Text="{Binding RegisterEmail, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource AuthTextBoxStyle}"/>
+                                    <TextBlock Text="{Binding RegisterEmailError}"
+                                               Foreground="#B91C1C"
+                                               Margin="0,6,0,0"
+                                               Visibility="{Binding RegisterEmailError, Converter={StaticResource StringToVisibility}}"/>
+
+                                    <TextBlock Text="Password" FontWeight="SemiBold" Foreground="{DynamicResource TextColor}" Margin="0,18,0,0"/>
+                                    <PasswordBox x:Name="RegisterPasswordBox"
+                                                 PasswordChanged="RegisterPasswordBox_OnPasswordChanged"
+                                                 Style="{StaticResource AuthPasswordBoxStyle}"/>
+                                    <TextBlock Text="{Binding RegisterPasswordError}"
+                                               Foreground="#B91C1C"
+                                               Margin="0,6,0,0"
+                                               Visibility="{Binding RegisterPasswordError, Converter={StaticResource StringToVisibility}}"/>
+                                </StackPanel>
+
+                                <Button Height="52" Margin="0,24,0,0" Command="{Binding SubmitCommand}" Style="{StaticResource SearchButtonStyle}">
+                                    <TextBlock Text="{Binding PrimaryActionText}" FontSize="16" FontWeight="SemiBold"/>
+                                </Button>
+                                <Button Height="56" Margin="0,14,0,14" Command="{Binding SignInWithGoogleCommand}" Style="{StaticResource LoginButtonStyle}">
+                                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                                        <Border Width="28" Height="28" CornerRadius="14" Background="White" Margin="0,0,12,0">
+                                            <TextBlock Text="G"
+                                                       FontWeight="Bold"
+                                                       Foreground="#DB4437"
+                                                       HorizontalAlignment="Center"
+                                                       VerticalAlignment="Center"/>
+                                        </Border>
+                                        <TextBlock Text="{Binding GoogleButtonText}"
+                                                   Foreground="{DynamicResource TextColor}"
+                                                   VerticalAlignment="Center"/>
+                                    </StackPanel>
+                                </Button>
+                                <Button Height="52" Command="{Binding ContinueAsGuestCommand}" Style="{StaticResource SecondaryButtonStyle}">
+                                    <TextBlock Text="Continue as guest" FontWeight="SemiBold"/>
+                                </Button>
+                            </StackPanel>
+                        </Grid>
+
+                        <Grid>
+                            <Grid.Style>
+                                <Style TargetType="Grid">
+                                    <Setter Property="Visibility" Value="Collapsed"/>
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding IsAuthenticated}" Value="True">
+                                            <Setter Property="Visibility" Value="Visible"/>
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </Grid.Style>
+
+                            <StackPanel>
+                                <Grid Margin="0,0,0,22">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+
+                                    <Grid Width="108" Height="108" Margin="0,0,18,0">
+                                        <Border Width="108"
+                                                Height="108"
+                                                CornerRadius="54"
+                                                Background="{DynamicResource NavbarBackground}"
+                                                BorderBrush="{DynamicResource BorderColor}"
+                                                BorderThickness="3">
+                                            <TextBlock Text="{Binding AvatarInitial}"
+                                                       FontSize="34"
+                                                       FontWeight="Bold"
+                                                       Foreground="White"
+                                                       HorizontalAlignment="Center"
+                                                       VerticalAlignment="Center"/>
+                                        </Border>
+                                        <Image Source="{Binding AvatarImage}"
+                                               Stretch="UniformToFill"
+                                               Visibility="{Binding HasAvatarImage, Converter={StaticResource BoolToVisibility}}">
+                                            <Image.Clip>
+                                                <EllipseGeometry Center="54,54" RadiusX="54" RadiusY="54"/>
+                                            </Image.Clip>
+                                        </Image>
+                                    </Grid>
+
+                                    <StackPanel Grid.Column="1" VerticalAlignment="Center">
+                                        <TextBlock Text="{Binding CurrentDisplayName}" FontSize="30" FontWeight="Bold" Foreground="{DynamicResource TextColor}"/>
+                                        <TextBlock Text="{Binding CurrentEmail}" FontSize="15" Margin="0,6,0,0" Foreground="{DynamicResource TextColor}" Opacity="0.78"/>
+                                        <TextBlock Text="{Binding SignedInSummary}" FontSize="14" FontWeight="SemiBold" Margin="0,14,0,0" Foreground="{DynamicResource ButtonColor}"/>
+                                    </StackPanel>
+                                </Grid>
+
+                                <Grid Margin="0,0,0,18">
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="Auto"/>
+                                    </Grid.RowDefinitions>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+
+                                    <Border Grid.Row="0" Grid.Column="0" Style="{StaticResource CardStyle}" Margin="0,0,10,10" Padding="18">
+                                        <StackPanel>
+                                            <TextBlock Text="Role" FontSize="12" Foreground="{DynamicResource TextColor}" Opacity="0.65"/>
+                                            <TextBlock Text="{Binding RoleDisplay}" FontSize="16" Foreground="{DynamicResource TextColor}" Margin="0,8,0,0"/>
+                                        </StackPanel>
+                                    </Border>
+
+                                    <Border Grid.Row="0" Grid.Column="1" Style="{StaticResource CardStyle}" Margin="10,0,0,10" Padding="18">
+                                        <StackPanel>
+                                            <TextBlock Text="Session" FontSize="12" Foreground="{DynamicResource TextColor}" Opacity="0.65"/>
+                                            <TextBlock Text="{Binding TokenSummary}" FontSize="15" Foreground="{DynamicResource TextColor}" Margin="0,8,0,0" TextWrapping="Wrap"/>
+                                        </StackPanel>
+                                    </Border>
+
+                                    <Border Grid.Row="1" Grid.ColumnSpan="2" Style="{StaticResource CardStyle}" Padding="18">
+                                        <StackPanel>
+                                            <TextBlock Text="Account ID" FontSize="12" Foreground="{DynamicResource TextColor}" Opacity="0.65"/>
+                                            <TextBlock Text="{Binding ShortUserId}"
+                                                       FontSize="16"
+                                                       Foreground="{DynamicResource TextColor}"
+                                                       Margin="0,8,0,0"
+                                                       TextWrapping="Wrap"
+                                                       ToolTip="{Binding CurrentUserId}"/>
+                                        </StackPanel>
+                                    </Border>
+                                </Grid>
+
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="*"/>
+                                        </Grid.ColumnDefinitions>
+
+                                    <Button Grid.Column="0" Height="50" Margin="0,0,10,0" Command="{Binding ReloadProfileCommand}" Style="{StaticResource SecondaryButtonStyle}">
+                                        <TextBlock Text="Reload account" FontWeight="SemiBold"/>
+                                    </Button>
+                                    <Button Grid.Column="1" Height="50" Margin="10,0,10,0" Command="{Binding RefreshSessionCommand}" Style="{StaticResource SecondaryButtonStyle}">
+                                        <TextBlock Text="{Binding RefreshSessionText}" FontWeight="SemiBold"/>
+                                    </Button>
+                                    <Button Grid.Column="4" Height="50" Margin="10,0,0,0" Command="{Binding LogoutCommand}" Style="{StaticResource DangerButtonStyle}">
+                                        <TextBlock Text="Log out" FontWeight="SemiBold"/>
+                                    </Button>
+                                        <Button Grid.Column="3" Height="50" Margin="10,0,10,0" Style="{StaticResource SecondaryButtonStyle}" Command="{Binding PushCommand}">
+                                        <TextBlock Text="Push" FontWeight="SemiBold" />
+                                    </Button>
+                                        <Button Grid.Column="2" Height="50" Margin="10,0,0,0" Style="{StaticResource SecondaryButtonStyle}"  Command="{Binding PullCommand}">
+                                            <TextBlock Text="Pull" FontWeight="SemiBold"/>
+                                        </Button>
+                                    </Grid>
+                            </StackPanel>
+                        </Grid>
+                    </Grid>
+                    </Grid>
+                </Border>
+            </StackPanel>
+        </ScrollViewer>
+
+        <uc:StatusToast HorizontalAlignment="Right"
+                        VerticalAlignment="Top"
+                        Margin="0,20,26,0"
+                        Panel.ZIndex="20"
+                        Message="{Binding StatusMessage}"
+                        IsError="{Binding IsStatusError}" />
+    </Grid>
+</Page>

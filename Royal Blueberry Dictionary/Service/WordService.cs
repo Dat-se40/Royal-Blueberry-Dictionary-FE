@@ -1,5 +1,6 @@
 ﻿    using BlueBerryDictionary.Helpers;
 using Microsoft.EntityFrameworkCore.Migrations.Operations;
+using Microsoft.Extensions.DependencyInjection;
 using Royal_Blueberry_Dictionary.Database;
 using Royal_Blueberry_Dictionary.Model;
 using Royal_Blueberry_Dictionary.Repository.Interface;
@@ -20,7 +21,7 @@ namespace Royal_Blueberry_Dictionary.Service
         }
         public async Task<WordEntry> GetWordEntryByDetail(WordDetail detail, int meaningIdx, int defIdx) 
         {
-            var newEntry  = await WordEntryRepository.GetByWordAndMeaningAsync("GUEST",detail.Word, meaningIdx); 
+            var newEntry  = await WordEntryRepository.GetByWordAndMeaningAsync(App.UserId,detail.Word, meaningIdx); 
             
             try
             {
@@ -70,18 +71,24 @@ namespace Royal_Blueberry_Dictionary.Service
         public async Task FavoriteAsync(WordEntry wordEntry)
         {
             wordEntry.IsFavorited = !wordEntry.IsFavorited;
-            await SmartUpdate(wordEntry); 
-            
+            var ts = App.serviceProvider.GetRequiredService<ITagRepository>();
+            var ls = await ts.GetRelationsByWordAsync(App.UserId, wordEntry.Word, wordEntry.MeaningIndex);
+            foreach (var item in ls)
+            {
+                item.IsFavourite = wordEntry.IsFavorited;  
+                item.Note = wordEntry.Note; 
+            }
+            await Task.WhenAll(ts.SaveChangesAsync(),SmartUpdate(wordEntry));  
         }
 
         /// <summary>Danh sách từ đã gắn cờ yêu thích trong DB (theo user).</summary>
-        public async Task<List<WordEntry>> GetFavoritedWordsAsync(string userId = "GUEST") =>
-            await WordEntryRepository.GetFavoritedAsync(userId);
+        public async Task<List<WordEntry>> GetFavoritedWordsAsync() =>
+            await WordEntryRepository.GetFavoritedAsync(App.UserId);
 
         /// <summary>Bỏ yêu thích toàn bộ từ (không dùng toggle của <see cref="FavoriteAsync"/>).</summary>
-        public async Task ClearAllFavoritesAsync(string userId = "GUEST")
+        public async Task ClearAllFavoritesAsync()
         {
-            var list = await WordEntryRepository.GetFavoritedAsync(userId);
+            var list = await WordEntryRepository.GetFavoritedAsync(App.UserId);
             foreach (var e in list)
             {
                 e.IsFavorited = false;
@@ -100,6 +107,13 @@ namespace Royal_Blueberry_Dictionary.Service
             {
                 await WordEntryRepository.UpdateAsync(wordEntry);
             }
+        }
+        public async Task CleanUpData()
+        {
+            var list = await WordEntryRepository.GetAllAsync(App.UserId);
+            var db = App.serviceProvider.GetRequiredService<AppDbContext>();
+            db.WordEntries.RemoveRange(list.Where(l => l.IsFavorited == false && l.TagIdsJson.Count == 0 && l.Note == string.Empty ));
+            await db.SaveChangesAsync(); 
         }
     }
 }
