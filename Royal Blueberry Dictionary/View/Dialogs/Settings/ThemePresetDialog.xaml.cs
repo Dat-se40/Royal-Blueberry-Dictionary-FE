@@ -2,6 +2,7 @@
 using System;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Input;
 using System.Windows.Media;
 
 namespace Royal_Blueberry_Dictionary.View.Dialogs.Settings
@@ -58,8 +59,6 @@ namespace Royal_Blueberry_Dictionary.View.Dialogs.Settings
             if (sender is Button button && button.Tag is string themeName)
             {
                 SelectedTheme = themeName;
-
-                // Apply immediately
                 _themeManager.ApplyColorTheme(themeName);
 
                 DialogResult = true;
@@ -71,6 +70,19 @@ namespace Royal_Blueberry_Dictionary.View.Dialogs.Settings
         {
             DialogResult = false;
             Close();
+        }
+
+        protected override void OnMouseLeftButtonDown(MouseButtonEventArgs e)
+        {
+            base.OnMouseLeftButtonDown(e);
+
+            try
+            {
+                DragMove();
+            }
+            catch
+            {
+            }
         }
 
         #endregion
