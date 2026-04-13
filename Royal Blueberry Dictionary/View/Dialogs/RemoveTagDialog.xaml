@@ -1,85 +1,271 @@
 <Window x:Class="Royal_Blueberry_Dictionary.View.Dialogs.RemoveTagDialog"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="🗑️ Delete Tag"
-        Height="600" Width="700"
+        Title="Delete Tag"
+        Height="640"
+        Width="760"
         WindowStartupLocation="CenterOwner"
         ResizeMode="NoResize"
-        Background="{DynamicResource MainBackground}"
-        BorderBrush="{DynamicResource BorderColor}"
-        BorderThickness="2">
+        Background="Transparent"
+        WindowStyle="None"
+        AllowsTransparency="True">
 
-    <Border CornerRadius="16"
+    <Window.Resources>
+        <Style x:Key="DialogCloseButtonStyle" TargetType="Button">
+            <Setter Property="Width" Value="40"/>
+            <Setter Property="Height" Value="40"/>
+            <Setter Property="FontSize" Value="18"/>
+            <Setter Property="Foreground" Value="{DynamicResource TextColor}"/>
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}"
+                                CornerRadius="10">
+                            <ContentPresenter HorizontalAlignment="Center"
+                                              VerticalAlignment="Center"/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="#18FF4D4F"/>
+                    <Setter Property="Foreground" Value="#D92D20"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
+        <Style x:Key="TagItemCheckBoxStyle" TargetType="CheckBox">
+            <Setter Property="VerticalAlignment" Value="Center"/>
+            <Setter Property="Margin" Value="0,0,14,0"/>
+        </Style>
+
+        <Style x:Key="TagCardStyle" TargetType="Border">
+            <Setter Property="Margin" Value="0,0,0,12"/>
+            <Setter Property="Padding" Value="14"/>
+            <Setter Property="CornerRadius" Value="12"/>
+            <Setter Property="Background" Value="{DynamicResource WordItemBackground}"/>
+            <Setter Property="BorderBrush" Value="{DynamicResource BorderColor}"/>
+            <Setter Property="BorderThickness" Value="1.5"/>
+        </Style>
+    </Window.Resources>
+
+    <Border Background="{DynamicResource CardBackground}"
             BorderBrush="{DynamicResource BorderColor}"
             BorderThickness="2"
-            Padding="20"
-            Margin="10"
-            Background="{DynamicResource CardBackground}">
+            CornerRadius="22"
+            Padding="24">
+        <Border.Effect>
+            <DropShadowEffect BlurRadius="24"
+                              ShadowDepth="0"
+                              Opacity="0.25"
+                              Color="Black"/>
+        </Border.Effect>
+
         <Grid>
             <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="*"/>
                 <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
 
-            <!-- Header -->
-            <StackPanel Grid.Row="0" Margin="0,0,0,10">
-                <TextBlock Text="🗑️ Delete Tag "
-                           FontSize="24"
-                           FontWeight="Bold"
-                           Foreground="{DynamicResource ButtonColor}"/>
-                <TextBlock Text="Select the tags you want to delete. Words will remain intact."
-                           Foreground="{DynamicResource TextColor}"
+            <!-- HEADER -->
+            <Grid Grid.Row="0" Margin="0,0,0,18">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+
+                <StackPanel Orientation="Horizontal">
+                    <Border Width="54"
+                            Height="54"
+                            CornerRadius="14"
+                            Background="#1AFF4D4F"
+                            Margin="0,0,14,0">
+                        <TextBlock Text="🗑️"
+                                   FontSize="26"
+                                   HorizontalAlignment="Center"
+                                   VerticalAlignment="Center"/>
+                    </Border>
+
+                    <StackPanel VerticalAlignment="Center">
+                        <TextBlock Text="Delete Tags"
+                                   FontSize="26"
+                                   FontWeight="Bold"
+                                   Foreground="{DynamicResource TextColor}"/>
+                        <TextBlock Text="Select one or more tags to remove from your collection"
+                                   FontSize="13"
+                                   Foreground="{DynamicResource TextColor}"
+                                   Opacity="0.7"
+                                   Margin="0,4,0,0"/>
+                    </StackPanel>
+                </StackPanel>
+
+                <Button Grid.Column="1"
+                        Content="✕"
+                        Style="{StaticResource DialogCloseButtonStyle}"
+                        Click="Cancel_Click"/>
+            </Grid>
+
+            <!-- WARNING -->
+            <Border Grid.Row="1"
+                    Background="#14F59E0B"
+                    BorderBrush="#33F59E0B"
+                    BorderThickness="1"
+                    CornerRadius="12"
+                    Padding="14"
+                    Margin="0,0,0,16">
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock Text="⚠️"
+                               FontSize="18"
+                               Margin="0,0,10,0"/>
+                    <TextBlock Text="Deleting a tag will not delete the words linked to it. Only the tag itself will be removed."
+                               TextWrapping="Wrap"
+                               Foreground="{DynamicResource TextColor}"
+                               Opacity="0.85"/>
+                </StackPanel>
+            </Border>
+
+            <!-- TOOLBAR -->
+            <Grid Grid.Row="2" Margin="0,0,0,16">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+
+      <Border Height="46"
+        Background="{DynamicResource SearchBackground}"
+        BorderBrush="{DynamicResource BorderColor}"
+        BorderThickness="2"
+        CornerRadius="23"
+        Padding="14,0"
+        Margin="0,0,12,0">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+
+        <TextBlock Text="🔍"
+                   FontSize="16"
+                   VerticalAlignment="Center"
+                   Margin="0,0,10,0"
+                   Foreground="{DynamicResource TextColor}"
+                   Opacity="0.75"/>
+
+        <TextBox Grid.Column="1"
+                 x:Name="SearchTextBox"
+                 BorderThickness="0"
+                 Background="Transparent"
+                 Foreground="{DynamicResource TextColor}"
+                 FontSize="14"
+                 VerticalContentAlignment="Center"
+                 TextChanged="SearchTextBox_TextChanged"
+                 ToolTip="Search tags..." />
+    </Grid>
+</Border>
+
+
+                <Button Grid.Column="1"
+                        Content="Select all"
+                        Margin="12,0,8,0"
+                        Padding="18,10"
+                        Style="{StaticResource SecondaryButtonStyle}"
+                        Click="SelectAll_Click"/>
+
+                <Button Grid.Column="2"
+                        Content="Clear"
+                        Padding="18,10"
+                        Style="{StaticResource SecondaryButtonStyle}"
+                        Click="ClearSelection_Click"/>
+            </Grid>
+
+            <!-- TAG LIST -->
+            <Border Grid.Row="3"
+                    Background="{DynamicResource SearchBackground}"
+                    BorderBrush="{DynamicResource BorderColor}"
+                    BorderThickness="1.5"
+                    CornerRadius="14"
+                    Padding="12">
+                <ScrollViewer VerticalScrollBarVisibility="Auto">
+                    <ItemsControl x:Name="TagsList">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <Border Style="{StaticResource TagCardStyle}">
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="Auto"/>
+                                            <ColumnDefinition Width="Auto"/>
+                                            <ColumnDefinition Width="*"/>
+                                        </Grid.ColumnDefinitions>
+
+                                        <CheckBox Style="{StaticResource TagItemCheckBoxStyle}"
+                                                  Tag="{Binding Id}"
+                                                  Checked="TagCheckBox_Changed"
+                                                  Unchecked="TagCheckBox_Changed"/>
+
+                                        <TextBlock Grid.Column="1"
+                                                   Text="{Binding Icon}"
+                                                   FontSize="20"
+                                                   Margin="0,0,12,0"
+                                                   VerticalAlignment="Center"
+                                                   Foreground="{Binding Color}"/>
+
+                                        <StackPanel Grid.Column="2">
+                                            <TextBlock Text="{Binding Name}"
+                                                       FontSize="16"
+                                                       FontWeight="SemiBold"
+                                                       Foreground="{DynamicResource TextColor}"/>
+                                            <TextBlock Text="Tag will be permanently removed"
+                                                       FontSize="12"
+                                                       Foreground="{DynamicResource TextColor}"
+                                                       Opacity="0.6"
+                                                       Margin="0,4,0,0"/>
+                                        </StackPanel>
+                                    </Grid>
+                                </Border>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </ScrollViewer>
+            </Border>
+
+            <!-- FOOTER -->
+            <Grid Grid.Row="4" Margin="0,18,0,0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+
+                <TextBlock x:Name="SelectedCountText"
+                           Text="0 tag selected"
+                           VerticalAlignment="Center"
                            FontSize="14"
-                           Opacity="0.8"
-                           Margin="0,5,0,0"/>
-            </StackPanel>
+                           FontWeight="SemiBold"
+                           Foreground="{DynamicResource TextColor}"
+                           Opacity="0.8"/>
 
-            <!-- Content -->
-            <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
-                <ItemsControl x:Name="TagsList">
-                    <ItemsControl.ItemTemplate>
-                        <DataTemplate>
-                            <Border Margin="4" Padding="10"
-                                    Background="{DynamicResource WordItemBackground}"
-                                    BorderBrush="{DynamicResource BorderColor}"
-                                    BorderThickness="1"
-                                    CornerRadius="8">
-                                <StackPanel Orientation="Horizontal">
-                                    <CheckBox VerticalAlignment="Center"
-                                              Tag="{Binding Id}"
-                                              IsChecked="False"
-                                              Margin="0,0,12,0"/>
-                                    <TextBlock Text="{Binding Icon}" FontSize="18" Margin="0,0,6,0" Foreground="{Binding Color}"/>
-                                    <TextBlock Text="{Binding Name}" FontSize="16"
-                                               VerticalAlignment="Center"
-                                               Foreground="{DynamicResource TextColor}"/>
-                                </StackPanel>
-                            </Border>
-                        </DataTemplate>
-                    </ItemsControl.ItemTemplate>
-                </ItemsControl>
-            </ScrollViewer>
-
-            <!-- Footer -->
-            <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,15,0,0">
-                <Button Content="❌ Cancel"
+                <Button Grid.Column="1"
+                        Content="Cancel"
                         Padding="20,10"
-                        FontSize="14"
                         Margin="0,0,10,0"
-                        Click="Cancel_Click"
-                        Style="{StaticResource SecondaryButtonStyle}">
-                </Button>
+                        Style="{StaticResource SecondaryButtonStyle}"
+                        Click="Cancel_Click"/>
 
-                <Button x:Name="DeleteButton"
-                        Content="🗑️ Delete selected tag"
+                <Button Grid.Column="2"
+                        x:Name="DeleteButton"
+                        Content="🗑 Delete Selected"
                         Padding="20,10"
-                        FontSize="14"
-                        Click="Delete_Click"
-                        Style="{StaticResource DangerButtonStyle}">
-                </Button>
-            </StackPanel>
-
+                        Style="{StaticResource DangerButtonStyle}"
+                        Click="Delete_Click"/>
+            </Grid>
         </Grid>
     </Border>
 </Window>
