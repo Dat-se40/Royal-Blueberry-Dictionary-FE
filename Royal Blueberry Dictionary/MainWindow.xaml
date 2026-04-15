@@ -232,6 +232,13 @@
                             </StackPanel>
                         </Button>
 
+                        <Button Style="{StaticResource SidebarButtonStyle}" Tag="Offline" Click="SideBarNavigate">
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Text="📥" FontSize="20" Margin="0,0,15,0" Width="24" TextAlignment="Center"/>
+                                <TextBlock Text="Offline packages" FontSize="15" VerticalAlignment="Center"/>
+                            </StackPanel>
+                        </Button>
+
                         <Button Style="{StaticResource SidebarButtonStyle}" Tag="Account" Click="SideBarNavigate">
                             <StackPanel Orientation="Horizontal">
                                 <TextBlock Text="👤" FontSize="20" Margin="0,0,15,0" Width="24" TextAlignment="Center"/>

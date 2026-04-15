@@ -102,7 +102,7 @@
                                        FontWeight="Bold"
                                        Foreground="{DynamicResource TextColor}"
                                        Margin="0,0,10,0"/>
-                            <Border Background="{Binding BadgeColor}"
+                            <Border Background="{Binding BadgeColorBrush}"
                                     CornerRadius="10"
                                     Padding="8,3"
                                     VerticalAlignment="Center">
@@ -211,26 +211,31 @@
                                     HorizontalAlignment="Right"
                                     Margin="0,0,16,0">
 
-                            <!-- Chức năng command cũ đã bỏ.
-                                 Giữ lại button như UI element bình thường -->
                             <Button x:Name="DownloadFullButton"
-                                    Content="{Binding DownloadButtonText}"
-                                    Margin="0,0,20,0"
-                                    Style="{StaticResource SecondaryButtonStyle}"/>
+                                    Content="💾 Tải offline"
+                                    Margin="0,0,12,0"
+                                    Style="{StaticResource SecondaryButtonStyle}"
+                                    Command="{Binding DownloadCommand}"/>
 
-                            <!-- Chức năng command cũ đã bỏ.
-                                 Giữ lại button như UI element bình thường -->
                             <Button x:Name="OpenPackageButton"
-                                    Content="{Binding OpenButtonText}"
-                                    Margin="0,0,20,0"
-                                    Style="{StaticResource SecondaryButtonStyle}"/>
+                                    Content="👁️ Xem"
+                                    Margin="0,0,12,0"
+                                    Style="{StaticResource SecondaryButtonStyle}"
+                                    Command="{Binding PreviewCommand}"/>
 
-                            <!-- Chức năng command cũ đã bỏ.
-                                 Chỉ giữ phần hiển thị/ẩn của UI -->
+                            <Button x:Name="ImportPackageButton"
+                                    Content="➕ My Words"
+                                    Margin="0,0,12,0"
+                                    Style="{StaticResource SecondaryButtonStyle}"
+                                    Command="{Binding ImportCommand}"
+                                    Visibility="{Binding IsDownloaded,
+                                                         Converter={StaticResource BoolToVisibilityConverter}}"/>
+
                             <Button x:Name="DeletePackageButton"
-                                    Content="{Binding DeleteButtonText}"
+                                    Content="🗑️ Xóa cache"
                                     Style="{StaticResource DangerButtonStyle}"
                                     BorderThickness="2"
+                                    Command="{Binding DeleteOfflineCommand}"
                                     Visibility="{Binding IsDownloaded,
                                                          Converter={StaticResource BoolToVisibilityConverter}}"/>
                         </StackPanel>

@@ -89,6 +89,9 @@ namespace Royal_Blueberry_Dictionary.Service
                 case "Game":
                     NavigateTo<GamePage, GameViewModel>(null);
                     break;
+                case "Offline":
+                    NavigateTo<OfflinePackagesPage, OfflinePackagesPageViewModel>(null);
+                    break;
                 case "Account":
                     NavigateTo<AccountPage, AccountPageViewModel>(null);
                     break;

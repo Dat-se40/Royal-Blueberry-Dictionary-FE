@@ -5,19 +5,13 @@ using System.Windows.Media;
 namespace Royal_Blueberry_Dictionary.View.User_Control
 {
     /// <summary>
-    /// FE/UI only for PackageCard.
-    /// Chỉ giữ phần hiển thị giao diện.
-    /// Các command, viewmodel, service, model nghiệp vụ tạm bỏ qua.
+    /// Thẻ package: bind <see cref="ViewModel.OfflinePackageRowViewModel"/> (ItemsControl) hoặc set DependencyProperty khi dùng độc lập.
     /// </summary>
     public partial class PackageCard : UserControl
     {
         public PackageCard()
         {
             InitializeComponent();
-
-            // FE/UI only:
-            // Gán DataContext vào chính control để binding trực tiếp các DependencyProperty.
-            DataContext = this;
 
             // Logic cũ:
             // Constructor cũ nhận TopicPackage + OfflineModeViewModel

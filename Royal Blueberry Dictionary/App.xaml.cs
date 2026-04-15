@@ -48,11 +48,12 @@ namespace Royal_Blueberry_Dictionary
             serviceCollection.AddScoped<Repository.Interface.ITagRepository, Repository.Implement.TagRepository>();
 
             serviceCollection.AddSingleton<IBackendApiClient, BackendApiClient>();
+            serviceCollection.AddSingleton<Service.OfflinePackageCacheService>();
 
             serviceCollection.AddScoped<Service.SearchService>();
+            serviceCollection.AddScoped<Service.TagService>();
             serviceCollection.AddScoped<Service.PackageService>();
             serviceCollection.AddScoped<Service.NavigationService>();
-            serviceCollection.AddScoped<Service.TagService>();
             serviceCollection.AddScoped<Service.WordService>();
             serviceCollection.AddSingleton<Service.ThemeManager>();
             serviceCollection.AddSingleton(_ => Service.SettingsService.Instance);
@@ -69,7 +70,8 @@ namespace Royal_Blueberry_Dictionary
             serviceCollection.AddTransient<HomePage>();
             serviceCollection.AddTransient<SettingsPage>();
             serviceCollection.AddTransient<AccountPage>();
-            serviceCollection.AddTransient<GamePage>(); 
+            serviceCollection.AddTransient<GamePage>();
+            serviceCollection.AddTransient<OfflinePackagesPage>();
 
             serviceCollection.AddScoped<DetailsPageViewModel>();
             serviceCollection.AddScoped<SearchViewModel>();
@@ -80,6 +82,7 @@ namespace Royal_Blueberry_Dictionary
             serviceCollection.AddScoped<AccountPageViewModel>();
             serviceCollection.AddTransient<WelcomeWindowViewModel>();
             serviceCollection.AddTransient<GameViewModel>();
+            serviceCollection.AddScoped<OfflinePackagesPageViewModel>();
 
             serviceProvider = serviceCollection.BuildServiceProvider();
 
