@@ -1,0 +1,303 @@
+﻿<Window x:Class="Royal_Blueberry_Dictionary.View.Dialogs.Settings.ContactDialog"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Contact &amp; Support"
+        Width="640" Height="580"
+        WindowStartupLocation="CenterOwner"
+        Background="Transparent"
+        ResizeMode="NoResize"
+        WindowStyle="None"
+        AllowsTransparency="True">
+
+    <Window.Resources>
+        <!-- Header Style -->
+        <Style x:Key="HeaderStyle" TargetType="TextBlock">
+            <Setter Property="FontSize" Value="18"/>
+            <Setter Property="FontWeight" Value="Bold"/>
+            <Setter Property="Foreground" Value="{DynamicResource TextColor}"/>
+            <Setter Property="Margin" Value="0,15,0,10"/>
+        </Style>
+
+        <!-- Body Style -->
+        <Style x:Key="BodyStyle" TargetType="TextBlock">
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="Foreground" Value="{DynamicResource TextColor}"/>
+            <Setter Property="TextWrapping" Value="Wrap"/>
+            <Setter Property="LineHeight" Value="22"/>
+            <Setter Property="Margin" Value="0,0,0,15"/>
+            <Setter Property="Opacity" Value="0.9"/>
+        </Style>
+
+        <!-- Link Style -->
+        <Style x:Key="LinkStyle" TargetType="TextBlock">
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="Foreground" Value="{DynamicResource ButtonColor}"/>
+            <Setter Property="TextDecorations" Value="Underline"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Margin" Value="0,5,0,5"/>
+        </Style>
+
+        <!-- Close Button Style (đồng bộ với AboutDialog) -->
+        <Style x:Key="CloseButtonStyle" TargetType="Button">
+            <Setter Property="Background">
+                <Setter.Value>
+                    <LinearGradientBrush StartPoint="0,0" EndPoint="1,0">
+                        <GradientStop Color="#667EEA" Offset="0"/>
+                        <GradientStop Color="#764BA2" Offset="1"/>
+                    </LinearGradientBrush>
+                </Setter.Value>
+            </Setter>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Padding" Value="32,12"/>
+            <Setter Property="FontSize" Value="15"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}"
+                                Padding="{TemplateBinding Padding}"
+                                CornerRadius="10">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background">
+                        <Setter.Value>
+                            <LinearGradientBrush StartPoint="0,0" EndPoint="1,0">
+                                <GradientStop Color="#5568D3" Offset="0"/>
+                                <GradientStop Color="#6A42A0" Offset="1"/>
+                            </LinearGradientBrush>
+                        </Setter.Value>
+                    </Setter>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+    </Window.Resources>
+
+    <Border CornerRadius="20"
+            Background="{DynamicResource CardBackground}"
+            BorderBrush="{DynamicResource BorderColor}"
+            BorderThickness="2">
+        <Border.Effect>
+            <DropShadowEffect BlurRadius="30" ShadowDepth="0" Opacity="0.3" Color="Black"/>
+        </Border.Effect>
+
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+
+            <!-- Header (đồng bộ với AboutDialog) -->
+            <Border Grid.Row="0"
+                    CornerRadius="18,18,0,0"
+                    Padding="32,24"
+                    MouseLeftButtonDown="Header_MouseLeftButtonDown">
+                <Border.Background>
+                    <LinearGradientBrush StartPoint="0,0" EndPoint="1,0">
+                        <GradientStop Color="#667EEA" Offset="0"/>
+                        <GradientStop Color="#764BA2" Offset="1"/>
+                    </LinearGradientBrush>
+                </Border.Background>
+
+                <Grid>
+                    <StackPanel Orientation="Horizontal">
+                        <Border Background="#20FFFFFF"
+                                Width="64" Height="64"
+                                CornerRadius="16"
+                                Margin="0,0,20,0">
+                            <TextBlock Text="📧"
+                                       FontSize="40"
+                                       HorizontalAlignment="Center"
+                                       VerticalAlignment="Center"/>
+                        </Border>
+                        <StackPanel VerticalAlignment="Center">
+                            <TextBlock Text="CONTACT &amp; SUPPORT"
+                                       FontSize="22"
+                                       FontWeight="Bold"
+                                       Foreground="White"/>
+                            <TextBlock Text="We are always ready to listen and assist you"
+                                       FontSize="14"
+                                       Foreground="White"
+                                       Opacity="0.9"
+                                       Margin="0,6,0,0"/>
+                        </StackPanel>
+                    </StackPanel>
+
+                    <!-- Close Button (đồng bộ với AboutDialog) -->
+                    <Button Content="✕"
+                            FontSize="24"
+                            Width="40" Height="40"
+                            HorizontalAlignment="Right"
+                            VerticalAlignment="Top"
+                            Background="Transparent"
+                            Foreground="White"
+                            BorderThickness="0"
+                            Cursor="Hand"
+                            Click="Close_Click">
+                        <Button.Style>
+                            <Style TargetType="Button">
+                                <Setter Property="Template">
+                                    <Setter.Value>
+                                        <ControlTemplate TargetType="Button">
+                                            <Border Background="{TemplateBinding Background}"
+                                                    CornerRadius="8">
+                                                <ContentPresenter HorizontalAlignment="Center"
+                                                                  VerticalAlignment="Center"/>
+                                            </Border>
+                                        </ControlTemplate>
+                                    </Setter.Value>
+                                </Setter>
+                                <Style.Triggers>
+                                    <Trigger Property="IsMouseOver" Value="True">
+                                        <Setter Property="Background" Value="#30FFFFFF"/>
+                                    </Trigger>
+                                </Style.Triggers>
+                            </Style>
+                        </Button.Style>
+                    </Button>
+                </Grid>
+            </Border>
+
+            <!-- Content -->
+            <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" Padding="32,24">
+                <StackPanel>
+                    <!-- Introduction -->
+                    <TextBlock Style="{StaticResource HeaderStyle}">
+                        💬 Contact Us
+                    </TextBlock>
+
+                    <TextBlock Style="{StaticResource BodyStyle}">
+                        If you encounter any issues not covered in the guide, or have suggestions for improving the app, we are always ready to listen and assist you.
+                    </TextBlock>
+
+                    <!-- Email -->
+                    <Border Background="{DynamicResource SearchBackground}"
+                            BorderBrush="{DynamicResource BorderColor}"
+                            BorderThickness="2"
+                            CornerRadius="12"
+                            Padding="20"
+                            Margin="0,0,0,16">
+                        <StackPanel>
+                            <TextBlock Text="📧 Email"
+                                       FontSize="16"
+                                       FontWeight="SemiBold"
+                                       Foreground="{DynamicResource TextColor}"
+                                       Margin="0,0,0,10"/>
+                            <TextBlock Text="labotanique117@gmail.com"
+                                       Style="{StaticResource LinkStyle}"
+                                       TextDecorations="None"
+                                       MouseDown="EmailLink_Click"/>
+                            <TextBlock Text="Click to open your email client"
+                                       FontSize="12"
+                                       Foreground="{DynamicResource TextColor}"
+                                       Opacity="0.6"
+                                       Margin="0,5,0,0"/>
+                        </StackPanel>
+                    </Border>
+
+                    <!-- GitHub -->
+                    <Border Background="{DynamicResource SearchBackground}"
+                            BorderBrush="{DynamicResource BorderColor}"
+                            BorderThickness="2"
+                            CornerRadius="12"
+                            Padding="20"
+                            Margin="0,0,0,16">
+                        <StackPanel>
+                            <TextBlock Text="🐙 GitHub Repository"
+                                       FontSize="16"
+                                       FontWeight="SemiBold"
+                                       Foreground="{DynamicResource TextColor}"
+                                       Margin="0,0,0,10"/>
+                            <TextBlock Style="{StaticResource LinkStyle}"
+                                       Text="https://github.com/Dat-se40/Royal-Blueberry-Dictionary-FE"
+                                       MouseDown="GitHubLink_Click"/>
+                            <TextBlock Style="{StaticResource LinkStyle}"
+                                       Text="https://github.com/Dat-se40/Royal-Blueberry-Dictionary-BE"
+                                       MouseDown="GitHubLink_Click"/>
+                            <StackPanel Margin="0,10,0,0">
+                                <TextBlock Text="• Issues: Report bugs and track fix progress"
+                                           FontSize="13"
+                                           Foreground="{DynamicResource TextColor}"
+                                           Opacity="0.8"
+                                           Margin="0,3"/>
+                                <TextBlock Text="• Discussions: Discuss new features"
+                                           FontSize="13"
+                                           Foreground="{DynamicResource TextColor}"
+                                           Opacity="0.8"
+                                           Margin="0,3"/>
+                            </StackPanel>
+                        </StackPanel>
+                    </Border>
+                    <!-- Team Info -->
+                    <Border Background="{DynamicResource SearchBackground}"
+        BorderBrush="{DynamicResource BorderColor}"
+        BorderThickness="2"
+        CornerRadius="12"
+        Padding="20">
+                        <StackPanel>
+                            <TextBlock Text="Subject: Nhập môn công nghệ phần mềm"
+                   FontSize="14"
+                   Foreground="{DynamicResource TextColor}"
+                   Margin="0,0,0,5"/>
+                            <TextBlock Text="Lecturer: ThS. Huỳnh Ngọc Tín"
+                   FontSize="14"
+                   Foreground="{DynamicResource TextColor}"
+                   Margin="0,0,0,5"/>
+                            <TextBlock Text="Semester: Kỳ 2 - Năm học 2025-2026"
+                   FontSize="14"
+                   Foreground="{DynamicResource TextColor}"
+                   Margin="0,0,0,15"/>
+
+                            <TextBlock Text="Members:"
+                   FontSize="14"
+                   FontWeight="SemiBold"
+                   Foreground="{DynamicResource TextColor}"
+                   Margin="0,0,0,5"/>
+                            <TextBlock Text="• Nguyễn Tấn Đạt"
+                   FontSize="14"
+                   Foreground="{DynamicResource TextColor}"
+                   Margin="10,3,0,3"/>
+                            <TextBlock Text="• Võ Nguyễn Thanh Hương"
+                   FontSize="14"
+                   Foreground="{DynamicResource TextColor}"
+                   Margin="10,3,0,3"/>
+                            <TextBlock Text="• Ngô Phương Hiền"
+                   FontSize="14"
+                   Foreground="{DynamicResource TextColor}"
+                   Margin="10,3,0,3"/>
+                            <TextBlock Text="• Nguyễn Quốc An"
+                   FontSize="14"
+                   Foreground="{DynamicResource TextColor}"
+                   Margin="10,3,0,3"/>
+                            <TextBlock Text="• Võ Văn Hải"
+                   FontSize="14"
+                   Foreground="{DynamicResource TextColor}"
+                   Margin="10,3,0,3"/>
+                        </StackPanel>
+                    </Border>
+                </StackPanel>
+            </ScrollViewer>
+
+            <!-- Footer Buttons (đồng bộ với AboutDialog) -->
+            <Border Grid.Row="2"
+                    Background="{DynamicResource CardBackground}"
+                    BorderBrush="{DynamicResource BorderColor}"
+                    BorderThickness="0,2,0,0"
+                    CornerRadius="0,0,18,18"
+                    Padding="24,16">
+                <Button Content="Close"
+                        Width="140"
+                        Style="{StaticResource CloseButtonStyle}"
+                        HorizontalAlignment="Right"
+                        Click="Close_Click"/>
+            </Border>
+        </Grid>
+    </Border>
+</Window>

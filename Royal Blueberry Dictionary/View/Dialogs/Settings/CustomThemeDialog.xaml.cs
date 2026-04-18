@@ -1,6 +1,7 @@
 ﻿using Royal_Blueberry_Dictionary.Service;
 using System;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Media;
 
 namespace Royal_Blueberry_Dictionary.View.Dialogs.Settings
@@ -22,33 +23,32 @@ namespace Royal_Blueberry_Dictionary.View.Dialogs.Settings
         public CustomThemeDialog(ThemeManager themeManager)
         {
             InitializeComponent();
+
             _themeManager = themeManager;
+
+            PrimaryColor = (Color)ColorConverter.ConvertFromString("#667EEA");
+            SecondaryColor = (Color)ColorConverter.ConvertFromString("#8B9DFF");
+            AccentColor = (Color)ColorConverter.ConvertFromString("#F093FB");
+
             ApplyGlobalFont();
             LoadCurrentCustomColors();
+
+            PrimaryColorPicker.SelectedColor = PrimaryColor;
+            SecondaryColorPicker.SelectedColor = SecondaryColor;
+            AccentColorPicker.SelectedColor = AccentColor;
+
+            UpdateColorUI();
         }
 
         #endregion
 
         #region Private Methods
 
-        /// <summary>
-        /// Load màu custom hiện tại (nếu có)
-        /// </summary>
         private void LoadCurrentCustomColors()
         {
-            // TODO: Load from SettingsService when available
-            // if (_settingsService.CurrentSettings.CustomColorTheme != null)
-            // {
-            //     var theme = _settingsService.CurrentSettings.CustomColorTheme;
-            //     PrimaryColorPicker.SelectedColor = theme.Primary;
-            //     SecondaryColorPicker.SelectedColor = theme.Secondary;
-            //     AccentColorPicker.SelectedColor = theme.Accent;
-            // }
+            // TODO: nếu sau này load từ settings thì gán lại ở đây
         }
 
-        /// <summary>
-        /// Apply global font
-        /// </summary>
         private void ApplyGlobalFont()
         {
             try
@@ -69,18 +69,97 @@ namespace Royal_Blueberry_Dictionary.View.Dialogs.Settings
             }
         }
 
+        private void UpdateColorUI()
+        {
+            if (PrimaryColorButton != null)
+                PrimaryColorButton.Background = new SolidColorBrush(PrimaryColor);
+
+            if (SecondaryColorButton != null)
+                SecondaryColorButton.Background = new SolidColorBrush(SecondaryColor);
+
+            if (AccentColorButton != null)
+                AccentColorButton.Background = new SolidColorBrush(AccentColor);
+
+            if (PrimaryPreview != null)
+                PrimaryPreview.Background = new SolidColorBrush(PrimaryColor);
+
+            if (SecondaryPreview != null)
+                SecondaryPreview.Background = new SolidColorBrush(SecondaryColor);
+
+            if (AccentPreview != null)
+                AccentPreview.Background = new SolidColorBrush(AccentColor);
+
+            if (PrimaryHexText != null)
+                PrimaryHexText.Text = ToHex(PrimaryColor);
+
+            if (SecondaryHexText != null)
+                SecondaryHexText.Text = ToHex(SecondaryColor);
+
+            if (AccentHexText != null)
+                AccentHexText.Text = ToHex(AccentColor);
+        }
+
+        private string ToHex(Color color)
+        {
+            return $"#{color.R:X2}{color.G:X2}{color.B:X2}";
+        }
+
+        private void OpenColorPicker(Control picker)
+        {
+            picker.Focus();
+
+            // Giả lập click để mở popup dropdown của ColorPicker
+            var args = new RoutedEventArgs(System.Windows.Controls.Primitives.ButtonBase.ClickEvent);
+            picker.RaiseEvent(args);
+        }
+
         #endregion
 
-        #region Event Handlers
+        #region Color Button Events
+
+        private void PrimaryColorButton_Click(object sender, RoutedEventArgs e)
+        {
+            OpenColorPicker(PrimaryColorPicker);
+        }
+
+        private void SecondaryColorButton_Click(object sender, RoutedEventArgs e)
+        {
+            OpenColorPicker(SecondaryColorPicker);
+        }
+
+        private void AccentColorButton_Click(object sender, RoutedEventArgs e)
+        {
+            OpenColorPicker(AccentColorPicker);
+        }
+
+        #endregion
+
+        #region ColorPicker Changed Events
+
+        private void PrimaryColorPicker_SelectedColorChanged(object sender, RoutedPropertyChangedEventArgs<Color?> e)
+        {
+            PrimaryColor = e.NewValue ?? PrimaryColor;
+            UpdateColorUI();
+        }
+
+        private void SecondaryColorPicker_SelectedColorChanged(object sender, RoutedPropertyChangedEventArgs<Color?> e)
+        {
+            SecondaryColor = e.NewValue ?? SecondaryColor;
+            UpdateColorUI();
+        }
+
+        private void AccentColorPicker_SelectedColorChanged(object sender, RoutedPropertyChangedEventArgs<Color?> e)
+        {
+            AccentColor = e.NewValue ?? AccentColor;
+            UpdateColorUI();
+        }
+
+        #endregion
+
+        #region Action Events
 
         private void Apply_Click(object sender, RoutedEventArgs e)
         {
-            // Get colors with fallback
-            PrimaryColor = PrimaryColorPicker.SelectedColor ?? Color.FromRgb(102, 126, 234);
-            SecondaryColor = SecondaryColorPicker.SelectedColor ?? Color.FromRgb(118, 75, 162);
-            AccentColor = AccentColorPicker.SelectedColor ?? Color.FromRgb(240, 147, 251);
-
-            // Apply immediately
             _themeManager.ApplyCustomColorTheme(PrimaryColor, SecondaryColor, AccentColor);
 
             DialogResult = true;

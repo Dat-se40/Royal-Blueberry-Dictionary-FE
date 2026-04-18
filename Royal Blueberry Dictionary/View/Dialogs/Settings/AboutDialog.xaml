@@ -1,0 +1,399 @@
+﻿<Window x:Class="Royal_Blueberry_Dictionary.View.Dialogs.Settings.AboutDialog"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="About the App"
+        Width="640" Height="720"
+        WindowStartupLocation="CenterOwner"
+        Background="Transparent"
+        ResizeMode="NoResize"
+        WindowStyle="None"
+        AllowsTransparency="True">
+
+    <Window.Resources>
+        <!-- Header Style -->
+        <Style x:Key="HeaderStyle" TargetType="TextBlock">
+            <Setter Property="FontSize" Value="18"/>
+            <Setter Property="FontWeight" Value="Bold"/>
+            <Setter Property="Foreground" Value="{DynamicResource TextColor}"/>
+            <Setter Property="Margin" Value="0,15,0,10"/>
+        </Style>
+
+        <!-- Body Style -->
+        <Style x:Key="BodyStyle" TargetType="TextBlock">
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="Foreground" Value="{DynamicResource TextColor}"/>
+            <Setter Property="TextWrapping" Value="Wrap"/>
+            <Setter Property="LineHeight" Value="22"/>
+            <Setter Property="Margin" Value="0,0,0,10"/>
+            <Setter Property="Opacity" Value="0.9"/>
+        </Style>
+
+        <!-- Link Style -->
+        <Style x:Key="LinkStyle" TargetType="TextBlock">
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="Foreground" Value="{DynamicResource ButtonColor}"/>
+            <Setter Property="TextDecorations" Value="Underline"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Margin" Value="0,5,0,5"/>
+        </Style>
+
+        <!-- Info Grid Row Style -->
+        <Style x:Key="InfoRowStyle" TargetType="TextBlock">
+            <Setter Property="Foreground" Value="{DynamicResource TextColor}"/>
+            <Setter Property="Margin" Value="0,5,0,5"/>
+            <Setter Property="FontSize" Value="14"/>
+        </Style>
+
+        <!-- Close Button Style -->
+        <Style x:Key="CloseButtonStyle" TargetType="Button">
+            <Setter Property="Background">
+                <Setter.Value>
+                    <LinearGradientBrush StartPoint="0,0" EndPoint="1,0">
+                        <GradientStop Color="#667EEA" Offset="0"/>
+                        <GradientStop Color="#764BA2" Offset="1"/>
+                    </LinearGradientBrush>
+                </Setter.Value>
+            </Setter>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Padding" Value="32,12"/>
+            <Setter Property="FontSize" Value="15"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}"
+                                Padding="{TemplateBinding Padding}"
+                                CornerRadius="10">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background">
+                        <Setter.Value>
+                            <LinearGradientBrush StartPoint="0,0" EndPoint="1,0">
+                                <GradientStop Color="#5568D3" Offset="0"/>
+                                <GradientStop Color="#6A42A0" Offset="1"/>
+                            </LinearGradientBrush>
+                        </Setter.Value>
+                    </Setter>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+    </Window.Resources>
+
+    <Border CornerRadius="20"
+            Background="{DynamicResource CardBackground}"
+            BorderBrush="{DynamicResource BorderColor}"
+            BorderThickness="2">
+        <Border.Effect>
+            <DropShadowEffect BlurRadius="30" ShadowDepth="0" Opacity="0.3" Color="Black"/>
+        </Border.Effect>
+
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+
+            <!-- Header -->
+            <Border Grid.Row="0"
+                    CornerRadius="18,18,0,0"
+                    Padding="32,24"
+                    MouseLeftButtonDown="Header_MouseLeftButtonDown">
+                <Border.Background>
+                    <LinearGradientBrush StartPoint="0,0" EndPoint="1,0">
+                        <GradientStop Color="#667EEA" Offset="0"/>
+                        <GradientStop Color="#764BA2" Offset="1"/>
+                    </LinearGradientBrush>
+                </Border.Background>
+
+                <Grid>
+                    <StackPanel Orientation="Horizontal">
+                        <Border Background="#20FFFFFF"
+                                Width="64" Height="64"
+                                CornerRadius="16"
+                                Margin="0,0,20,0">
+                            <TextBlock Text="📖"
+                                       FontSize="40"
+                                       HorizontalAlignment="Center"
+                                       VerticalAlignment="Center"/>
+                        </Border>
+                        <StackPanel VerticalAlignment="Center">
+                            <TextBlock Text="ROYAL BLUEBERRY DICTIONARY"
+                                       FontSize="22"
+                                       FontWeight="Bold"
+                                       Foreground="White"/>
+                            <TextBlock Text="A smart dictionary for everyone"
+                                       FontSize="14"
+                                       Foreground="White"
+                                       Opacity="0.9"
+                                       Margin="0,6,0,0"/>
+                        </StackPanel>
+                    </StackPanel>
+
+                    <!-- Close Button -->
+                    <Button Content="✕"
+                            FontSize="24"
+                            Width="40" Height="40"
+                            HorizontalAlignment="Right"
+                            VerticalAlignment="Top"
+                            Background="Transparent"
+                            Foreground="White"
+                            BorderThickness="0"
+                            Cursor="Hand"
+                            Click="Close_Click">
+                        <Button.Style>
+                            <Style TargetType="Button">
+                                <Setter Property="Template">
+                                    <Setter.Value>
+                                        <ControlTemplate TargetType="Button">
+                                            <Border Background="{TemplateBinding Background}"
+                                                    CornerRadius="8">
+                                                <ContentPresenter HorizontalAlignment="Center"
+                                                                  VerticalAlignment="Center"/>
+                                            </Border>
+                                        </ControlTemplate>
+                                    </Setter.Value>
+                                </Setter>
+                                <Style.Triggers>
+                                    <Trigger Property="IsMouseOver" Value="True">
+                                        <Setter Property="Background" Value="#30FFFFFF"/>
+                                    </Trigger>
+                                </Style.Triggers>
+                            </Style>
+                        </Button.Style>
+                    </Button>
+                </Grid>
+            </Border>
+
+            <!-- Content -->
+            <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" Padding="32,24">
+                <StackPanel>
+                    <!-- Version Info -->
+                    <Border Background="{DynamicResource SearchBackground}"
+                            BorderBrush="{DynamicResource BorderColor}"
+                            BorderThickness="2"
+                            CornerRadius="12"
+                            Padding="20"
+                            Margin="0,0,0,16">
+                        <StackPanel>
+                            <TextBlock Text="ℹ️ Version Information"
+                                       Style="{StaticResource HeaderStyle}"
+                                       Margin="0,0,0,15"/>
+
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="Auto"/>
+                                </Grid.RowDefinitions>
+
+                                <TextBlock Grid.Row="0" Grid.Column="0"
+                       Text="Version:"
+                       FontWeight="SemiBold"
+                       Style="{StaticResource InfoRowStyle}"
+                       Margin="0,5,15,5"/>
+                                <TextBlock Grid.Row="0" Grid.Column="1"
+                       Text="1.0.0"
+                       Style="{StaticResource InfoRowStyle}"/>
+
+                                <TextBlock Grid.Row="1" Grid.Column="0"
+                       Text="Build:"
+                       FontWeight="SemiBold"
+                       Style="{StaticResource InfoRowStyle}"
+                       Margin="0,5,15,5"/>
+                                <TextBlock Grid.Row="1" Grid.Column="1"
+                       Text="2025.01.15"
+                       Style="{StaticResource InfoRowStyle}"/>
+
+                                <TextBlock Grid.Row="2" Grid.Column="0"
+                       Text="Platform:"
+                       FontWeight="SemiBold"
+                       Style="{StaticResource InfoRowStyle}"
+                       Margin="0,5,15,5"/>
+                                <TextBlock Grid.Row="2" Grid.Column="1"
+                       Text="Windows 10/11 - WPF .NET 9.0"
+                       Style="{StaticResource InfoRowStyle}"/>
+
+                                <TextBlock Grid.Row="3" Grid.Column="0"
+                       Text="License:"
+                       FontWeight="SemiBold"
+                       Style="{StaticResource InfoRowStyle}"
+                       Margin="0,5,15,5"/>
+                                <TextBlock Grid.Row="3" Grid.Column="1"
+                       Text="MIT License - Open Source"
+                       Style="{StaticResource InfoRowStyle}"/>
+                            </Grid>
+                        </StackPanel>
+                    </Border>
+
+                    <!-- Team Info -->
+                    <Border Background="{DynamicResource SearchBackground}"
+        BorderBrush="{DynamicResource BorderColor}"
+        BorderThickness="2"
+        CornerRadius="12"
+        Padding="20"
+        Margin="0,0,0,16">
+                        <StackPanel>
+                            <TextBlock Text="👥 Development Team"
+                   Style="{StaticResource HeaderStyle}"
+                   Margin="0,0,0,15"/>
+
+                            <TextBlock Style="{StaticResource BodyStyle}">
+            <Run Text="Subject:" FontWeight="SemiBold"/>
+            <Run Text="Nhập môn công nghệ phần mềm"/>
+                            </TextBlock>
+
+                            <TextBlock Style="{StaticResource BodyStyle}">
+            <Run Text="Lecturer:" FontWeight="SemiBold"/>
+            <Run Text="ThS. Huỳnh Ngọc Tín"/>
+                            </TextBlock>
+
+                            <TextBlock Style="{StaticResource BodyStyle}">
+            <Run Text="Semester:" FontWeight="SemiBold"/>
+            <Run Text="Kỳ 2 - Năm học 2025-2026"/>
+                            </TextBlock>
+
+                            <TextBlock Text="Members:"
+                   FontWeight="SemiBold"
+                   Foreground="{DynamicResource TextColor}"
+                   Margin="0,15,0,8"/>
+
+                            <StackPanel Margin="15,0,0,0">
+                                <TextBlock Style="{StaticResource BodyStyle}">
+                                    • Nguyễn Tấn Đạt
+                                </TextBlock>
+                                <TextBlock Style="{StaticResource BodyStyle}">
+                                    • Võ Nguyễn Thanh Hương
+                                </TextBlock>
+                                <TextBlock Style="{StaticResource BodyStyle}">
+                                    • Ngô Phương Hiền
+                                </TextBlock>
+                                <TextBlock Style="{StaticResource BodyStyle}">
+                                    • Nguyễn Quốc An
+                                </TextBlock>
+                                <TextBlock Style="{StaticResource BodyStyle}">
+                                    • Võ Văn Hải
+                                </TextBlock>
+                            </StackPanel>
+
+                            <!-- GitHub Links -->
+                            <Border Background="#10667EEA"
+                                    BorderBrush="#30667EEA"
+                                    BorderThickness="1"
+                                    CornerRadius="8"
+                                    Padding="12"
+                                    Margin="0,15,0,0">
+                                <StackPanel>
+                                    <TextBlock Text="📦 Source Code Repositories"
+                           FontSize="14"
+                           FontWeight="SemiBold"
+                           Foreground="{DynamicResource TextColor}"
+                           Margin="0,0,0,8"/>
+                                    <TextBlock Style="{StaticResource LinkStyle}"
+                           Text="🔗 Frontend (WPF .NET 9.0)"
+                           MouseDown="FrontendRepo_Click"/>
+                                    <TextBlock Style="{StaticResource LinkStyle}"
+                           Text="🔗 Backend (ASP.NET Core)"
+                           MouseDown="BackendRepo_Click"/>
+                                </StackPanel>
+                            </Border>
+                        </StackPanel>
+                    </Border>
+
+                    <!-- Description -->
+                    <Border Background="{DynamicResource SearchBackground}"
+                            BorderBrush="{DynamicResource BorderColor}"
+                            BorderThickness="2"
+                            CornerRadius="12"
+                            Padding="20"
+                            Margin="0,0,0,16">
+                        <StackPanel>
+                            <TextBlock Text="📝 Description"
+                                       Style="{StaticResource HeaderStyle}"
+                                       Margin="0,0,0,15"/>
+
+                            <TextBlock Style="{StaticResource BodyStyle}">
+                                Royal Blueberry Dictionary is a smart English dictionary app designed to provide the most effective vocabulary lookup and learning experience. The app is not only a tool for looking up words but also a companion that helps you build your personal vocabulary systematically.
+                            </TextBlock>
+
+                            <TextBlock Text="Key Features:"
+                                       FontWeight="SemiBold"
+                                       Foreground="{DynamicResource TextColor}"
+                                       Margin="0,10,0,8"/>
+
+                            <StackPanel Margin="15,0,0,0">
+                                <TextBlock Style="{StaticResource BodyStyle}">
+                                    ✅ Look up words using multiple reliable sources
+                                </TextBlock>
+                                <TextBlock Style="{StaticResource BodyStyle}">
+                                    ✅ Accurate US 🇺🇸 and UK 🇬🇧 pronunciation
+                                </TextBlock>
+                                <TextBlock Style="{StaticResource BodyStyle}">
+                                    ✅ Manage vocabulary with a Tag system
+                                </TextBlock>
+                                <TextBlock Style="{StaticResource BodyStyle}">
+                                    ✅ Sync data via Google Drive
+                                </TextBlock>
+                                <TextBlock Style="{StaticResource BodyStyle}">
+                                    ✅ 23 themes + custom colors
+                                </TextBlock>
+                                <TextBlock Style="{StaticResource BodyStyle}">
+                                    ✅ Supports offline mode
+                                </TextBlock>
+                            </StackPanel>
+                        </StackPanel>
+                    </Border>
+
+                    <!-- Links -->
+                    <Border Background="{DynamicResource SearchBackground}"
+                            BorderBrush="{DynamicResource BorderColor}"
+                            BorderThickness="2"
+                            CornerRadius="12"
+                            Padding="20">
+                        <StackPanel>
+                            <TextBlock Text="🔗 Links"
+                                       Style="{StaticResource HeaderStyle}"
+                                       Margin="0,0,0,15"/>
+
+                            <StackPanel>
+                                <TextBlock Style="{StaticResource LinkStyle}"
+                                           Text="🐙 GitHub Repository"
+                                           MouseDown="GitHubLink_Click"/>
+                                <TextBlock Text="📧 labotanique117@gmail.com"
+                                           Style="{StaticResource LinkStyle}"
+                                           TextDecorations="None"
+                                           MouseDown="EmailLink_Click"/>
+                            </StackPanel>
+                        </StackPanel>
+                    </Border>
+                </StackPanel>
+            </ScrollViewer>
+
+            <!-- Footer Buttons -->
+            <Border Grid.Row="2"
+                    Background="{DynamicResource CardBackground}"
+                    BorderBrush="{DynamicResource BorderColor}"
+                    BorderThickness="0,2,0,0"
+                    CornerRadius="0,0,18,18"
+                    Padding="24,16">
+                <Button Content="Close"
+                        Width="140"
+                        Style="{StaticResource CloseButtonStyle}"
+                        HorizontalAlignment="Right"
+                        Click="Close_Click"/>
+            </Border>
+        </Grid>
+    </Border>
+</Window>

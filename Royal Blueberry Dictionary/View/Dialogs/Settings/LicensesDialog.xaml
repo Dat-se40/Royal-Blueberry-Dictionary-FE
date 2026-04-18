@@ -1,0 +1,375 @@
+﻿<Window x:Class="Royal_Blueberry_Dictionary.View.Dialogs.Settings.LicensesDialog"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Source Code License"
+        Width="760" Height="760"
+        WindowStartupLocation="CenterOwner"
+        Background="Transparent"
+        ResizeMode="CanResize"
+        MinWidth="700" MinHeight="600"
+        WindowStyle="None"
+        AllowsTransparency="True">
+
+    <Window.Resources>
+        <!-- Header Style -->
+        <Style x:Key="HeaderStyle" TargetType="TextBlock">
+            <Setter Property="FontSize" Value="18"/>
+            <Setter Property="FontWeight" Value="Bold"/>
+            <Setter Property="Foreground" Value="{DynamicResource TextColor}"/>
+            <Setter Property="Margin" Value="0,15,0,10"/>
+        </Style>
+
+        <!-- Body Style -->
+        <Style x:Key="BodyStyle" TargetType="TextBlock">
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="Foreground" Value="{DynamicResource TextColor}"/>
+            <Setter Property="TextWrapping" Value="Wrap"/>
+            <Setter Property="LineHeight" Value="22"/>
+            <Setter Property="Margin" Value="0,0,0,10"/>
+            <Setter Property="Opacity" Value="0.9"/>
+        </Style>
+
+        <!-- Link Style -->
+        <Style x:Key="LinkStyle" TargetType="TextBlock">
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="Foreground" Value="{DynamicResource ButtonColor}"/>
+            <Setter Property="TextDecorations" Value="Underline"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Margin" Value="0,3,0,3"/>
+        </Style>
+
+        <!-- Library Name Style -->
+        <Style x:Key="LibraryNameStyle" TargetType="TextBlock">
+            <Setter Property="FontSize" Value="16"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="Foreground" Value="{DynamicResource TextColor}"/>
+            <Setter Property="Margin" Value="0,10,0,5"/>
+        </Style>
+
+        <!-- Close Button Style -->
+        <Style x:Key="CloseButtonStyle" TargetType="Button">
+            <Setter Property="Background">
+                <Setter.Value>
+                    <LinearGradientBrush StartPoint="0,0" EndPoint="1,0">
+                        <GradientStop Color="#667EEA" Offset="0"/>
+                        <GradientStop Color="#764BA2" Offset="1"/>
+                    </LinearGradientBrush>
+                </Setter.Value>
+            </Setter>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Padding" Value="32,12"/>
+            <Setter Property="FontSize" Value="15"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}"
+                                Padding="{TemplateBinding Padding}"
+                                CornerRadius="10">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background">
+                        <Setter.Value>
+                            <LinearGradientBrush StartPoint="0,0" EndPoint="1,0">
+                                <GradientStop Color="#5568D3" Offset="0"/>
+                                <GradientStop Color="#6A42A0" Offset="1"/>
+                            </LinearGradientBrush>
+                        </Setter.Value>
+                    </Setter>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+    </Window.Resources>
+
+    <Border CornerRadius="20"
+            Background="{DynamicResource CardBackground}"
+            BorderBrush="{DynamicResource BorderColor}"
+            BorderThickness="2">
+        <Border.Effect>
+            <DropShadowEffect BlurRadius="30" ShadowDepth="0" Opacity="0.3" Color="Black"/>
+        </Border.Effect>
+
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+
+            <!-- Header -->
+            <Border Grid.Row="0"
+                    CornerRadius="18,18,0,0"
+                    Padding="32,24"
+                    MouseLeftButtonDown="Header_MouseLeftButtonDown">
+                <Border.Background>
+                    <LinearGradientBrush StartPoint="0,0" EndPoint="1,0">
+                        <GradientStop Color="#667EEA" Offset="0"/>
+                        <GradientStop Color="#764BA2" Offset="1"/>
+                    </LinearGradientBrush>
+                </Border.Background>
+
+                <Grid>
+                    <StackPanel Orientation="Horizontal">
+                        <Border Background="#20FFFFFF"
+                                Width="64" Height="64"
+                                CornerRadius="16"
+                                Margin="0,0,20,0">
+                            <TextBlock Text="⚖️"
+                                       FontSize="40"
+                                       HorizontalAlignment="Center"
+                                       VerticalAlignment="Center"/>
+                        </Border>
+                        <StackPanel VerticalAlignment="Center">
+                            <TextBlock Text="SOURCE CODE LICENSE"
+                                       FontSize="22"
+                                       FontWeight="Bold"
+                                       Foreground="White"/>
+                            <TextBlock Text="Open Source Licenses and Acknowledgments"
+                                       FontSize="14"
+                                       Foreground="White"
+                                       Opacity="0.9"
+                                       Margin="0,6,0,0"/>
+                        </StackPanel>
+                    </StackPanel>
+
+                    <!-- Close Button -->
+                    <Button Content="✕"
+                            FontSize="24"
+                            Width="40" Height="40"
+                            HorizontalAlignment="Right"
+                            VerticalAlignment="Top"
+                            Background="Transparent"
+                            Foreground="White"
+                            BorderThickness="0"
+                            Cursor="Hand"
+                            Click="Close_Click">
+                        <Button.Style>
+                            <Style TargetType="Button">
+                                <Setter Property="Template">
+                                    <Setter.Value>
+                                        <ControlTemplate TargetType="Button">
+                                            <Border Background="{TemplateBinding Background}"
+                                                    CornerRadius="8">
+                                                <ContentPresenter HorizontalAlignment="Center"
+                                                                  VerticalAlignment="Center"/>
+                                            </Border>
+                                        </ControlTemplate>
+                                    </Setter.Value>
+                                </Setter>
+                                <Style.Triggers>
+                                    <Trigger Property="IsMouseOver" Value="True">
+                                        <Setter Property="Background" Value="#30FFFFFF"/>
+                                    </Trigger>
+                                </Style.Triggers>
+                            </Style>
+                        </Button.Style>
+                    </Button>
+                </Grid>
+            </Border>
+
+            <!-- Content -->
+            <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" Padding="32,24">
+                <StackPanel>
+                    <!-- App License -->
+                    <Border Background="{DynamicResource SearchBackground}"
+                            BorderBrush="{DynamicResource BorderColor}"
+                            BorderThickness="2"
+                            CornerRadius="12"
+                            Padding="20"
+                            Margin="0,0,0,16">
+                        <StackPanel>
+                            <TextBlock Style="{StaticResource HeaderStyle}" Margin="0,0,0,15">
+                                📖 Royal Blueberry Dictionary - MIT License
+                            </TextBlock>
+
+                            <TextBlock Style="{StaticResource BodyStyle}">
+                                Copyright (c) 2025 Royal Blueberry Dictionary Team
+                            </TextBlock>
+
+                            <TextBlock Style="{StaticResource BodyStyle}">
+                                Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+                            </TextBlock>
+
+                            <TextBlock Style="{StaticResource BodyStyle}">
+                                The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+                            </TextBlock>
+
+                            <TextBlock Style="{StaticResource BodyStyle}" FontWeight="SemiBold">
+                                THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED.
+                            </TextBlock>
+
+                            <TextBlock Style="{StaticResource LinkStyle}"
+                                       Text="🔗 View full license on GitHub"
+                                       MouseDown="AppLicense_Click"
+                                       Margin="0,10,0,0"/>
+                        </StackPanel>
+                    </Border>
+
+                    <!-- Third-Party Libraries -->
+                    <Border Background="{DynamicResource SearchBackground}"
+                            BorderBrush="{DynamicResource BorderColor}"
+                            BorderThickness="2"
+                            CornerRadius="12"
+                            Padding="20"
+                            Margin="0,0,0,16">
+                        <StackPanel>
+                            <TextBlock Style="{StaticResource HeaderStyle}" Margin="0,0,0,15">
+                                📚 Third-Party Libraries
+                            </TextBlock>
+
+                            <!-- .NET -->
+                            <TextBlock Text=".NET 9.0" Style="{StaticResource LibraryNameStyle}"/>
+                            <TextBlock Style="{StaticResource BodyStyle}">
+                                License: MIT License<LineBreak/>
+                                © Microsoft Corporation
+                            </TextBlock>
+                            <TextBlock Style="{StaticResource LinkStyle}"
+                                       Text="🔗 https://github.com/dotnet/runtime"
+                                       MouseDown="DotNetLink_Click"/>
+
+                            <!-- Newtonsoft.Json -->
+                            <TextBlock Text="Newtonsoft.Json" Style="{StaticResource LibraryNameStyle}" Margin="0,15,0,5"/>
+                            <TextBlock Style="{StaticResource BodyStyle}">
+                                License: MIT License<LineBreak/>
+                                © James Newton-King
+                            </TextBlock>
+                            <TextBlock Style="{StaticResource LinkStyle}"
+                                       Text="🔗 https://www.newtonsoft.com/json"
+                                       MouseDown="NewtonsoftLink_Click"/>
+
+                            <!-- Google Drive API -->
+                            <TextBlock Text="Google.Apis.Drive.v3" Style="{StaticResource LibraryNameStyle}" Margin="0,15,0,5"/>
+                            <TextBlock Style="{StaticResource BodyStyle}">
+                                License: Apache License 2.0<LineBreak/>
+                                © Google LLC
+                            </TextBlock>
+                            <TextBlock Style="{StaticResource LinkStyle}"
+                                       Text="🔗 https://developers.google.com/drive"
+                                       MouseDown="GoogleAPILink_Click"/>
+                        </StackPanel>
+                    </Border>
+
+                    <!-- APIs & Data Sources -->
+                    <Border Background="{DynamicResource SearchBackground}"
+                            BorderBrush="{DynamicResource BorderColor}"
+                            BorderThickness="2"
+                            CornerRadius="12"
+                            Padding="20"
+                            Margin="0,0,0,16">
+                        <StackPanel>
+                            <TextBlock Style="{StaticResource HeaderStyle}" Margin="0,0,0,15">
+                                🌐 APIs and Data Sources
+                            </TextBlock>
+
+                            <!-- Free Dictionary API -->
+                            <TextBlock Text="Free Dictionary API" Style="{StaticResource LibraryNameStyle}"/>
+                            <TextBlock Style="{StaticResource BodyStyle}">
+                                Primary dictionary data source
+                            </TextBlock>
+                            <TextBlock Style="{StaticResource LinkStyle}"
+                                       Text="🔗 https://dictionaryapi.dev"
+                                       MouseDown="FreeDictLink_Click"/>
+
+                            <!-- Merriam-Webster -->
+                            <TextBlock Text="Merriam-Webster Dictionary API" Style="{StaticResource LibraryNameStyle}" Margin="0,15,0,5"/>
+                            <TextBlock Style="{StaticResource BodyStyle}">
+                                Additional dictionary sources
+                            </TextBlock>
+                            <TextBlock Style="{StaticResource LinkStyle}"
+                                       Text="🔗 https://dictionaryapi.com"
+                                       MouseDown="MerriamLink_Click"/>
+
+                            <!-- Cambridge Dictionary -->
+                            <TextBlock Text="Cambridge Dictionary" Style="{StaticResource LibraryNameStyle}" Margin="0,15,0,5"/>
+                            <TextBlock Style="{StaticResource BodyStyle}">
+                                Audio pronunciation sources
+                            </TextBlock>
+                            <TextBlock Style="{StaticResource LinkStyle}"
+                                       Text="🔗 https://dictionary.cambridge.org"
+                                       MouseDown="CambridgeLink_Click"/>
+                        </StackPanel>
+                    </Border>
+
+                    <!-- Acknowledgments -->
+                    <Border Background="{DynamicResource SearchBackground}"
+        BorderBrush="{DynamicResource BorderColor}"
+        BorderThickness="2"
+        CornerRadius="12"
+        Padding="20">
+                        <StackPanel>
+                            <TextBlock Style="{StaticResource HeaderStyle}" Margin="0,0,0,15">
+            🙏 Acknowledgments
+                            </TextBlock>
+
+                            <TextBlock Style="{StaticResource BodyStyle}">
+            We would like to express our sincere thanks to:
+                            </TextBlock>
+
+                            <StackPanel Margin="15,10,0,0">
+                                <TextBlock Style="{StaticResource BodyStyle}">
+                • WPF Community - Technical Support
+                                </TextBlock>
+                                <TextBlock Style="{StaticResource BodyStyle}">
+                • .NET Foundation - Powerful Framework
+                                </TextBlock>
+                                <TextBlock Style="{StaticResource BodyStyle}">
+                • Stack Overflow – Question and Answer Platform
+                                </TextBlock>
+                                <TextBlock Style="{StaticResource BodyStyle}">
+                • ThS. Huỳnh Ngọc Tín - Thanks for the helpful guidance
+                                </TextBlock>
+                                <TextBlock Style="{StaticResource BodyStyle}">
+                • All users - Thank you for your valuable feedback and contributions
+                                </TextBlock>
+                            </StackPanel>
+
+                            <!-- GitHub Repositories -->
+                            <Border Background="#10667EEA"
+                BorderBrush="#30667EEA"
+                BorderThickness="1"
+                CornerRadius="8"
+                Padding="12"
+                Margin="0,15,0,0">
+                                <StackPanel>
+                                    <TextBlock Text="📦 Project Repositories"
+                           FontSize="14"
+                           FontWeight="SemiBold"
+                           Foreground="{DynamicResource TextColor}"
+                           Margin="0,0,0,8"/>
+                                    <TextBlock Style="{StaticResource LinkStyle}"
+                           Text="🔗 Frontend Repository"
+                           MouseDown="FrontendRepo_Click"/>
+                                    <TextBlock Style="{StaticResource LinkStyle}"
+                           Text="🔗 Backend Repository"
+                           MouseDown="BackendRepo_Click"/>
+                                </StackPanel>
+                            </Border>
+                        </StackPanel>
+                    </Border>
+                    
+                </StackPanel>
+            </ScrollViewer>
+
+            <!-- Footer Buttons -->
+            <Border Grid.Row="2"
+                    Background="{DynamicResource CardBackground}"
+                    BorderBrush="{DynamicResource BorderColor}"
+                    BorderThickness="0,2,0,0"
+                    CornerRadius="0,0,18,18"
+                    Padding="24,16">
+                <Button Content="Close"
+                        Width="140"
+                        Style="{StaticResource CloseButtonStyle}"
+                        HorizontalAlignment="Right"
+                        Click="Close_Click"/>
+            </Border>
+        </Grid>
+    </Border>
+</Window>
