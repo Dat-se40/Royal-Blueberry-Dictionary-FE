@@ -3,36 +3,54 @@
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-      xmlns:local="clr-namespace:Royal_Blueberry_Dictionary.View.Pages"
-      xmlns:conv="clr-namespace:Royal_Blueberry_Dictionary.Converters"
       mc:Ignorable="d"
       d:DesignHeight="600" d:DesignWidth="1000"
-      Background="{DynamicResource MainBackground}">
+      Background="{DynamicResource MainBackground}" Title="Game Mode">
 
     <Page.Resources>
-        <conv:BoolToVisibilityConverter x:Key="BoolToVis" />
-
         <Storyboard x:Key="FlipToBackPhase1" Completed="FlipToBackPhase1_Completed">
-            <DoubleAnimation Storyboard.TargetName="FlipTransform" Storyboard.TargetProperty="ScaleX" From="1" To="0" Duration="0:0:0.2" />
+            <DoubleAnimation Storyboard.TargetName="FlipTransform" Storyboard.TargetProperty="ScaleX" From="1" To="0" Duration="0:0:0.2" AccelerationRatio="0.5" />
+            <DoubleAnimation Storyboard.TargetName="CardFront" Storyboard.TargetProperty="Opacity" From="1" To="0" Duration="0:0:0.2" />
         </Storyboard>
         <Storyboard x:Key="FlipToBackPhase2" Completed="AnimationCompleted">
-            <DoubleAnimation Storyboard.TargetName="FlipTransform" Storyboard.TargetProperty="ScaleX" From="0" To="1" Duration="0:0:0.2" />
+            <DoubleAnimation Storyboard.TargetName="FlipTransform" Storyboard.TargetProperty="ScaleX" From="0" To="1" Duration="0:0:0.2" DecelerationRatio="0.5" />
+            <DoubleAnimation Storyboard.TargetName="CardBack" Storyboard.TargetProperty="Opacity" From="0" To="1" Duration="0:0:0.2" />
         </Storyboard>
         <Storyboard x:Key="FlipToFrontPhase1" Completed="FlipToFrontPhase1_Completed">
-            <DoubleAnimation Storyboard.TargetName="FlipTransform" Storyboard.TargetProperty="ScaleX" From="1" To="0" Duration="0:0:0.2" />
+            <DoubleAnimation Storyboard.TargetName="FlipTransform" Storyboard.TargetProperty="ScaleX" From="1" To="0" Duration="0:0:0.2" AccelerationRatio="0.5" />
+            <DoubleAnimation Storyboard.TargetName="CardBack" Storyboard.TargetProperty="Opacity" From="1" To="0" Duration="0:0:0.2" />
         </Storyboard>
         <Storyboard x:Key="FlipToFrontPhase2" Completed="AnimationCompleted">
-            <DoubleAnimation Storyboard.TargetName="FlipTransform" Storyboard.TargetProperty="ScaleX" From="0" To="1" Duration="0:0:0.2" />
+            <DoubleAnimation Storyboard.TargetName="FlipTransform" Storyboard.TargetProperty="ScaleX" From="0" To="1" Duration="0:0:0.2" DecelerationRatio="0.5" />
+            <DoubleAnimation Storyboard.TargetName="CardFront" Storyboard.TargetProperty="Opacity" From="0" To="1" Duration="0:0:0.2" />
         </Storyboard>
+        <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
     </Page.Resources>
 
     <Grid>
-        <ScrollViewer x:Name="GameSelectionPanel" Visibility="Visible">
-            <StackPanel Margin="30">
-                <TextBlock Text="🎮 Game Mode" FontSize="36" FontWeight="Bold" HorizontalAlignment="Center" Foreground="{DynamicResource TextColor}"/>
-                <Border Background="{DynamicResource CardBackground}" CornerRadius="20" Padding="30" MouseDown="GameCard_Click" Cursor="Hand" Margin="0,20">
-                    <TextBlock Text="Bắt đầu học với Flashcard" HorizontalAlignment="Center" Foreground="{DynamicResource TextColor}"/>
+        <ScrollViewer x:Name="GameSelectionPanel" VerticalScrollBarVisibility="Auto">
+            <StackPanel MaxWidth="1200" Margin="30">
+                <TextBlock Text="🎮 Game Mode" FontSize="36" FontWeight="Bold" Foreground="{DynamicResource TextColor}" HorizontalAlignment="Center" Margin="0,0,0,10" />
+                <TextBlock Text="Learn vocabulary through interesting games" FontSize="16" Foreground="{DynamicResource TextColor}" Opacity="0.7" HorizontalAlignment="Center" Margin="0,0,0,40" />
+
+                <Border Background="{DynamicResource CardBackground}" BorderBrush="{DynamicResource BorderColor}" BorderThickness="2" CornerRadius="20" Padding="30" Cursor="Hand" MouseDown="GameCard_Click">
+                    <StackPanel>
+                        <DockPanel Margin="0,0,0,20">
+                            <Border Width="80" Height="80" Background="{DynamicResource ToolButtonActive}" CornerRadius="20" DockPanel.Dock="Left" Margin="0,0,20,0">
+                                <TextBlock Text="📇" FontSize="40" Foreground="White" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                            </Border>
+                            <StackPanel VerticalAlignment="Center">
+                                <TextBlock Text="Flashcard" FontSize="28" FontWeight="Bold" Foreground="{DynamicResource TextColor}" />
+                                <TextBlock Text="Flip the vocabulary card to learn the meaning and usage" FontSize="14" Foreground="{DynamicResource TextColor}" Opacity="0.7" Margin="0,5,0,0" />
+                            </StackPanel>
+                        </DockPanel>
+                        <Border BorderBrush="{DynamicResource BorderColor}" BorderThickness="0,2,0,0" Padding="0,20,0,0">
+                            <TextBlock Text="📚 Review • ⏱️ Flexible • 🎯 Effective" FontSize="14" Foreground="{DynamicResource TextColor}" Opacity="0.7" HorizontalAlignment="Center"/>
+                        </Border>
+                    </StackPanel>
                 </Border>
+
+                <Button Content="📊 View training history" HorizontalAlignment="Center" Margin="0,20,0,0" Click="ViewHistory_Click" Padding="20,10" Background="{DynamicResource SearchBackground}"/>
             </StackPanel>
         </ScrollViewer>
 
@@ -42,10 +60,10 @@
                 <RowDefinition Height="*" />
             </Grid.RowDefinitions>
 
-            <Border Grid.Row="0" Background="{DynamicResource CardBackground}" Padding="20,15">
+            <Border Grid.Row="0" Background="{DynamicResource CardBackground}" BorderBrush="{DynamicResource BorderColor}" BorderThickness="0,0,0,2" Padding="20,15">
                 <DockPanel>
-                    <Button Content="✕ Thoát" Click="ExitGame_Click" Style="{StaticResource SearchButtonStyle}"/>
-                    <TextBlock Text="{Binding ProgressText}" DockPanel.Dock="Right" VerticalAlignment="Center" FontWeight="Bold" Foreground="{DynamicResource TextColor}"/>
+                    <Button Content="✕ Exit" Background="Transparent" Foreground="Red" BorderBrush="Red" BorderThickness="1" Padding="15,8" DockPanel.Dock="Left" Click="ExitGame_Click" />
+                    <TextBlock Text="{Binding ProgressText}" FontWeight="SemiBold" FontSize="16" Foreground="{DynamicResource TextColor}" DockPanel.Dock="Right" HorizontalAlignment="Right" VerticalAlignment="Center"/>
                 </DockPanel>
             </Border>
 
@@ -56,30 +74,56 @@
                     <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
 
-                <Viewbox Grid.Row="0" Margin="30">
-                    <Border x:Name="FlashcardBorder" Width="700" Height="450" CornerRadius="25" Background="{DynamicResource CardBackground}" MouseDown="FlipCard_Click" BorderBrush="{DynamicResource BorderColor}" BorderThickness="2">
+                <Viewbox Grid.Row="0" Margin="30,20,30,0" MaxHeight="450" MaxWidth="700">
+                    <Border x:Name="FlashcardBorder" Background="{DynamicResource CardBackground}" BorderBrush="{DynamicResource ToolButtonActive}" BorderThickness="2" CornerRadius="25" Width="700" Height="450" Cursor="Hand" MouseDown="FlipCard_Click">
                         <Border.RenderTransform>
-                            <ScaleTransform x:Name="FlipTransform" CenterX="350" CenterY="225" />
+                            <TransformGroup>
+                                <ScaleTransform x:Name="FlipTransform" ScaleX="1" ScaleY="1" CenterX="350" CenterY="225" />
+                            </TransformGroup>
                         </Border.RenderTransform>
+
                         <Grid>
-                            <StackPanel x:Name="CardFront" VerticalAlignment="Center" HorizontalAlignment="Center">
-                                <TextBlock Text="{Binding CurrentCard.Word}" FontSize="48" FontWeight="Bold" Foreground="{DynamicResource TextColor}" HorizontalAlignment="Center"/>
-                                <TextBlock Text="{Binding CurrentCard.Phonetic}" FontSize="20" Opacity="0.7" Foreground="{DynamicResource TextColor}" HorizontalAlignment="Center"/>
+                            <StackPanel x:Name="CardFront" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="50">
+                                <TextBlock Text="{Binding CurrentCard.Word}" FontSize="48" FontWeight="Bold" Foreground="{DynamicResource TextColor}" HorizontalAlignment="Center" Margin="0,0,0,15" />
+                                <TextBlock Text="{Binding CurrentCard.Phonetic}" FontSize="20" FontFamily="Consolas" Foreground="{DynamicResource TextColor}" Opacity="0.7" HorizontalAlignment="Center" Margin="0,0,0,10" />
+                                <Border Background="{DynamicResource ToolButtonActive}" CornerRadius="15" Padding="12,6" HorizontalAlignment="Center" Margin="0,0,0,30">
+                                    <TextBlock Text="{Binding CurrentCard.PartOfSpeech}" FontSize="14" FontWeight="Bold" Foreground="White" />
+                                </Border>
+                                <TextBlock Text="👆 Click to flip" FontSize="14" Foreground="{DynamicResource TextColor}" Opacity="0.6" HorizontalAlignment="Center" />
                             </StackPanel>
 
-                            <StackPanel x:Name="CardBack" Visibility="Collapsed" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="40">
-                                <TextBlock Text="{Binding CurrentCard.PartOfSpeech}" Foreground="CornflowerBlue" FontWeight="Bold" HorizontalAlignment="Center" Margin="0,0,0,10"/>
-                                <TextBlock Text="{Binding CurrentCard.Definition}" FontSize="24" TextWrapping="Wrap" TextAlignment="Center" Foreground="{DynamicResource TextColor}"/>
-                                <TextBlock Text="{Binding CurrentCard.Example}" FontSize="16" FontStyle="Italic" Margin="0,15" Opacity="0.7" Foreground="{DynamicResource TextColor}" TextAlignment="Center" TextWrapping="Wrap"/>
+                            <StackPanel x:Name="CardBack" Visibility="Collapsed" Opacity="0" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="50">
+                                <TextBlock Text="{Binding CurrentCard.Definition}" FontSize="24" FontWeight="SemiBold" Foreground="{DynamicResource TextColor}" HorizontalAlignment="Center" TextWrapping="Wrap" TextAlignment="Center" Margin="0,0,0,20" />
+                                <TextBlock Text="{Binding CurrentCard.Example}" FontSize="16" FontStyle="Italic" Foreground="{DynamicResource TextColor}" Opacity="0.7" HorizontalAlignment="Center" TextWrapping="Wrap" TextAlignment="Center" Margin="0,0,0,20" />
+                                <TextBlock Text="👆 Click to flip back" FontSize="14" Foreground="{DynamicResource TextColor}" Opacity="0.6" HorizontalAlignment="Center" />
                             </StackPanel>
                         </Grid>
                     </Border>
                 </Viewbox>
 
-                <UniformGrid Grid.Row="2" Columns="3" Margin="30">
-                    <Button Content="❌ Bỏ qua" Click="SkipCard_Click" Margin="5"/>
-                    <Button Content="◀ Trước" Click="PreviousCard_Click" IsEnabled="{Binding CanGoBack}" Margin="5"/>
-                    <Button Content="{Binding NextButtonText}" Click="NextCard_Click" Margin="5" Background="{DynamicResource ToolButtonActive}" Foreground="White"/>
+                <Border Grid.Row="1" Background="#fff3cd" BorderBrush="#ffc107" BorderThickness="2" CornerRadius="10" Padding="12,8" Margin="30,20,30,0" MaxWidth="700">
+                    <DockPanel>
+                        <TextBlock Text="{Binding SkipTrackerMessage}" FontWeight="SemiBold" Foreground="#856404" DockPanel.Dock="Left" VerticalAlignment="Center" Margin="0,0,10,0" />
+                        <Button Content="👁️ Review" Visibility="{Binding HasSkippedCards, Converter={StaticResource BooleanToVisibilityConverter}}" Background="#ffc107" Foreground="#856404" BorderThickness="0" Padding="10,4" FontWeight="SemiBold" Cursor="Hand" DockPanel.Dock="Right" Click="ReviewSkipped_Click"/>
+                        <ItemsControl ItemsSource="{Binding SkippedCards}" VerticalAlignment="Center" HorizontalAlignment="Left">
+                            <ItemsControl.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <WrapPanel />
+                                </ItemsPanelTemplate>
+                            </ItemsControl.ItemsPanel>
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <Button Content="{Binding}" Background="#ffc107" Foreground="#856404" BorderThickness="1" Padding="10,4" Margin="4" Click="SkipNumber_Click" Tag="{Binding}"/>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                    </DockPanel>
+                </Border>
+
+                <UniformGrid Grid.Row="2" Columns="3" Rows="1" Margin="30,20,30,30" MaxWidth="700">
+                    <Button Content="❌ Skip" Background="White" Foreground="Red" BorderBrush="Red" BorderThickness="1" Margin="0,0,7,0" Click="SkipCard_Click" Padding="15"/>
+                    <Button Content="◀ Previous" Background="{DynamicResource SearchBackground}" Margin="7,0,7,0" Click="PreviousCard_Click" IsEnabled="{Binding CanGoBack}" />
+                    <Button Content="{Binding NextButtonText}" Background="{DynamicResource ToolButtonActive}" Foreground="White" Margin="7,0,0,0" Click="NextCard_Click" />
                 </UniformGrid>
             </Grid>
         </Grid>
