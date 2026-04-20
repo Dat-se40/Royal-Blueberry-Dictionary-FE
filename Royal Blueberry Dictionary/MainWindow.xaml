@@ -225,7 +225,7 @@
                             </StackPanel>
                         </Button>
 
-                        <Button Style="{StaticResource SidebarButtonStyle}" Tag="Game" >
+                        <Button Style="{StaticResource SidebarButtonStyle}" Tag="Game"  Click="SideBarNavigate" >
                             <StackPanel Orientation="Horizontal">
                                 <TextBlock Text="🎮" FontSize="20" Margin="0,0,15,0" Width="24" TextAlignment="Center"/>
                                 <TextBlock Text="Game" FontSize="15" VerticalAlignment="Center"/>

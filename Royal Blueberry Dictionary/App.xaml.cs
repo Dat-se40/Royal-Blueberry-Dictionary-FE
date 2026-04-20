@@ -46,7 +46,7 @@ namespace Royal_Blueberry_Dictionary
 
             serviceCollection.AddScoped<Repository.Interface.IWordEntryRepository, Repository.Implement.WordEntryRepository>();
             serviceCollection.AddScoped<Repository.Interface.ITagRepository, Repository.Implement.TagRepository>();
-
+            serviceCollection.AddSingleton<Service.GameLogService>();
             serviceCollection.AddSingleton<IBackendApiClient, BackendApiClient>();
             serviceCollection.AddSingleton<Service.OfflinePackageCacheService>();
 
@@ -80,6 +80,7 @@ namespace Royal_Blueberry_Dictionary
             serviceCollection.AddScoped<MyWordsPageViewModel>();
             serviceCollection.AddScoped<SettingsPageViewModel>();
             serviceCollection.AddScoped<AccountPageViewModel>();
+            serviceCollection.AddScoped<GameViewModel>();
             serviceCollection.AddTransient<WelcomeWindowViewModel>();
             serviceCollection.AddTransient<GameViewModel>();
             serviceCollection.AddScoped<OfflinePackagesPageViewModel>();

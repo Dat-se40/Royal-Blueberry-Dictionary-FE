@@ -38,6 +38,11 @@ namespace Royal_Blueberry_Dictionary.Service
             }
             return newEntry;
         }
+
+        public async Task<List<WordEntry>> GetAllWordsAsync()
+        {
+            return await WordEntryRepository.GetAllAsync(App.UserId);
+        }
         public async Task<WordEntry> GetWordEntryByID (string ID) 
         {
             var res = await WordEntryRepository.GetByIdAsync(ID);
@@ -49,24 +54,35 @@ namespace Royal_Blueberry_Dictionary.Service
         }
 
         public Task DeleteWordEntryAsync(string id) => WordEntryRepository.DeleteAsync(id);
-        public static WordEntry MapWordDetailToWordEntry(WordDetail detail, int meaningIdx, int defIdx)
+        public static WordEntry? MapWordDetailToWordEntry(WordDetail detail, int meaningIdx, int defIdx)
         {
-            var meaning = detail.Meanings[meaningIdx];
-            var definition = meaning.Definitions[defIdx];
-
-            return new WordEntry
+          
+            try
             {
-                Word = detail.Word ?? string.Empty,
-                Phonetic = detail.Phonetic ?? string.Empty,
-                PartOfSpeech = meaning.PartOfSpeech ?? string.Empty,
-                Definition = definition.Text ?? string.Empty,
-                Example = definition.Example ?? string.Empty,
-                Note = string.Empty,
+                var meaning = detail.Meanings[meaningIdx];
+                var definition = new Definition();
+                definition = meaning.Definitions[defIdx];
 
-                MeaningIndex = meaningIdx,
-                LastModifiedAt = DateTime.UtcNow,
-                IsDirty = true
-            };
+                return new WordEntry
+                {
+                    Word = detail.Word ?? string.Empty,
+                    Phonetic = detail.Phonetic ?? string.Empty,
+                    PartOfSpeech = meaning.PartOfSpeech ?? string.Empty,
+                    Definition = definition.Text ?? string.Empty,
+                    Example = definition.Example ?? string.Empty,
+                    Note = string.Empty,
+
+                    MeaningIndex = meaningIdx,
+                    LastModifiedAt = DateTime.UtcNow,
+                    IsDirty = true
+                };
+            }
+            catch (Exception ex) 
+            {
+                Console.WriteLine(ex.Message);
+                return null; 
+            }
+
         }
         public async Task FavoriteAsync(WordEntry wordEntry)
         {

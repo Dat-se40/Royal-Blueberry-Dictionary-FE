@@ -106,10 +106,8 @@ namespace Royal_Blueberry_Dictionary.Service
                 }
             }
 
-            // Lưu Tags và Relations xuống Local DB trước
             await _tagRepo.SaveChangesAsync();
 
-            // 3. (MỚI) Rà soát và tải WordEntry còn thiếu dựa trên Relations vừa đồng bộ
             await FetchMissingWordsForRelationsAsync(uid);
         }
         /// <summary>
@@ -140,6 +138,7 @@ namespace Royal_Blueberry_Dictionary.Service
                         if (detail != null)
                         {
                             var newEntry = WordService.MapWordDetailToWordEntry(detail, rel.MeaningIndex, 0);
+                            if(newEntry == null) return;    
                             newEntry.UserId = uid;
 
                             await _wordRepo.AddAsync(newEntry);
