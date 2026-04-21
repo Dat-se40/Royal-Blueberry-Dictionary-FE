@@ -48,14 +48,7 @@
 
         <!-- Close Button Style -->
         <Style x:Key="CloseButtonStyle" TargetType="Button">
-            <Setter Property="Background">
-                <Setter.Value>
-                    <LinearGradientBrush StartPoint="0,0" EndPoint="1,0">
-                        <GradientStop Color="#667EEA" Offset="0"/>
-                        <GradientStop Color="#764BA2" Offset="1"/>
-                    </LinearGradientBrush>
-                </Setter.Value>
-            </Setter>
+            <Setter Property="Background" Value="{DynamicResource SearchButton}"/>
             <Setter Property="Foreground" Value="White"/>
             <Setter Property="BorderThickness" Value="0"/>
             <Setter Property="Padding" Value="32,12"/>
@@ -75,14 +68,7 @@
             </Setter>
             <Style.Triggers>
                 <Trigger Property="IsMouseOver" Value="True">
-                    <Setter Property="Background">
-                        <Setter.Value>
-                            <LinearGradientBrush StartPoint="0,0" EndPoint="1,0">
-                                <GradientStop Color="#5568D3" Offset="0"/>
-                                <GradientStop Color="#6A42A0" Offset="1"/>
-                            </LinearGradientBrush>
-                        </Setter.Value>
-                    </Setter>
+                    <Setter Property="Background" Value="{DynamicResource SearchButtonHover}"/>
                 </Trigger>
             </Style.Triggers>
         </Style>
@@ -107,13 +93,9 @@
             <Border Grid.Row="0"
                     CornerRadius="18,18,0,0"
                     Padding="32,24"
-                    MouseLeftButtonDown="Header_MouseLeftButtonDown">
-                <Border.Background>
-                    <LinearGradientBrush StartPoint="0,0" EndPoint="1,0">
-                        <GradientStop Color="#667EEA" Offset="0"/>
-                        <GradientStop Color="#764BA2" Offset="1"/>
-                    </LinearGradientBrush>
-                </Border.Background>
+                    MouseLeftButtonDown="Header_MouseLeftButtonDown"
+                    Background="{DynamicResource NavbarBackground}">
+
 
                 <Grid>
                     <StackPanel Orientation="Horizontal">

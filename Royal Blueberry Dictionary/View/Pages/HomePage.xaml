@@ -170,15 +170,15 @@
                                        Foreground="White" Margin="0,0,0,10"/>
                             <TextBlock Foreground="White" Opacity="0.9" TextWrapping="Wrap">
                                 <Run Text="Subject: " FontWeight="Bold"/>
-                                <Run Text="Lập trình trực quan"/>
+                                <Run Text="Nhập môn công nghệ phần mềm"/>
                             </TextBlock>
                             <TextBlock Foreground="White" Opacity="0.9" TextWrapping="Wrap">
                                 <Run Text="Lecturer: " FontWeight="Bold"/>
-                                <Run Text="Mai Trọng Khang"/>
+                                <Run Text="ThS. Huỳnh Ngọc Tín"/>
                             </TextBlock>
                             <TextBlock Foreground="White" Opacity="0.9" TextWrapping="Wrap">
                                 <Run Text="Semester: " FontWeight="Bold"/>
-                                <Run Text="1 - Academic Year 2024-2025"/>
+                                <Run Text="Semester: Kỳ 2 - Academic Year 2025-2026"/>
                             </TextBlock>
                         </StackPanel>
 
@@ -195,8 +195,16 @@
                                 <Run Text="MSSV: 24520649"/>
                             </TextBlock>
                             <TextBlock Foreground="White" Opacity="0.9" TextWrapping="Wrap">
-                                <Run Text="Phan Thế Phong" FontWeight="Bold"/><LineBreak/>
-                                <Run Text="MSSV: 24521342"/>
+                                <Run Text="Võ Văn Hải" FontWeight="Bold"/><LineBreak/>
+                                <Run Text="MSSV: 24520443"/>
+                            </TextBlock>
+                            <TextBlock Foreground="White" Opacity="0.9" TextWrapping="Wrap">
+                                <Run Text="Nguyễn Quốc An" FontWeight="Bold"/><LineBreak/>
+                                <Run Text="MSSV: 24520065"/>
+                            </TextBlock>
+                            <TextBlock Foreground="White" Opacity="0.9" TextWrapping="Wrap">
+                                <Run Text="Ngô Phương Hiền" FontWeight="Bold"/><LineBreak/>
+                                <Run Text="MSSV: 24520474"/>
                             </TextBlock>
                         </StackPanel>
 

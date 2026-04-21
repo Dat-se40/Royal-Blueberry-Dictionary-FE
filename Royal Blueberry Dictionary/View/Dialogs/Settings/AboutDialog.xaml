@@ -46,14 +46,7 @@
 
         <!-- Close Button Style -->
         <Style x:Key="CloseButtonStyle" TargetType="Button">
-            <Setter Property="Background">
-                <Setter.Value>
-                    <LinearGradientBrush StartPoint="0,0" EndPoint="1,0">
-                        <GradientStop Color="#667EEA" Offset="0"/>
-                        <GradientStop Color="#764BA2" Offset="1"/>
-                    </LinearGradientBrush>
-                </Setter.Value>
-            </Setter>
+            <Setter Property="Background" Value="{DynamicResource SearchButton}"/>
             <Setter Property="Foreground" Value="White"/>
             <Setter Property="BorderThickness" Value="0"/>
             <Setter Property="Padding" Value="32,12"/>
@@ -64,8 +57,8 @@
                 <Setter.Value>
                     <ControlTemplate TargetType="Button">
                         <Border Background="{TemplateBinding Background}"
-                                Padding="{TemplateBinding Padding}"
-                                CornerRadius="10">
+                        Padding="{TemplateBinding Padding}"
+                        CornerRadius="10">
                             <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
                         </Border>
                     </ControlTemplate>
@@ -73,17 +66,11 @@
             </Setter>
             <Style.Triggers>
                 <Trigger Property="IsMouseOver" Value="True">
-                    <Setter Property="Background">
-                        <Setter.Value>
-                            <LinearGradientBrush StartPoint="0,0" EndPoint="1,0">
-                                <GradientStop Color="#5568D3" Offset="0"/>
-                                <GradientStop Color="#6A42A0" Offset="1"/>
-                            </LinearGradientBrush>
-                        </Setter.Value>
-                    </Setter>
+                    <Setter Property="Background" Value="{DynamicResource SearchButtonHover}"/>
                 </Trigger>
             </Style.Triggers>
         </Style>
+
     </Window.Resources>
 
     <Border CornerRadius="20"
@@ -103,15 +90,11 @@
 
             <!-- Header -->
             <Border Grid.Row="0"
-                    CornerRadius="18,18,0,0"
-                    Padding="32,24"
-                    MouseLeftButtonDown="Header_MouseLeftButtonDown">
-                <Border.Background>
-                    <LinearGradientBrush StartPoint="0,0" EndPoint="1,0">
-                        <GradientStop Color="#667EEA" Offset="0"/>
-                        <GradientStop Color="#764BA2" Offset="1"/>
-                    </LinearGradientBrush>
-                </Border.Background>
+        CornerRadius="18,18,0,0"
+        Padding="32,24"
+        Background="{DynamicResource NavbarBackground}"
+        MouseLeftButtonDown="Header_MouseLeftButtonDown">
+
 
                 <Grid>
                     <StackPanel Orientation="Horizontal">
@@ -344,7 +327,7 @@
                                     ✅ Manage vocabulary with a Tag system
                                 </TextBlock>
                                 <TextBlock Style="{StaticResource BodyStyle}">
-                                    ✅ Sync data via Google Drive
+                                    ✅ Sync data via sever for backup and multi-device access
                                 </TextBlock>
                                 <TextBlock Style="{StaticResource BodyStyle}">
                                     ✅ 23 themes + custom colors
