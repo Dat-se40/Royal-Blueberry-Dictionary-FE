@@ -155,6 +155,26 @@ namespace Royal_Blueberry_Dictionary.Service.ApiClient
                 };
             }
 
+            // Một số API BE đang trả HttpStatus.FOUND (302) nhưng vẫn kèm body JSON hợp lệ.
+            // FE chấp nhận parse payload này như response thành công để tương thích BE hiện tại.
+            if (response.StatusCode == HttpStatusCode.Found && !string.IsNullOrWhiteSpace(payload))
+            {
+                try
+                {
+                    var redirectedData = JsonSerializer.Deserialize<T>(payload, JsonOptions);
+                    return new ApiResponse<T>
+                    {
+                        IsSuccess = true,
+                        StatusCode = response.StatusCode,
+                        Data = redirectedData
+                    };
+                }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine($"Unable to parse 302 payload: {ex.Message}");
+                }
+            }
+
             ApiErrorResponse? error = null;
             if (!string.IsNullOrWhiteSpace(payload))
             {
