@@ -36,7 +36,7 @@
                                        Foreground="{DynamicResource TextColor}"
                                        VerticalAlignment="Center"/>
                         </StackPanel>
-                        <TextBlock Text="Tải gói từ vựng từ server về máy, mở xem bất cứ lúc nào; có thể đưa toàn bộ từ trong gói vào My Words."
+                        <TextBlock Text="Download vocabulary packages from the server to your device, open them anytime, and add all words in a package to My Words."
                                    Foreground="{DynamicResource TextColor}"
                                    FontSize="15"
                                    Opacity="0.8"
@@ -72,7 +72,7 @@
                                        FontWeight="Bold"
                                        Foreground="{DynamicResource ButtonColor}"
                                        HorizontalAlignment="Center"/>
-                            <TextBlock Text="Đã tải"
+                            <TextBlock Text="Downloaded"
                                        Foreground="{DynamicResource TextColor}"
                                        FontSize="14"
                                        Opacity="0.8"
@@ -85,7 +85,7 @@
                                        FontWeight="Bold"
                                        Foreground="{DynamicResource ButtonColor}"
                                        HorizontalAlignment="Center"/>
-                            <TextBlock Text="Từ (ước lượng)"
+                            <TextBlock Text="Words (estimated)"
                                        Foreground="{DynamicResource TextColor}"
                                        FontSize="14"
                                        Opacity="0.8"
@@ -98,7 +98,7 @@
                                        FontWeight="Bold"
                                        Foreground="{DynamicResource ButtonColor}"
                                        HorizontalAlignment="Center"/>
-                            <TextBlock Text="Dung lượng cache"
+                            <TextBlock Text="Cache Size"
                                        FontSize="14"
                                        Opacity="0.8"
                                        Foreground="{DynamicResource TextColor}"
@@ -111,7 +111,7 @@
                                        FontWeight="Bold"
                                        Foreground="{DynamicResource ButtonColor}"
                                        HorizontalAlignment="Center"/>
-                            <TextBlock Text="Trên server"
+                            <TextBlock Text="On Server"
                                        Foreground="{DynamicResource TextColor}"
                                        FontSize="14"
                                        Opacity="0.8"
@@ -128,7 +128,7 @@
                         Padding="30"
                         Margin="0,0,0,30">
                     <StackPanel>
-                        <TextBlock Text="✅ Đã tải về máy"
+                        <TextBlock Text="✅ Downloaded Packages"
                                    FontSize="24"
                                    FontWeight="Bold"
                                    Foreground="{DynamicResource TextColor}"
@@ -155,7 +155,7 @@
                                        Foreground="{DynamicResource TextColor}"
                                        HorizontalAlignment="Center"
                                        Opacity="0.5"/>
-                            <TextBlock Text="Chưa có package nào được tải về"
+                            <TextBlock Text="No packages have been downloaded yet"
                                        FontSize="16"
                                        Foreground="{DynamicResource TextColor}"
                                        Opacity="0.7"
@@ -173,12 +173,12 @@
                         Padding="30">
                     <StackPanel>
                         <StackPanel Orientation="Horizontal" Margin="0,0,0,20">
-                            <TextBlock Text="📦 Có trên server"
+                            <TextBlock Text="📦 Available on Server"
                                        FontSize="24"
                                        FontWeight="Bold"
                                        Foreground="{DynamicResource TextColor}"
                                        VerticalAlignment="Center"/>
-                            <Button Content="🔄 Cập nhật danh sách"
+                            <Button Content="🔄 Refresh List"
                                     Padding="14,10"
                                     Margin="20,0,0,0"
                                     Background="{DynamicResource ButtonColor}"
@@ -198,7 +198,7 @@
                             </Button>
                         </StackPanel>
 
-                        <TextBlock Text="Các gói chưa tải — bấm «Tải offline» trên thẻ để lưu về máy, rồi «Xem» hoặc «My Words»."
+                        <TextBlock Text="Packages not yet downloaded — click «Download Offline» on a card to save it to your device, then «View» or «My Words»."
                                    FontSize="13"
                                    Opacity="0.75"
                                    Foreground="{DynamicResource TextColor}"
@@ -218,7 +218,7 @@
                             </ItemsControl.ItemTemplate>
                         </ItemsControl>
 
-                        <TextBlock Text="Không còn gói nào chưa tải (hoặc server chưa trả về danh sách)."
+                        <TextBlock Text="There are no more packages to download (or the server has not returned any packages yet)."
                                    FontSize="14"
                                    Opacity="0.65"
                                    Foreground="{DynamicResource TextColor}"
@@ -245,7 +245,7 @@
                 Opacity="0.92"
                 Visibility="{Binding IsLoading, Converter={StaticResource BoolToVis}}">
             <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
-                <TextBlock Text="Đang tải…"
+                <TextBlock Text="Loading…"
                            FontSize="20"
                            FontWeight="SemiBold"
                            Foreground="{DynamicResource TextColor}"/>
