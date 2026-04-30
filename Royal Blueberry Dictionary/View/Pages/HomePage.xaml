@@ -7,7 +7,9 @@
       mc:Ignorable="d"
       d:DesignHeight="800" d:DesignWidth="1400"
       Title="HomePage"
-      Background="{DynamicResource MainBackground}">
+      Background="{DynamicResource MainBackground}"
+      FontFamily="{DynamicResource AppFontFamily}"
+      FontSize="{DynamicResource AppFontSize}">
 
     <Grid>
         <Grid.RowDefinitions>

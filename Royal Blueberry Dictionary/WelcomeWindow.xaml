@@ -15,7 +15,9 @@
         AllowsTransparency="True"
         Background="Transparent"
         UseLayoutRounding="True"
-        SnapsToDevicePixels="True">
+        SnapsToDevicePixels="True"
+        FontFamily="{DynamicResource AppFontFamily}"
+        FontSize="{DynamicResource AppFontSize}">
 
     <Window.Resources>
         <DropShadowEffect x:Key="WelcomeWindowShadow"

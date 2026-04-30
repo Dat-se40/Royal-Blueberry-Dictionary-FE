@@ -5,7 +5,10 @@
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
       mc:Ignorable="d"
       d:DesignHeight="600" d:DesignWidth="1000"
-      Background="{DynamicResource MainBackground}" Title="Game Mode">
+      Background="{DynamicResource MainBackground}" 
+      FontFamily="{DynamicResource AppFontFamily}"
+      FontSize="{DynamicResource AppFontSize}"
+      Title="Game Mode">
 
     <Page.Resources>
         <Storyboard x:Key="FlipToBackPhase1" Completed="FlipToBackPhase1_Completed">

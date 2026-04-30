@@ -3,6 +3,7 @@ using CommunityToolkit.Mvvm.Input;
 using Royal_Blueberry_Dictionary.Service;
 using Royal_Blueberry_Dictionary.View.Dialogs.Settings;
 using System.Windows;
+using System.Windows.Controls;
 using AppThemeMode = Royal_Blueberry_Dictionary.Service.ThemeMode;
 
 namespace Royal_Blueberry_Dictionary.ViewModel
@@ -67,11 +68,11 @@ namespace Royal_Blueberry_Dictionary.ViewModel
             }
 
             // Apply font if custom
-            if (!string.IsNullOrEmpty(settings.FontFamily) && settings.FontFamily != "Segoe UI")
+            if (!string.IsNullOrWhiteSpace(settings.FontFamily))
             {
                 var fontFamily = new System.Windows.Media.FontFamily(settings.FontFamily);
                 Application.Current.Resources["AppFontFamily"] = fontFamily;
-                Application.Current.Resources["AppFontSize"] = settings.FontSize;
+                Application.Current.Resources["AppFontSize"] = settings.FontSize > 0 ? settings.FontSize : 14d;
             }
 
             System.Diagnostics.Debug.WriteLine($"✅ Loaded settings: Theme={settings.ThemeMode}, Color={settings.ColorTheme}, Font={settings.FontFamily} {settings.FontSize}pt");
@@ -161,11 +162,10 @@ namespace Royal_Blueberry_Dictionary.ViewModel
 
             if (dialog.ShowDialog() == true)
             {
-                _settingsService.SaveFont(dialog.SelectedFont.Source, dialog.SelectedFontSize);
-
                 MessageBox.Show($"Font '{dialog.SelectedFont.Source}' ({dialog.SelectedFontSize}pt) applied!", "Success",
                     MessageBoxButton.OK, MessageBoxImage.Information);
             }
+
         }
 
         [RelayCommand]
@@ -188,7 +188,18 @@ namespace Royal_Blueberry_Dictionary.ViewModel
                 {
                     window.FontFamily = defaultFont;
                     window.FontSize = 14;
+
+                    if (window is MainWindow mainWindow)
+                    {
+                        var frame = mainWindow.FindName("MainFrame") as Frame;
+                        if (frame?.Content is Page page)
+                        {
+                            page.FontFamily = defaultFont;
+                            page.FontSize = 14;
+                        }
+                    }
                 }
+
 
                 _settingsService.SaveFont("Segoe UI", 14);
 
@@ -213,6 +224,20 @@ namespace Royal_Blueberry_Dictionary.ViewModel
             };
             dialog.ShowDialog();
         }
+
+        /// <summary>
+        /// Mở dialog User Guide
+        /// </summary>
+        [RelayCommand]
+        private void OpenUserGuide()
+        {
+            var dialog = new UserGuideDialog
+            {
+                Owner = Application.Current.MainWindow
+            };
+            dialog.ShowDialog();
+        }
+
 
         /// <summary>
         /// Mở dialog Contact Support

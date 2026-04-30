@@ -7,7 +7,9 @@
       mc:Ignorable="d"
       d:DesignHeight="900" d:DesignWidth="880"
       Title="DetailsPage"
-      Background="{DynamicResource MainBackground}">
+      Background="{DynamicResource MainBackground}"
+      FontFamily="{DynamicResource AppFontFamily}"
+      FontSize="{DynamicResource AppFontSize}">
 
     <Page.Resources>
         <Style x:Key="PhoneticButtonStyle" TargetType="Border">

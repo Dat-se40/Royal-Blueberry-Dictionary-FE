@@ -12,7 +12,9 @@
         ShowInTaskbar="False"
         WindowStyle="None"
         AllowsTransparency="True"
-        Background="Transparent">
+        Background="Transparent"
+        FontFamily="{DynamicResource AppFontFamily}"
+        FontSize="{DynamicResource AppFontSize}">
 
     <Grid Background="Transparent">
         <Border MaxWidth="430"

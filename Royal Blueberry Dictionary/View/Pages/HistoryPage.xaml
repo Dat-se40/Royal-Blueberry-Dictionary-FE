@@ -8,7 +8,9 @@
       mc:Ignorable="d"
       d:DesignHeight="600" d:DesignWidth="1200"
       Title="HistoryPage"
-      Background="{DynamicResource MainBackground}">
+      Background="{DynamicResource MainBackground}"
+      FontFamily="{DynamicResource AppFontFamily}"
+      FontSize="{DynamicResource AppFontSize}">
 
     <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
         <Grid Margin="30">

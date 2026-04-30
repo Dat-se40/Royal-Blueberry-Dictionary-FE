@@ -8,7 +8,9 @@
         ResizeMode="NoResize"
         Background="Transparent"
         WindowStyle="None"
-        AllowsTransparency="True">
+        AllowsTransparency="True"
+        FontFamily="{DynamicResource AppFontFamily}"
+        FontSize="{DynamicResource AppFontSize}">
 
     <Window.Resources>
         <Style x:Key="DialogCloseButtonStyle" TargetType="Button">
