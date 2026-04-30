@@ -8,7 +8,9 @@
       mc:Ignorable="d"
       d:DesignHeight="900" d:DesignWidth="1100"
       Title="OfflinePackagesPage"
-      Background="{DynamicResource MainBackground}">
+      Background="{DynamicResource MainBackground}"
+      FontFamily="{DynamicResource AppFontFamily}"
+      FontSize="{DynamicResource AppFontSize}">
 
     <Page.Resources>
         <conv:BoolToVisibilityConverter x:Key="BoolToVis"/>

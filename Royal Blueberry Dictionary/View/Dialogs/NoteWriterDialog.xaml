@@ -11,7 +11,9 @@
         Background="Transparent"
         ResizeMode="NoResize"
         WindowStyle="None"
-        AllowsTransparency="True">
+        AllowsTransparency="True"
+        FontFamily="{DynamicResource AppFontFamily}"
+        FontSize="{DynamicResource AppFontSize}">
 
     <Border BorderBrush="{DynamicResource BorderColor}"
             BorderThickness="2"
