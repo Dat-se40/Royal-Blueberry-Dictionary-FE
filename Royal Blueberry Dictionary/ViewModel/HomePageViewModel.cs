@@ -238,4 +238,5 @@ namespace Royal_Blueberry_Dictionary.ViewModel
         public double BarHeight { get; set; }
         public bool IsToday { get; set; }
     }
+
 }

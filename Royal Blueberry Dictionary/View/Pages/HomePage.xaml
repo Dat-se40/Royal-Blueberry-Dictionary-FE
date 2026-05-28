@@ -48,15 +48,24 @@
                 </Trigger>
             </Style.Triggers>
         </Style>
+
+        <Style x:Key="PosBadgeBorderStyle" TargetType="Border">
+            <Setter Property="Background" Value="{DynamicResource ButtonColor}"/>
+            <Setter Property="BorderBrush" Value="{DynamicResource BorderColor}"/>
+            <Setter Property="BorderThickness" Value="1.5"/>
+            <Setter Property="CornerRadius" Value="12"/>
+            <Setter Property="Padding" Value="8,2"/>
+        </Style>
+
+        <Style x:Key="PosBadgeTextStyle" TargetType="TextBlock">
+            <Setter Property="FontSize" Value="10"/>
+            <Setter Property="FontWeight" Value="Bold"/>
+            <Setter Property="Foreground" Value="White"/>
+        </Style>
     </Page.Resources>
 
     <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="*"/>
-            <RowDefinition Height="Auto"/>
-        </Grid.RowDefinitions>
-
-        <ScrollViewer Grid.Row="0" VerticalScrollBarVisibility="Auto">
+        <ScrollViewer VerticalScrollBarVisibility="Auto">
             <StackPanel>
 
                 <!-- Loading bar -->
@@ -147,7 +156,7 @@
                 <!-- ============================================================ -->
                 <!--  MAIN CONTENT                                                 -->
                 <!-- ============================================================ -->
-                <Grid Margin="30,16,30,0">
+                <Grid Margin="30,16,30,24">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*"/>
                         <ColumnDefinition Width="20"/>
@@ -155,7 +164,7 @@
                     </Grid.ColumnDefinitions>
 
                     <!-- ── LEFT COLUMN ── -->
-                    <StackPanel Grid.Column="0">
+                    <StackPanel Grid.Column="0" x:Name="LeftColumnStack">
 
                         <!-- Greeting + Quote card -->
                         <Border Style="{StaticResource CardStyle}">
@@ -237,13 +246,12 @@
                                                Foreground="{DynamicResource TextColor}"
                                                VerticalAlignment="Center"/>
                                     <Border Grid.Column="1"
-                                            Background="{DynamicResource ToolbarBackground}"
-                                            CornerRadius="4" Padding="7,3" VerticalAlignment="Center"
+                                            Style="{StaticResource PosBadgeBorderStyle}"
+                                            VerticalAlignment="Center"
                                             Visibility="{Binding WordOfTheDay.PartOfSpeech,
                                                 Converter={StaticResource StrToVis}}">
                                         <TextBlock Text="{Binding WordOfTheDay.PartOfSpeech}"
-                                                   FontSize="10" FontWeight="Bold"
-                                                   Foreground="{DynamicResource ButtonColor}"/>
+                                                   Style="{StaticResource PosBadgeTextStyle}"/>
                                     </Border>
                                 </Grid>
 
@@ -347,7 +355,11 @@
                     </StackPanel>
 
                     <!-- RIGHT COLUMN: Vocabulary Collection -->
-                    <Border Grid.Column="2" Style="{StaticResource CardStyle}" Padding="0">
+                    <Border Grid.Column="2"
+                            Style="{StaticResource CardStyle}"
+                            Padding="0"
+                            VerticalAlignment="Top"
+                            Height="{Binding ElementName=LeftColumnStack, Path=ActualHeight}">
                         <Border BorderBrush="{DynamicResource BorderColor}"
                                 BorderThickness="2,0,0,0" CornerRadius="16">
                             <Grid>
@@ -506,7 +518,7 @@
                                 <!-- Word list -->
                                 <ScrollViewer Grid.Row="1"
                                               VerticalScrollBarVisibility="Auto"
-                                              Padding="14,12" MaxHeight="560"
+                                              Padding="14,12"
                                               Visibility="{Binding HasWords,
                                                   Converter={StaticResource BoolToVis}}">
                                     <ItemsControl ItemsSource="{Binding RecentWords}">
@@ -525,14 +537,12 @@
                                                                        FontSize="15" FontWeight="SemiBold"
                                                                        Foreground="{DynamicResource TextColor}"
                                                                        VerticalAlignment="Center"/>
-                                                            <Border Background="{DynamicResource ToolbarBackground}"
-                                                                    CornerRadius="4" Padding="5,2"
+                                                            <Border Style="{StaticResource PosBadgeBorderStyle}"
                                                                     Margin="8,0,0,0" VerticalAlignment="Center"
                                                                     Visibility="{Binding PartOfSpeech,
                                                                         Converter={StaticResource StrToVis}}">
                                                                 <TextBlock Text="{Binding PartOfSpeech}"
-                                                                           FontSize="9" FontWeight="Bold"
-                                                                           Foreground="{DynamicResource ButtonColor}"/>
+                                                                           Style="{StaticResource PosBadgeTextStyle}"/>
                                                             </Border>
                                                         </StackPanel>
                                                         <TextBlock Text="{Binding Phonetic}"
@@ -560,15 +570,13 @@
 
                 </Grid>
 
-            </StackPanel>
-        </ScrollViewer>
-
-        <!-- ============================================================ -->
-        <!--  FOOTER — luôn nằm đáy cửa sổ                               -->
-        <!-- ============================================================ -->
-        <Border Grid.Row="1"
+                <!-- ============================================================ -->
+                <!--  FOOTER — chỉ xuất hiện khi cuộn tới gần đáy trang         -->
+                <!-- ============================================================ -->
+                <Border
                 Background="{DynamicResource NavbarBackground}"
                 Padding="40,24"
+                Margin="0,10,0,0"
                 TextElement.Foreground="White">
             <Grid>
                 <Grid.ColumnDefinitions>
@@ -664,7 +672,10 @@
                 </StackPanel>
 
             </Grid>
-        </Border>
+                </Border>
+
+            </StackPanel>
+        </ScrollViewer>
 
     </Grid>
 </Page>
