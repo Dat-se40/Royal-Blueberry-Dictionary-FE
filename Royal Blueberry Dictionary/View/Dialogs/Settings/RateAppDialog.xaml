@@ -145,10 +145,9 @@
                                 Width="64" Height="64"
                                 CornerRadius="16"
                                 Margin="0,0,20,0">
-                            <TextBlock Text="⭐"
-                                       FontSize="40"
-                                       HorizontalAlignment="Center"
-                                       VerticalAlignment="Center"/>
+                            <TextBlock FontFamily="Segoe MDL2 Assets" Text="&#xE734;"
+                                       FontSize="32" Foreground="White"
+                                       HorizontalAlignment="Center" VerticalAlignment="Center"/>
                         </Border>
                         <StackPanel VerticalAlignment="Center">
                             <TextBlock Text="RATE THE APP"
@@ -164,8 +163,9 @@
                     </StackPanel>
 
                     <!-- Close Button -->
-                    <Button Content="✕"
-                            FontSize="24"
+                    <Button Content="&#xE711;"
+                            FontFamily="Segoe MDL2 Assets"
+                            FontSize="16"
                             Width="40" Height="40"
                             HorizontalAlignment="Right"
                             VerticalAlignment="Top"
@@ -232,11 +232,16 @@
                                 Introduce Royal Blueberry Dictionary to your friends and learn vocabulary more effectively together!
                             </TextBlock>
 
-                            <Button Content="🐙 GitHub - Give us a ⭐"
-                                    Style="{StaticResource ActionButtonStyle}"
+                            <Button Style="{StaticResource ActionButtonStyle}"
                                     HorizontalAlignment="Left"
                                     Click="GitHubStar_Click"
-                                    Margin="0,10,0,0"/>
+                                    Margin="0,10,0,0">
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock FontFamily="Segoe MDL2 Assets" Text="&#xE774;" FontSize="13" VerticalAlignment="Center" Margin="0,0,6,0"/>
+                                    <TextBlock Text="GitHub — Give us a star" VerticalAlignment="Center"/>
+                                    <TextBlock FontFamily="Segoe MDL2 Assets" Text="&#xE734;" FontSize="11" VerticalAlignment="Center" Margin="6,0,0,0"/>
+                                </StackPanel>
+                            </Button>
                         </StackPanel>
                     </Border>
 
@@ -247,11 +252,11 @@
                             CornerRadius="12"
                             Padding="20">
                         <StackPanel>
-                            <TextBlock Text="💙 Thank you for using our app!"
-                                       FontSize="16"
-                                       FontWeight="SemiBold"
-                                       Foreground="{DynamicResource TextColor}"
-                                       Margin="0,0,0,10"/>
+                            <StackPanel Orientation="Horizontal" Margin="0,0,0,10">
+                                <TextBlock FontFamily="Segoe MDL2 Assets" Text="&#xEB51;" FontSize="14"
+                                           Foreground="#667EEA" VerticalAlignment="Center" Margin="0,0,8,0"/>
+                                <TextBlock Text="Thank you for using our app!" FontSize="16" FontWeight="SemiBold" Foreground="{DynamicResource TextColor}"/>
+                            </StackPanel>
                             <TextBlock Style="{StaticResource BodyStyle}">
                                 Your support and feedback are invaluable to us. Every star on GitHub helps more people discover and benefit from this app.
                             </TextBlock>

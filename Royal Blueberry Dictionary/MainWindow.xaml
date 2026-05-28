@@ -46,7 +46,7 @@
         Style="{StaticResource NavButtonStyle}"
         IsEnabled="{Binding ElementName=MainFrame, Path=CanGoBack}"
         Margin="0,0,8,0">
-                        <TextBlock Text="◀" FontSize="16" FontWeight="Bold"/>
+                        <TextBlock Style="{StaticResource IconGlyphMd}" Text="&#xE76B;"/>
                     </Button>
 
                     <Button Grid.Column="2" x:Name="ForwardBtn"
@@ -54,14 +54,14 @@
         Style="{StaticResource NavButtonStyle}"
         IsEnabled="{Binding ElementName=MainFrame, Path=CanGoForward}"
         Margin="0,0,8,0">
-                        <TextBlock Text="▶" FontSize="16" FontWeight="Bold"/>
+                        <TextBlock Style="{StaticResource IconGlyphMd}" Text="&#xE76C;"/>
                     </Button>
 
                     <Button Grid.Column="3" x:Name="ReloadBtn"
                             Style="{StaticResource NavButtonStyle}"
                             Margin="0,0,20,0"
                             Foreground="{DynamicResource MainBackground}" Click="ReloadBtn_Click">
-                        <TextBlock Text="🔄" FontSize="16"/>
+                        <TextBlock Style="{StaticResource IconGlyphMd}" Text="&#xE72C;"/>
                     </Button>
 
                     <Grid x:Name="SearchArea" Grid.Column="4" MaxWidth="700" HorizontalAlignment="Stretch" Margin="20,0">
@@ -77,9 +77,10 @@
                                     <ColumnDefinition Width="Auto"/>
                                 </Grid.ColumnDefinitions>
 
-                                <TextBlock Grid.Column="0" Text="🔍" FontSize="18" 
-                                           VerticalAlignment="Center"
-                                           Foreground="{DynamicResource TextColor}" 
+                                <TextBlock Grid.Column="0"
+                                           Style="{StaticResource IconGlyphMd}"
+                                           Text="&#xE721;"
+                                           Foreground="{DynamicResource TextColor}"
                                            Margin="0,0,10,0"/>
 
                                 <TextBox Grid.Column="1" x:Name="SearchInput" Style="{StaticResource SearchTextBoxStyle}"
@@ -102,7 +103,7 @@
                             <Border Background="{DynamicResource SuggestionsBackground}"
             BorderBrush="{DynamicResource SuggestionsBorder}"
             BorderThickness="2" 
-            CornerRadius="0,0,12,12"
+            CornerRadius="0"
             Width="{Binding ElementName=SearchInput, Path=ActualWidth}" >
                                 <ListBox x:Name="SuggestionsList"
                  ItemsSource="{Binding Suggestions}"
@@ -115,9 +116,26 @@
                                         <Style TargetType="ListBoxItem">
                                             <Setter Property="Padding" Value="10,8"/>
                                             <Setter Property="Cursor" Value="Hand"/>
+                                            <Setter Property="Foreground" Value="{DynamicResource TextColor}"/>
+                                            <Setter Property="Background" Value="Transparent"/>
+                                            <Setter Property="Template">
+                                                <Setter.Value>
+                                                    <ControlTemplate TargetType="ListBoxItem">
+                                                        <Border x:Name="ItemBorder"
+                                                                Background="{TemplateBinding Background}"
+                                                                Padding="{TemplateBinding Padding}">
+                                                            <ContentPresenter/>
+                                                        </Border>
+                                                    </ControlTemplate>
+                                                </Setter.Value>
+                                            </Setter>
                                             <Style.Triggers>
                                                 <Trigger Property="IsMouseOver" Value="True">
-                                                    <Setter Property="Background" Value="{DynamicResource ToolButtonActive}"/>
+                                                    <Setter Property="Background" Value="{DynamicResource ButtonColor}"/>
+                                                    <Setter Property="Foreground" Value="White"/>
+                                                </Trigger>
+                                                <Trigger Property="IsSelected" Value="True">
+                                                    <Setter Property="Background" Value="{DynamicResource ButtonColor}"/>
                                                     <Setter Property="Foreground" Value="White"/>
                                                 </Trigger>
                                             </Style.Triggers>
@@ -142,7 +160,8 @@
                             <Border x:Name="ThemeSlider" Width="28" Height="28"
                                     Background="{DynamicResource ThemeSliderBackground}"
                                     CornerRadius="14" Canvas.Left="3" Canvas.Top="3">
-                                <TextBlock Text="🌙" FontSize="16"
+                                <TextBlock FontFamily="Segoe MDL2 Assets" Text="&#xE708;" FontSize="14"
+                                           Foreground="{DynamicResource TextColor}"
                                            HorizontalAlignment="Center" VerticalAlignment="Center"/>
                             </Border>
                         </Canvas>
@@ -168,7 +187,11 @@
 
                 <Border Grid.Row="0" Background="{DynamicResource NavbarBackground}" Padding="22">
                     <StackPanel>
-                        <TextBlock Text="📖 Dictionary" FontSize="24" FontWeight="Bold" Foreground="White" HorizontalAlignment="Center"/>
+                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                            <TextBlock Style="{StaticResource IconGlyphMd}" Text="&#xE82D;"
+                                       Foreground="White" Margin="0,0,8,0"/>
+                            <TextBlock Text="Dictionary" FontSize="24" FontWeight="Bold" Foreground="White"/>
+                        </StackPanel>
                         <TextBlock Text="Quick Access Menu" FontSize="12" Foreground="White" Opacity="0.9" HorizontalAlignment="Center" Margin="0,5,0,0"/>
                         <Border Margin="0,16,0,0"
                                 Padding="12,10"
@@ -200,55 +223,72 @@
                     <StackPanel Margin="0,20,0,0">
                         <Button Style="{StaticResource SidebarButtonStyle}" Tag="Home" Click="SideBarNavigate">
                             <StackPanel Orientation="Horizontal">
-                                <TextBlock Text="🏠" FontSize="20" Margin="0,0,15,0" Width="24" TextAlignment="Center"/>
+                                <TextBlock Style="{StaticResource IconGlyphMd}" Text="&#xE80F;"
+                                           Foreground="{DynamicResource ButtonColor}"
+                                           Margin="0,0,15,0" Width="24"/>
                                 <TextBlock Text="Home" FontSize="15" VerticalAlignment="Center"/>
                             </StackPanel>
                         </Button>
 
                         <Button Style="{StaticResource SidebarButtonStyle}" Tag="History" Click="SideBarNavigate">
                             <StackPanel Orientation="Horizontal">
-                                <TextBlock Text="🕐" FontSize="20" Margin="0,0,15,0" Width="24" TextAlignment="Center"/>
+                                <TextBlock Style="{StaticResource IconGlyphMd}" Text="&#xE81C;"
+                                           Foreground="{DynamicResource ButtonColor}"
+                                           Margin="0,0,15,0" Width="24"/>
                                 <TextBlock Text="History" FontSize="15" VerticalAlignment="Center"/>
                             </StackPanel>
                         </Button>
+
                         <Button Style="{StaticResource SidebarButtonStyle}" Tag="Favourite" Click="SideBarNavigate">
                             <StackPanel Orientation="Horizontal">
-                                <TextBlock Text="⭐" FontSize="20" Margin="0,0,15,0" Width="24" TextAlignment="Center"/>
+                                <TextBlock Style="{StaticResource IconGlyphMd}" Text="&#xE734;"
+                                           Foreground="{DynamicResource ButtonColor}"
+                                           Margin="0,0,15,0" Width="24"/>
                                 <TextBlock Text="Favorite" FontSize="15" VerticalAlignment="Center"/>
                             </StackPanel>
                         </Button>
 
                         <Button Style="{StaticResource SidebarButtonStyle}" Tag="MyWords" Click="SideBarNavigate">
                             <StackPanel Orientation="Horizontal">
-                                <TextBlock Text="📚" FontSize="20" Margin="0,0,15,0" Width="24" TextAlignment="Center"/>
+                                <TextBlock Style="{StaticResource IconGlyphMd}" Text="&#xE736;"
+                                           Foreground="{DynamicResource ButtonColor}"
+                                           Margin="0,0,15,0" Width="24"/>
                                 <TextBlock Text="My Words" FontSize="15" VerticalAlignment="Center"/>
                             </StackPanel>
                         </Button>
 
-                        <Button Style="{StaticResource SidebarButtonStyle}" Tag="Game"  Click="SideBarNavigate" >
+                        <Button Style="{StaticResource SidebarButtonStyle}" Tag="Game" Click="SideBarNavigate">
                             <StackPanel Orientation="Horizontal">
-                                <TextBlock Text="🎮" FontSize="20" Margin="0,0,15,0" Width="24" TextAlignment="Center"/>
+                                <TextBlock Style="{StaticResource IconGlyphMd}" Text="&#xE7FC;"
+                                           Foreground="{DynamicResource ButtonColor}"
+                                           Margin="0,0,15,0" Width="24"/>
                                 <TextBlock Text="Game" FontSize="15" VerticalAlignment="Center"/>
                             </StackPanel>
                         </Button>
 
                         <Button Style="{StaticResource SidebarButtonStyle}" Tag="Offline" Click="SideBarNavigate">
                             <StackPanel Orientation="Horizontal">
-                                <TextBlock Text="📥" FontSize="20" Margin="0,0,15,0" Width="24" TextAlignment="Center"/>
+                                <TextBlock Style="{StaticResource IconGlyphMd}" Text="&#xE896;"
+                                           Foreground="{DynamicResource ButtonColor}"
+                                           Margin="0,0,15,0" Width="24"/>
                                 <TextBlock Text="Offline packages" FontSize="15" VerticalAlignment="Center"/>
                             </StackPanel>
                         </Button>
 
                         <Button Style="{StaticResource SidebarButtonStyle}" Tag="Account" Click="SideBarNavigate">
                             <StackPanel Orientation="Horizontal">
-                                <TextBlock Text="👤" FontSize="20" Margin="0,0,15,0" Width="24" TextAlignment="Center"/>
+                                <TextBlock Style="{StaticResource IconGlyphMd}" Text="&#xE77B;"
+                                           Foreground="{DynamicResource ButtonColor}"
+                                           Margin="0,0,15,0" Width="24"/>
                                 <TextBlock Text="Account" FontSize="15" VerticalAlignment="Center"/>
                             </StackPanel>
                         </Button>
 
                         <Button Style="{StaticResource SidebarButtonStyle}" Tag="Setting" Click="SideBarNavigate">
                             <StackPanel Orientation="Horizontal">
-                                <TextBlock Text="⚙️" FontSize="20" Margin="0,0,15,0" Width="24" TextAlignment="Center"/>
+                                <TextBlock Style="{StaticResource IconGlyphMd}" Text="&#xE713;"
+                                           Foreground="{DynamicResource ButtonColor}"
+                                           Margin="0,0,15,0" Width="24"/>
                                 <TextBlock Text="Setting" FontSize="15" VerticalAlignment="Center"/>
                             </StackPanel>
                         </Button>

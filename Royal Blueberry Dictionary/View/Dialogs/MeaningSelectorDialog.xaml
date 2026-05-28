@@ -42,11 +42,11 @@
 
             <!-- HEADER -->
             <StackPanel Grid.Row="0" Margin="0,0,0,20">
-                <TextBlock Text="📚 Save word to My Words"
-                           FontSize="24"
-                           FontWeight="Bold"
-                           Foreground="{DynamicResource TextColor}"
-                           Margin="0,0,0,10"/>
+                <StackPanel Orientation="Horizontal" Margin="0,0,0,10">
+                    <TextBlock FontFamily="Segoe MDL2 Assets" Text="&#xE736;" FontSize="22"
+                               Foreground="{DynamicResource ButtonColor}" VerticalAlignment="Center" Margin="0,0,10,0"/>
+                    <TextBlock Text="Save word to My Words" FontSize="24" FontWeight="Bold" Foreground="{DynamicResource TextColor}" VerticalAlignment="Center"/>
+                </StackPanel>
 
                 <TextBlock x:Name="WordTitleText"
                            Text="{Binding Detail.Word, FallbackValue=Word}"
@@ -176,7 +176,8 @@
                                 Padding="15"
                                 Margin="0,0,0,20">
                             <StackPanel Orientation="Horizontal">
-                                <TextBlock Text="✅" FontSize="20" Margin="0,0,10,0"/>
+                                <TextBlock FontFamily="Segoe MDL2 Assets" Text="&#xE73E;" FontSize="18"
+                                           Foreground="#22C55E" VerticalAlignment="Center" Margin="0,0,10,0"/>
                                 <TextBlock x:Name="SelectedMeaningText"
                                            Text="Select a meaning first"
                                            FontSize="14"
@@ -334,12 +335,15 @@
                 </Button>
 
                 <!-- Cancel Button -->
-                <Button Content="❌ Cancel"
-                        Padding="20,12"
+                <Button Padding="20,12"
                         FontSize="14"
                         FontWeight="SemiBold"
                         Margin="0,0,10,0"
                         Click="CancelButton_Click">
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock FontFamily="Segoe MDL2 Assets" Text="&#xE711;" FontSize="13" VerticalAlignment="Center" Margin="0,0,6,0"/>
+                        <TextBlock Text="Cancel" VerticalAlignment="Center"/>
+                    </StackPanel>
                     <Button.Style>
                         <Style TargetType="Button">
                             <Setter Property="Background" Value="{DynamicResource SearchBackground}"/>
@@ -371,8 +375,7 @@
                 </Button>
 
                 <!-- Save Button (only in step 2) -->
-                <Button Content="💾 Save Word"
-                        Padding="20,12"
+                <Button Padding="20,12"
                         FontSize="14"
                         FontWeight="SemiBold"
                         Margin="0,0,10,0"
@@ -402,6 +405,10 @@
                             </Style.Triggers>
                         </Style>
                     </Button.Style>
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock FontFamily="Segoe MDL2 Assets" Text="&#xE74E;" FontSize="13" VerticalAlignment="Center" Margin="0,0,6,0"/>
+                        <TextBlock Text="Save Word" VerticalAlignment="Center"/>
+                    </StackPanel>
                 </Button>
                 <Button Content="Create tag"
         Padding="20,12"

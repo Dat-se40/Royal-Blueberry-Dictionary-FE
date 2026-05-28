@@ -29,7 +29,9 @@
                         </Grid.ColumnDefinitions>
 
                         <StackPanel Grid.Column="0" Orientation="Horizontal">
-                            <TextBlock Text="⭐" FontSize="48" VerticalAlignment="Center" Foreground="{DynamicResource TextColor}" Margin="0,0,15,0" />
+                            <TextBlock Style="{StaticResource IconGlyphLg}" Text="&#xE734;"
+                                       Foreground="{DynamicResource ButtonColor}"
+                                       VerticalAlignment="Center" Margin="0,0,15,0"/>
                             <TextBlock Text="Favourite Words"
                                        FontSize="36"
                                        FontWeight="Bold"
@@ -43,8 +45,8 @@
                                 Margin="0,0,0,7"
                                 Command="{Binding ClearAllFavoritesCommand}">
                             <StackPanel Orientation="Horizontal">
-                                <TextBlock Text="🗑️" FontSize="16" Margin="0,0,8,0" />
-                                <TextBlock Text="Delete All" />
+                                <TextBlock Style="{StaticResource IconGlyphSm}" Text="&#xE74D;" Foreground="#DC2626" Margin="0,0,8,0"/>
+                                <TextBlock Text="Delete All"/>
                             </StackPanel>
                         </Button>
                     </Grid>

@@ -131,10 +131,11 @@
                 Background="{DynamicResource ButtonColor}"
                 Padding="30,20">
             <StackPanel>
-                <TextBlock Text="📖 USER GUIDE"
-                           FontSize="24"
-                           FontWeight="Bold"
-                           Foreground="White"/>
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock FontFamily="Segoe MDL2 Assets" Text="&#xE82D;" FontSize="22"
+                               Foreground="White" VerticalAlignment="Center" Margin="0,0,10,0"/>
+                    <TextBlock Text="USER GUIDE" FontSize="24" FontWeight="Bold" Foreground="White"/>
+                </StackPanel>
                 <TextBlock Text="BlueBerry Dictionary – The Smart Dictionary for Everyone"
                            FontSize="14"
                            Foreground="White"
@@ -151,13 +152,48 @@
             <ScrollViewer HorizontalScrollBarVisibility="Auto"
                           VerticalScrollBarVisibility="Disabled">
                 <StackPanel Orientation="Horizontal" x:Name="TabsPanel">
-                    <Button Content="🎯 Introduction" Tag="intro" Click="Tab_Click" Style="{StaticResource ActiveTabStyle}" x:Name="IntroTab"/>
-                    <Button Content="🔍 Search" Tag="search" Click="Tab_Click" Style="{StaticResource TabButtonStyle}"/>
-                    <Button Content="📚 Manage Words" Tag="manage" Click="Tab_Click" Style="{StaticResource TabButtonStyle}"/>
-                    <Button Content="📜 History" Tag="history" Click="Tab_Click" Style="{StaticResource TabButtonStyle}"/>
-                    <Button Content="❤️ Favorites" Tag="favourite" Click="Tab_Click" Style="{StaticResource TabButtonStyle}"/>
-                    <Button Content="🎨 Interface" Tag="theme" Click="Tab_Click" Style="{StaticResource TabButtonStyle}"/>
-                    <Button Content="🔐 Sync" Tag="sync" Click="Tab_Click" Style="{StaticResource TabButtonStyle}"/>
+                    <Button Tag="intro" Click="Tab_Click" Style="{StaticResource ActiveTabStyle}" x:Name="IntroTab">
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock FontFamily="Segoe MDL2 Assets" Text="&#xE946;" FontSize="12" VerticalAlignment="Center" Margin="0,0,6,0"/>
+                            <TextBlock Text="Introduction" VerticalAlignment="Center"/>
+                        </StackPanel>
+                    </Button>
+                    <Button Tag="search" Click="Tab_Click" Style="{StaticResource TabButtonStyle}">
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock FontFamily="Segoe MDL2 Assets" Text="&#xE721;" FontSize="12" VerticalAlignment="Center" Margin="0,0,6,0"/>
+                            <TextBlock Text="Search" VerticalAlignment="Center"/>
+                        </StackPanel>
+                    </Button>
+                    <Button Tag="manage" Click="Tab_Click" Style="{StaticResource TabButtonStyle}">
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock FontFamily="Segoe MDL2 Assets" Text="&#xE736;" FontSize="12" VerticalAlignment="Center" Margin="0,0,6,0"/>
+                            <TextBlock Text="Manage Words" VerticalAlignment="Center"/>
+                        </StackPanel>
+                    </Button>
+                    <Button Tag="history" Click="Tab_Click" Style="{StaticResource TabButtonStyle}">
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock FontFamily="Segoe MDL2 Assets" Text="&#xE81C;" FontSize="12" VerticalAlignment="Center" Margin="0,0,6,0"/>
+                            <TextBlock Text="History" VerticalAlignment="Center"/>
+                        </StackPanel>
+                    </Button>
+                    <Button Tag="favourite" Click="Tab_Click" Style="{StaticResource TabButtonStyle}">
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock FontFamily="Segoe MDL2 Assets" Text="&#xE734;" FontSize="12" VerticalAlignment="Center" Margin="0,0,6,0"/>
+                            <TextBlock Text="Favorites" VerticalAlignment="Center"/>
+                        </StackPanel>
+                    </Button>
+                    <Button Tag="theme" Click="Tab_Click" Style="{StaticResource TabButtonStyle}">
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock FontFamily="Segoe MDL2 Assets" Text="&#xE81E;" FontSize="12" VerticalAlignment="Center" Margin="0,0,6,0"/>
+                            <TextBlock Text="Interface" VerticalAlignment="Center"/>
+                        </StackPanel>
+                    </Button>
+                    <Button Tag="sync" Click="Tab_Click" Style="{StaticResource TabButtonStyle}">
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock FontFamily="Segoe MDL2 Assets" Text="&#xE8A7;" FontSize="12" VerticalAlignment="Center" Margin="0,0,6,0"/>
+                            <TextBlock Text="Sync" VerticalAlignment="Center"/>
+                        </StackPanel>
+                    </Button>
                 </StackPanel>
             </ScrollViewer>
         </Border>

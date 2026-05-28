@@ -177,11 +177,13 @@
 
             <!-- Header -->
             <StackPanel Grid.Row="0" Margin="0,0,0,25">
-                <TextBlock Text="⚙️ Game Settings"
-                           FontSize="28"
-                           FontWeight="Bold"
-                           Foreground="{DynamicResource TextColor}"
-                           Margin="0,0,0,8" />
+                <StackPanel Orientation="Horizontal" Margin="0,0,0,8">
+                    <TextBlock Style="{StaticResource IconGlyphMd}" Text="&#xE713;"
+                               Foreground="{DynamicResource ButtonColor}" Margin="0,0,10,0"/>
+                    <TextBlock Text="Game Settings"
+                               FontSize="28" FontWeight="Bold"
+                               Foreground="{DynamicResource TextColor}"/>
+                </StackPanel>
                 <TextBlock Text="Customize your learning experience"
                            FontSize="14"
                            Foreground="{DynamicResource TextColor}"
@@ -191,11 +193,13 @@
             <!-- Settings Content -->
             <StackPanel Grid.Row="1">
                 <!-- Data Source Selection -->
-                <TextBlock Text="📚 Vocabulary Source"
-                           FontSize="16"
-                           FontWeight="SemiBold"
-                           Foreground="{DynamicResource TextColor}"
-                           Margin="0,0,0,15" />
+                <StackPanel Orientation="Horizontal" Margin="0,0,0,15">
+                    <TextBlock Style="{StaticResource IconGlyphSm}" Text="&#xE736;"
+                               Foreground="{DynamicResource ButtonColor}" Margin="0,0,8,0"/>
+                    <TextBlock Text="Vocabulary Source"
+                               FontSize="16" FontWeight="SemiBold"
+                               Foreground="{DynamicResource TextColor}"/>
+                </StackPanel>
 
                 <Grid Margin="0,0,0,10">
                     <Button x:Name="BtnDataSource"
@@ -206,7 +210,11 @@
                                 <ColumnDefinition Width="*" />
                                 <ColumnDefinition Width="Auto" />
                             </Grid.ColumnDefinitions>
-                            <TextBlock x:Name="TxtSelectedSource" Text="📚 All Words" Grid.Column="0" />
+                            <StackPanel Grid.Column="0" Orientation="Horizontal">
+                                <TextBlock Style="{StaticResource IconGlyphSm}" Text="&#xE736;"
+                                           Foreground="{DynamicResource ButtonColor}" Margin="0,0,6,0"/>
+                                <TextBlock x:Name="TxtSelectedSource" Text="All Words"/>
+                            </StackPanel>
                             <Path Grid.Column="1"
                                   Data="M 0 0 L 4 4 L 8 0"
                                   Stroke="{DynamicResource TextColor}"
@@ -241,11 +249,12 @@
                            Margin="0,0,0,25" />
 
                 <!-- Card Count Selection -->
-                <TextBlock Text="🎴 Card Count"
-                           FontSize="16"
-                           FontWeight="SemiBold"
-                           Foreground="{DynamicResource TextColor}"
-                           Margin="0,0,0,15" />
+                <StackPanel Orientation="Horizontal" Margin="0,0,0,15">
+                    <TextBlock Style="{StaticResource IconGlyphSm}" Text="&#xE8EC;"
+                               Foreground="{DynamicResource ButtonColor}" Margin="0,0,8,0"/>
+                    <TextBlock Text="Card Count" FontSize="16" FontWeight="SemiBold"
+                               Foreground="{DynamicResource TextColor}"/>
+                </StackPanel>
 
                 <Grid Margin="0,0,0,25">
                     <Button x:Name="BtnCardCount"
@@ -297,14 +306,18 @@
 
             <!-- Action Buttons -->
             <UniformGrid Grid.Row="2" Columns="2" Rows="1">
-                <Button Content="◀ Cancel"
-                        Style="{StaticResource SecondaryButtonStyle}"
-                        Margin="0,0,7,0"
-                        Click="Cancel_Click" />
-                <Button Content="▶ Start Playing"
-                        Style="{StaticResource PrimaryButtonStyle}"
-                        Margin="7,0,0,0"
-                        Click="StartGame_Click" />
+                <Button Style="{StaticResource SecondaryButtonStyle}" Margin="0,0,7,0" Click="Cancel_Click">
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Style="{StaticResource IconGlyphSm}" Text="&#xE76B;" Margin="0,0,6,0"/>
+                        <TextBlock Text="Cancel"/>
+                    </StackPanel>
+                </Button>
+                <Button Style="{StaticResource PrimaryButtonStyle}" Margin="7,0,0,0" Click="StartGame_Click">
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Style="{StaticResource IconGlyphSm}" Text="&#xE768;" Margin="0,0,6,0"/>
+                        <TextBlock Text="Start Playing"/>
+                    </StackPanel>
+                </Button>
             </UniformGrid>
         </Grid>
     </Border>

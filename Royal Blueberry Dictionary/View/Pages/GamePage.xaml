@@ -30,14 +30,20 @@
     <Grid>
         <ScrollViewer x:Name="GameSelectionPanel" VerticalScrollBarVisibility="Auto">
             <StackPanel MaxWidth="1200" Margin="30">
-                <TextBlock Text="🎮 Game Mode" FontSize="36" FontWeight="Bold" Foreground="{DynamicResource TextColor}" HorizontalAlignment="Center" Margin="0,0,0,10" />
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,0,0,10">
+                    <TextBlock Style="{StaticResource IconGlyphLg}" Text="&#xE7FC;"
+                               Foreground="{DynamicResource ButtonColor}" Margin="0,0,12,0"/>
+                    <TextBlock Text="Game Mode" FontSize="36" FontWeight="Bold" Foreground="{DynamicResource TextColor}"/>
+                </StackPanel>
                 <TextBlock Text="Learn vocabulary through interesting games" FontSize="16" Foreground="{DynamicResource TextColor}" Opacity="0.7" HorizontalAlignment="Center" Margin="0,0,0,40" />
 
                 <Border Background="{DynamicResource CardBackground}" BorderBrush="{DynamicResource BorderColor}" BorderThickness="2" CornerRadius="20" Padding="30" Cursor="Hand" MouseDown="GameCard_Click">
                     <StackPanel>
                         <DockPanel Margin="0,0,0,20">
                             <Border Width="80" Height="80" Background="{DynamicResource ToolButtonActive}" CornerRadius="20" DockPanel.Dock="Left" Margin="0,0,20,0">
-                                <TextBlock Text="📇" FontSize="40" Foreground="White" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                                <TextBlock Style="{StaticResource IconGlyph}" Text="&#xE736;"
+                                           FontSize="36" Foreground="White"
+                                           HorizontalAlignment="Center" VerticalAlignment="Center"/>
                             </Border>
                             <StackPanel VerticalAlignment="Center">
                                 <TextBlock Text="Flashcard" FontSize="28" FontWeight="Bold" Foreground="{DynamicResource TextColor}" />
@@ -45,12 +51,31 @@
                             </StackPanel>
                         </DockPanel>
                         <Border BorderBrush="{DynamicResource BorderColor}" BorderThickness="0,2,0,0" Padding="0,20,0,0">
-                            <TextBlock Text="📚 Review • ⏱️ Flexible • 🎯 Effective" FontSize="14" Foreground="{DynamicResource TextColor}" Opacity="0.7" HorizontalAlignment="Center"/>
+                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                                <TextBlock Style="{StaticResource IconGlyphSm}" Text="&#xE736;"
+                                           Foreground="{DynamicResource ButtonColor}" Margin="0,0,6,0"/>
+                                <TextBlock Text="Review" FontSize="14" Foreground="{DynamicResource TextColor}" Opacity="0.7"/>
+                                <TextBlock Text=" • " FontSize="14" Foreground="{DynamicResource TextColor}" Opacity="0.4"/>
+                                <TextBlock Style="{StaticResource IconGlyphSm}" Text="&#xE7BA;"
+                                           Foreground="{DynamicResource ButtonColor}" Margin="0,0,6,0"/>
+                                <TextBlock Text="Flexible" FontSize="14" Foreground="{DynamicResource TextColor}" Opacity="0.7"/>
+                                <TextBlock Text=" • " FontSize="14" Foreground="{DynamicResource TextColor}" Opacity="0.4"/>
+                                <TextBlock Style="{StaticResource IconGlyphSm}" Text="&#xE7C8;"
+                                           Foreground="{DynamicResource ButtonColor}" Margin="0,0,6,0"/>
+                                <TextBlock Text="Effective" FontSize="14" Foreground="{DynamicResource TextColor}" Opacity="0.7"/>
+                            </StackPanel>
                         </Border>
                     </StackPanel>
                 </Border>
 
-                <Button Content="📊 View training history" HorizontalAlignment="Center" Margin="0,20,0,0" Click="ViewHistory_Click" Padding="20,10" Background="{DynamicResource SearchBackground}"/>
+                <Button HorizontalAlignment="Center" Margin="0,20,0,0" Click="ViewHistory_Click"
+                        Padding="20,10" Background="{DynamicResource SearchBackground}">
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Style="{StaticResource IconGlyphSm}" Text="&#xE9D9;"
+                                   Foreground="{DynamicResource ButtonColor}" Margin="0,0,8,0"/>
+                        <TextBlock Text="View training history" Foreground="{DynamicResource TextColor}"/>
+                    </StackPanel>
+                </Button>
             </StackPanel>
         </ScrollViewer>
 
@@ -62,7 +87,13 @@
 
             <Border Grid.Row="0" Background="{DynamicResource CardBackground}" BorderBrush="{DynamicResource BorderColor}" BorderThickness="0,0,0,2" Padding="20,15">
                 <DockPanel>
-                    <Button Content="✕ Exit" Background="Transparent" Foreground="Red" BorderBrush="Red" BorderThickness="1" Padding="15,8" DockPanel.Dock="Left" Click="ExitGame_Click" />
+                    <Button Background="Transparent" Foreground="Red" BorderBrush="Red" BorderThickness="1"
+                            Padding="15,8" DockPanel.Dock="Left" Click="ExitGame_Click">
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Style="{StaticResource IconGlyphSm}" Text="&#xE8BB;" Foreground="Red" Margin="0,0,6,0"/>
+                            <TextBlock Text="Exit"/>
+                        </StackPanel>
+                    </Button>
                     <TextBlock Text="{Binding ProgressText}" FontWeight="SemiBold" FontSize="16" Foreground="{DynamicResource TextColor}" DockPanel.Dock="Right" HorizontalAlignment="Right" VerticalAlignment="Center"/>
                 </DockPanel>
             </Border>
@@ -89,13 +120,21 @@
                                 <Border Background="{DynamicResource ToolButtonActive}" CornerRadius="15" Padding="12,6" HorizontalAlignment="Center" Margin="0,0,0,30">
                                     <TextBlock Text="{Binding CurrentCard.PartOfSpeech}" FontSize="14" FontWeight="Bold" Foreground="White" />
                                 </Border>
-                                <TextBlock Text="👆 Click to flip" FontSize="14" Foreground="{DynamicResource TextColor}" Opacity="0.6" HorizontalAlignment="Center" />
+                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                                    <TextBlock Style="{StaticResource IconGlyphSm}" Text="&#xE7AF;"
+                                               Foreground="{DynamicResource TextColor}" Opacity="0.6" Margin="0,0,6,0"/>
+                                    <TextBlock Text="Click to flip" FontSize="14" Foreground="{DynamicResource TextColor}" Opacity="0.6"/>
+                                </StackPanel>
                             </StackPanel>
 
                             <StackPanel x:Name="CardBack" Visibility="Collapsed" Opacity="0" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="50">
                                 <TextBlock Text="{Binding CurrentCard.Definition}" FontSize="24" FontWeight="SemiBold" Foreground="{DynamicResource TextColor}" HorizontalAlignment="Center" TextWrapping="Wrap" TextAlignment="Center" Margin="0,0,0,20" />
                                 <TextBlock Text="{Binding CurrentCard.Example}" FontSize="16" FontStyle="Italic" Foreground="{DynamicResource TextColor}" Opacity="0.7" HorizontalAlignment="Center" TextWrapping="Wrap" TextAlignment="Center" Margin="0,0,0,20" />
-                                <TextBlock Text="👆 Click to flip back" FontSize="14" Foreground="{DynamicResource TextColor}" Opacity="0.6" HorizontalAlignment="Center" />
+                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                                    <TextBlock Style="{StaticResource IconGlyphSm}" Text="&#xE7AF;"
+                                               Foreground="{DynamicResource TextColor}" Opacity="0.6" Margin="0,0,6,0"/>
+                                    <TextBlock Text="Click to flip back" FontSize="14" Foreground="{DynamicResource TextColor}" Opacity="0.6"/>
+                                </StackPanel>
                             </StackPanel>
                         </Grid>
                     </Border>
@@ -104,7 +143,15 @@
                 <Border Grid.Row="1" Background="#fff3cd" BorderBrush="#ffc107" BorderThickness="2" CornerRadius="10" Padding="12,8" Margin="30,20,30,0" MaxWidth="700">
                     <DockPanel>
                         <TextBlock Text="{Binding SkipTrackerMessage}" FontWeight="SemiBold" Foreground="#856404" DockPanel.Dock="Left" VerticalAlignment="Center" Margin="0,0,10,0" />
-                        <Button Content="👁️ Review" Visibility="{Binding HasSkippedCards, Converter={StaticResource BooleanToVisibilityConverter}}" Background="#ffc107" Foreground="#856404" BorderThickness="0" Padding="10,4" FontWeight="SemiBold" Cursor="Hand" DockPanel.Dock="Right" Click="ReviewSkipped_Click"/>
+                        <Button Visibility="{Binding HasSkippedCards, Converter={StaticResource BooleanToVisibilityConverter}}"
+                                Background="#ffc107" Foreground="#856404" BorderThickness="0"
+                                Padding="10,4" FontWeight="SemiBold" Cursor="Hand"
+                                DockPanel.Dock="Right" Click="ReviewSkipped_Click">
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Style="{StaticResource IconGlyphSm}" Text="&#xE7B3;" Foreground="#856404" Margin="0,0,5,0"/>
+                                <TextBlock Text="Review"/>
+                            </StackPanel>
+                        </Button>
                         <ItemsControl ItemsSource="{Binding SkippedCards}" VerticalAlignment="Center" HorizontalAlignment="Left">
                             <ItemsControl.ItemsPanel>
                                 <ItemsPanelTemplate>
@@ -121,8 +168,21 @@
                 </Border>
 
                 <UniformGrid Grid.Row="2" Columns="3" Rows="1" Margin="30,20,30,30" MaxWidth="700">
-                    <Button Content="❌ Skip" Background="White" Foreground="Red" BorderBrush="Red" BorderThickness="1" Margin="0,0,7,0" Click="SkipCard_Click" Padding="15"/>
-                    <Button Content="◀ Previous" Background="{DynamicResource SearchBackground}" Margin="7,0,7,0" Click="PreviousCard_Click" IsEnabled="{Binding CanGoBack}" />
+                    <Button Background="White" Foreground="Red" BorderBrush="Red" BorderThickness="1"
+                            Margin="0,0,7,0" Click="SkipCard_Click" Padding="15">
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Style="{StaticResource IconGlyphSm}" Text="&#xE711;" Foreground="Red" Margin="0,0,6,0"/>
+                            <TextBlock Text="Skip"/>
+                        </StackPanel>
+                    </Button>
+                    <Button Background="{DynamicResource SearchBackground}" Margin="7,0,7,0"
+                            Click="PreviousCard_Click" IsEnabled="{Binding CanGoBack}">
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Style="{StaticResource IconGlyphSm}" Text="&#xE76B;"
+                                       Foreground="{DynamicResource TextColor}" Margin="0,0,6,0"/>
+                            <TextBlock Text="Previous" Foreground="{DynamicResource TextColor}"/>
+                        </StackPanel>
+                    </Button>
                     <Button Content="{Binding NextButtonText}" Background="{DynamicResource ToolButtonActive}" Foreground="White" Margin="7,0,0,0" Click="NextCard_Click" />
                 </UniformGrid>
             </Grid>

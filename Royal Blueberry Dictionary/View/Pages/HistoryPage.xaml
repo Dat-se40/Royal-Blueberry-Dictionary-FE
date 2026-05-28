@@ -39,11 +39,9 @@
 
                         <!-- Title Section -->
                         <StackPanel Grid.Column="0" Orientation="Horizontal">
-                            <TextBlock Text="🕐"
-                                   FontSize="48"
-                                   VerticalAlignment="Center"
-                                   Foreground="{DynamicResource TextColor}"
-                                   Margin="0,-8,15,0"/>
+                            <TextBlock Style="{StaticResource IconGlyphLg}" Text="&#xE81C;"
+                                       Foreground="{DynamicResource ButtonColor}"
+                                       VerticalAlignment="Center" Margin="0,0,15,0"/>
                             <TextBlock Text="History"
                                    FontSize="40"
                                    FontWeight="Bold"
@@ -59,7 +57,7 @@
                             VerticalAlignment="Center"
                             Command="{Binding ClearAllCommand}">
                             <StackPanel Orientation="Horizontal">
-                                <TextBlock Text="🗑️" FontSize="16" Margin="0,0,8,0"/>
+                                <TextBlock Style="{StaticResource IconGlyphSm}" Text="&#xE74D;" Foreground="#DC2626" Margin="0,0,8,0"/>
                                 <TextBlock Text="Delete All"/>
                             </StackPanel>
                         </Button>

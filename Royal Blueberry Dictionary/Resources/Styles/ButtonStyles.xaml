@@ -1,5 +1,64 @@
 <ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <!-- ================================= -->
+    <!-- ICON GLYPH (Segoe MDL2 Assets)   -->
+    <!-- Usage: <TextBlock Style="{StaticResource IconGlyph}" Text="&#xE80F;"/> -->
+    <!-- Glyph map:                        -->
+    <!--   Home        E80F               -->
+    <!--   Recent/Hist E81C               -->
+    <!--   Star        E734               -->
+    <!--   My Words    E736               -->
+    <!--   Game        E7FC               -->
+    <!--   Download    E896               -->
+    <!--   Account     E77B               -->
+    <!--   Settings    E713               -->
+    <!--   Search      E721               -->
+    <!--   Refresh     E72C               -->
+    <!--   Back        E76B               -->
+    <!--   Forward     E76C               -->
+    <!--   Book        E82D               -->
+    <!--   Add         E710               -->
+    <!--   Delete      E74D               -->
+    <!--   Trash       E74D               -->
+    <!--   Tag         E8EC               -->
+    <!--   ChevronDown E70D               -->
+    <!--   Close/X     E8BB               -->
+    <!--   Eye/View    E7B3               -->
+    <!--   Mail        E715               -->
+    <!--   Help        E897               -->
+    <!--   Info        E946               -->
+    <!--   Document    E8A5               -->
+    <!--   Certificate E8C1               -->
+    <!--   Brightness  E706               -->
+    <!--   Sort        E8CB               -->
+    <!--   Checkmark   E73E               -->
+    <!--   Cancel/X    E711               -->
+    <!--   Chart       E9D9               -->
+    <!--   Flag        E7C1               -->
+    <!--   Package     E7B8               -->
+    <!-- ================================= -->
+    <Style x:Key="IconGlyph" TargetType="TextBlock">
+        <Setter Property="FontFamily" Value="Segoe MDL2 Assets"/>
+        <Setter Property="VerticalAlignment" Value="Center"/>
+        <Setter Property="HorizontalAlignment" Value="Center"/>
+    </Style>
+
+    <!-- Small variant (12–14 px) -->
+    <Style x:Key="IconGlyphSm" TargetType="TextBlock" BasedOn="{StaticResource IconGlyph}">
+        <Setter Property="FontSize" Value="13"/>
+    </Style>
+
+    <!-- Medium variant (18–20 px) — default for sidebar/toolbar -->
+    <Style x:Key="IconGlyphMd" TargetType="TextBlock" BasedOn="{StaticResource IconGlyph}">
+        <Setter Property="FontSize" Value="18"/>
+    </Style>
+
+    <!-- Large variant (32–40 px) — page headers -->
+    <Style x:Key="IconGlyphLg" TargetType="TextBlock" BasedOn="{StaticResource IconGlyph}">
+        <Setter Property="FontSize" Value="36"/>
+    </Style>
+
     <!-- ================================= -->
     <!-- HAMBURGER BUTTON -->
     <!-- ================================= -->

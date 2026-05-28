@@ -1,24 +1,22 @@
-﻿using System.Windows;
+﻿using Microsoft.Extensions.DependencyInjection;
+using Royal_Blueberry_Dictionary.ViewModel;
+using System.Diagnostics;
 using System.Windows.Controls;
-using Microsoft.Extensions.DependencyInjection;
-using Royal_Blueberry_Dictionary.Service;
 
 namespace Royal_Blueberry_Dictionary.View.Pages
 {
     public partial class HomePage : Page
     {
-        private readonly NavigationService _navigationService;
-
         public HomePage()
         {
             InitializeComponent();
-            _navigationService = App.serviceProvider.GetRequiredService<NavigationService>();
+            DataContext = App.serviceProvider.GetRequiredService<HomePageViewModel>();
         }
 
-        private void ButtnNavigate_Click(object sender, RoutedEventArgs e)
+        private void Hyperlink_RequestNavigate(object sender, System.Windows.Navigation.RequestNavigateEventArgs e)
         {
-            if (sender is not Button button) return;
-            _navigationService.NavigateByTag(button.Tag?.ToString());
+            Process.Start(new ProcessStartInfo(e.Uri.AbsoluteUri) { UseShellExecute = true });
+            e.Handled = true;
         }
     }
 }

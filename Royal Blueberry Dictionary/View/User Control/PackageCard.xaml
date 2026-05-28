@@ -129,11 +129,11 @@
                         <ColumnDefinition Width="*"/>
                         <ColumnDefinition Width="Auto"/>
                     </Grid.ColumnDefinitions>
-                    <TextBlock Grid.Column="0"
-                               Text="📚 Word Count:"
-                               Opacity="0.8"
-                               Foreground="{DynamicResource ButtonColor}"
-                               FontSize="17"/>
+                    <StackPanel Grid.Column="0" Orientation="Horizontal" Opacity="0.8">
+                        <TextBlock FontFamily="Segoe MDL2 Assets" Text="&#xE736;" FontSize="14"
+                                   Foreground="{DynamicResource ButtonColor}" VerticalAlignment="Center" Margin="0,0,6,0"/>
+                        <TextBlock Text="Word Count:" Foreground="{DynamicResource ButtonColor}" FontSize="17" VerticalAlignment="Center"/>
+                    </StackPanel>
                     <TextBlock Grid.Column="1"
                                Text="{Binding TotalItems}"
                                FontWeight="Bold"
@@ -212,32 +212,48 @@
                                     Margin="0,0,16,0">
 
                             <Button x:Name="DownloadFullButton"
-                                    Content="💾 Tải offline"
                                     Margin="0,0,12,0"
                                     Style="{StaticResource SecondaryButtonStyle}"
-                                    Command="{Binding DownloadCommand}"/>
+                                    Command="{Binding DownloadCommand}">
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock FontFamily="Segoe MDL2 Assets" Text="&#xE74B;" FontSize="12" VerticalAlignment="Center" Margin="0,0,5,0"/>
+                                    <TextBlock Text="Tải offline" VerticalAlignment="Center"/>
+                                </StackPanel>
+                            </Button>
 
                             <Button x:Name="OpenPackageButton"
-                                    Content="👁️ Xem"
                                     Margin="0,0,12,0"
                                     Style="{StaticResource SecondaryButtonStyle}"
-                                    Command="{Binding PreviewCommand}"/>
+                                    Command="{Binding PreviewCommand}">
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock FontFamily="Segoe MDL2 Assets" Text="&#xE7B3;" FontSize="12" VerticalAlignment="Center" Margin="0,0,5,0"/>
+                                    <TextBlock Text="Xem" VerticalAlignment="Center"/>
+                                </StackPanel>
+                            </Button>
 
                             <Button x:Name="ImportPackageButton"
-                                    Content="➕ My Words"
                                     Margin="0,0,12,0"
                                     Style="{StaticResource SecondaryButtonStyle}"
                                     Command="{Binding ImportCommand}"
                                     Visibility="{Binding IsDownloaded,
-                                                         Converter={StaticResource BoolToVisibilityConverter}}"/>
+                                                         Converter={StaticResource BoolToVisibilityConverter}}">
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock FontFamily="Segoe MDL2 Assets" Text="&#xE710;" FontSize="12" VerticalAlignment="Center" Margin="0,0,5,0"/>
+                                    <TextBlock Text="My Words" VerticalAlignment="Center"/>
+                                </StackPanel>
+                            </Button>
 
                             <Button x:Name="DeletePackageButton"
-                                    Content="🗑️ Xóa cache"
                                     Style="{StaticResource DangerButtonStyle}"
                                     BorderThickness="2"
                                     Command="{Binding DeleteOfflineCommand}"
                                     Visibility="{Binding IsDownloaded,
-                                                         Converter={StaticResource BoolToVisibilityConverter}}"/>
+                                                         Converter={StaticResource BoolToVisibilityConverter}}">
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock FontFamily="Segoe MDL2 Assets" Text="&#xE74D;" FontSize="12" VerticalAlignment="Center" Margin="0,0,5,0"/>
+                                    <TextBlock Text="Xóa cache" VerticalAlignment="Center"/>
+                                </StackPanel>
+                            </Button>
                         </StackPanel>
                     </Grid>
                 </StackPanel>

@@ -32,7 +32,7 @@ namespace Royal_Blueberry_Dictionary
             Closed += MainWindow_Closed;
             authService.AuthStateChanged += OnAuthStateChanged;
 
-            navigationService.NavigateTo<HomePage, SearchViewModel>("home");
+            navigationService.NavigateTo<HomePage, HomePageViewModel>("home");
             RefreshAuthSummary();
         }
 

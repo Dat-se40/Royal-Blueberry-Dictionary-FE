@@ -151,12 +151,15 @@
 
                     <!-- Cancel Button -->
                     <Button Grid.Column="0"
-                            Content="❌ Cancel"
                             Padding="0,14"
                             FontSize="14"
                             FontWeight="SemiBold"
                             Margin="0,0,10,0"
                             Click="CancelButton_Click">
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock FontFamily="Segoe MDL2 Assets" Text="&#xE711;" FontSize="13" VerticalAlignment="Center" Margin="0,0,6,0"/>
+                            <TextBlock Text="Cancel" VerticalAlignment="Center"/>
+                        </StackPanel>
                         <Button.Style>
                             <Style TargetType="Button">
                                 <Setter Property="Background" Value="{DynamicResource SearchBackground}"/>
@@ -190,13 +193,16 @@
                     <!-- Create Button -->
                     <Button x:Name="CreateButton"
                             Grid.Column="1"
-                            Content="✅ Create Tag"
                             Padding="0,14"
                             FontSize="14"
                             FontWeight="SemiBold"
                             Margin="10,0,0,0"
                             IsEnabled="False"
                             Click="CreateButton_Click">
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock FontFamily="Segoe MDL2 Assets" Text="&#xE73E;" FontSize="13" VerticalAlignment="Center" Margin="0,0,6,0"/>
+                            <TextBlock Text="Create Tag" VerticalAlignment="Center"/>
+                        </StackPanel>
                         <Button.Style>
                             <Style TargetType="Button">
                                 <Setter Property="Background" Value="{DynamicResource ToolButtonActive}"/>

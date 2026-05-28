@@ -3,249 +3,666 @@
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-      xmlns:local="clr-namespace:Royal_Blueberry_Dictionary.View.Pages"
+      xmlns:conv="clr-namespace:Royal_Blueberry_Dictionary.Converters"
+      xmlns:vm="clr-namespace:Royal_Blueberry_Dictionary.ViewModel"
       mc:Ignorable="d"
       d:DesignHeight="800" d:DesignWidth="1400"
       Title="HomePage"
       Background="{DynamicResource MainBackground}">
 
+    <Page.Resources>
+        <conv:BoolToVisibilityConverter        x:Key="BoolToVis"/>
+        <conv:InverseBoolToVisibilityConverter x:Key="InvBoolToVis"/>
+        <conv:NullToVisibilityConverter        x:Key="NullToVis"/>
+        <conv:StringToVisibilityConverter      x:Key="StrToVis"/>
+
+        <!-- Chip style for recent searches -->
+        <Style x:Key="SearchChipStyle" TargetType="Button">
+            <Setter Property="Background" Value="{DynamicResource ToolbarBackground}"/>
+            <Setter Property="Foreground" Value="{DynamicResource TextColor}"/>
+            <Setter Property="BorderBrush" Value="{DynamicResource BorderColor}"/>
+            <Setter Property="BorderThickness" Value="1.5"/>
+            <Setter Property="Padding" Value="14,6"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="FontSize" Value="13"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}"
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                CornerRadius="20"
+                                Padding="{TemplateBinding Padding}">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="{DynamicResource ButtonColor}"/>
+                    <Setter Property="Foreground" Value="White"/>
+                    <Setter Property="BorderBrush" Value="{DynamicResource ButtonColor}"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+    </Page.Resources>
+
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
 
-        <!-- ================================= -->
-        <!-- TOOLBAR -->
-        <!-- ================================= -->
-        <Border Grid.Row="0"
-                Background="{DynamicResource ToolbarBackground}"
-                BorderBrush="{DynamicResource ToolbarBorder}"
-                BorderThickness="0,0,0,2"
-                Padding="15,10">
-            <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Disabled">
-                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-
-                    <!-- [NOTE] Tất cả Button toolbar đã xóa Click handler -->
-                    <!-- TODO: Gắn lại Click="ButtnNavigate_Click" khi Navigate action sẵn sàng -->
-
-                    <Button Style="{StaticResource ToolButtonStyle}" Tag="Home" Click="ButtnNavigate_Click">
-                        <StackPanel Orientation="Horizontal">
-                            <TextBlock Text="🏠" FontSize="18" Margin="0,0,8,0"/>
-                            <TextBlock Text="Home" VerticalAlignment="Center"/>
-                        </StackPanel>
-                    </Button>
-
-                    <Button Style="{StaticResource ToolButtonStyle}" Tag="History" Click="ButtnNavigate_Click">
-                        <StackPanel Orientation="Horizontal">
-                            <TextBlock Text="🕐" FontSize="18" Margin="0,0,8,0"/>
-                            <TextBlock Text="History" VerticalAlignment="Center"/>
-                        </StackPanel>
-                    </Button>
-
-                    <Button Style="{StaticResource ToolButtonStyle}" Tag="Favourite" Click="ButtnNavigate_Click">
-                        <StackPanel Orientation="Horizontal">
-                            <TextBlock Text="⭐" FontSize="18" Margin="0,0,8,0"/>
-                            <TextBlock Text="Favourite" VerticalAlignment="Center"/>
-                        </StackPanel>
-                    </Button>
-
-                    <Button Style="{StaticResource ToolButtonStyle}" Tag="MyWords" Click="ButtnNavigate_Click">
-                        <StackPanel Orientation="Horizontal">
-                            <TextBlock Text="📖" FontSize="18" Margin="0,0,8,0"/>
-                            <TextBlock Text="My Words" VerticalAlignment="Center"/>
-                        </StackPanel>
-                    </Button>
-
-                    <Button Style="{StaticResource ToolButtonStyle}" Tag="Game" Click="ButtnNavigate_Click">
-                        <StackPanel Orientation="Horizontal">
-                            <TextBlock Text="🎮" FontSize="18" Margin="0,0,8,0"/>
-                            <TextBlock Text="Game" VerticalAlignment="Center"/>
-                        </StackPanel>
-                    </Button>
-
-                    <Button Style="{StaticResource ToolButtonStyle}" Tag="Offline" Click="ButtnNavigate_Click">
-                        <StackPanel Orientation="Horizontal">
-                            <TextBlock Text="📥" FontSize="18" Margin="0,0,8,0"/>
-                            <TextBlock Text="Offline" VerticalAlignment="Center"/>
-                        </StackPanel>
-                    </Button>
-
-                    <Button Style="{StaticResource ToolButtonStyle}" Tag="Setting" Click="ButtnNavigate_Click">
-                        <StackPanel Orientation="Horizontal">
-                            <TextBlock Text="⚙️" FontSize="18" Margin="0,0,8,0"/>
-                            <TextBlock Text="Setting" VerticalAlignment="Center"/>
-                        </StackPanel>
-                    </Button>
-
-                </StackPanel>
-            </ScrollViewer>
-        </Border>
-
-        <!-- ================================= -->
-        <!-- MAIN CONTENT -->
-        <!-- ================================= -->
-        <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
+        <ScrollViewer Grid.Row="0" VerticalScrollBarVisibility="Auto">
             <StackPanel>
-                <Grid Margin="30">
+
+                <!-- Loading bar -->
+                <ProgressBar IsIndeterminate="True" Height="3" BorderThickness="0"
+                             Foreground="{DynamicResource ButtonColor}"
+                             Background="Transparent"
+                             Visibility="{Binding IsLoading, Converter={StaticResource BoolToVis}}"/>
+
+                <!-- ============================================================ -->
+                <!--  STATS STRIP                                                  -->
+                <!-- ============================================================ -->
+                <Grid Margin="30,24,30,0">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="16"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="16"/>
                         <ColumnDefinition Width="*"/>
                     </Grid.ColumnDefinitions>
 
-                    <!-- Quote Card -->
-                    <Border Grid.Column="0" Style="{StaticResource CardStyle}" Margin="0,0,15,0">
-                        <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
-                            <Border Width="200" Height="200" CornerRadius="100"
-                                    BorderBrush="{DynamicResource BorderColor}"
-                                    BorderThickness="3" Margin="0,0,0,20">
-                                <Border.Background>
-                                    <ImageBrush x:Name="QuoteImage" Stretch="UniformToFill"/>
-                                </Border.Background>
-                            </Border>
-
-                            <TextBlock Text="&quot;The limits of my language mean the limits of my world.&quot;"
-                                       FontSize="20" FontStyle="Italic" TextWrapping="Wrap"
-                                       TextAlignment="Center" Foreground="{DynamicResource TextColor}"
-                                       LineHeight="28" Margin="0,0,0,15" Name="QuoteText"/>
-
-                            <TextBlock Text="— Ludwig Wittgenstein" FontSize="15" FontWeight="SemiBold"
-                                       Foreground="{DynamicResource TextColor}" Opacity="0.8"
-                                       TextAlignment="Center" Name="QuoteAuthor"/>
+                    <Border Grid.Column="0" Style="{StaticResource CardStyle}" Padding="20,16">
+                        <StackPanel HorizontalAlignment="Center">
+                            <TextBlock Text="{Binding TotalWords}"
+                                       FontSize="34" FontWeight="Bold"
+                                       Foreground="{DynamicResource ButtonColor}"
+                                       TextAlignment="Center"/>
+                            <TextBlock Text="Words Saved" FontSize="12" FontWeight="SemiBold"
+                                       Foreground="{DynamicResource TextColor}"
+                                       Opacity="0.65" TextAlignment="Center" Margin="0,4,0,0"/>
                         </StackPanel>
                     </Border>
 
-                    <!-- Word Collection Card -->
-                    <Border Grid.Column="1" Style="{StaticResource CardStyle}"
-                            BorderThickness="0" Margin="15,0,0,0">
+                    <Border Grid.Column="2" Style="{StaticResource CardStyle}" Padding="20,16">
+                        <StackPanel HorizontalAlignment="Center">
+                            <TextBlock Text="{Binding FavoriteCount}"
+                                       FontSize="34" FontWeight="Bold"
+                                       Foreground="{DynamicResource ButtonColor}"
+                                       TextAlignment="Center"/>
+                            <TextBlock Text="Favorites" FontSize="12" FontWeight="SemiBold"
+                                       Foreground="{DynamicResource TextColor}"
+                                       Opacity="0.65" TextAlignment="Center" Margin="0,4,0,0"/>
+                        </StackPanel>
+                    </Border>
+
+                    <Border Grid.Column="4" Style="{StaticResource CardStyle}" Padding="20,16">
+                        <StackPanel HorizontalAlignment="Center">
+                            <TextBlock Text="{Binding TagCount}"
+                                       FontSize="34" FontWeight="Bold"
+                                       Foreground="{DynamicResource ButtonColor}"
+                                       TextAlignment="Center"/>
+                            <TextBlock Text="Tags Created" FontSize="12" FontWeight="SemiBold"
+                                       Foreground="{DynamicResource TextColor}"
+                                       Opacity="0.65" TextAlignment="Center" Margin="0,4,0,0"/>
+                        </StackPanel>
+                    </Border>
+                </Grid>
+
+                <!-- ============================================================ -->
+                <!--  RECENT SEARCHES CHIPS                                        -->
+                <!-- ============================================================ -->
+                <Border Margin="30,16,30,0"
+                        Visibility="{Binding HasRecentSearches, Converter={StaticResource BoolToVis}}">
+                    <StackPanel>
+                        <TextBlock Text="Recent searches"
+                                   FontSize="11" FontWeight="SemiBold"
+                                   Foreground="{DynamicResource TextColor}"
+                                   Opacity="0.5" Margin="0,0,0,8"/>
+                        <ItemsControl ItemsSource="{Binding RecentSearchWords}">
+                            <ItemsControl.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <WrapPanel Orientation="Horizontal"/>
+                                </ItemsPanelTemplate>
+                            </ItemsControl.ItemsPanel>
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <Button Style="{StaticResource SearchChipStyle}"
+                                            Margin="0,0,8,8"
+                                            Content="{Binding}"
+                                            Command="{Binding DataContext.OpenSearchWordCommand,
+                                                RelativeSource={RelativeSource AncestorType=Page}}"
+                                            CommandParameter="{Binding}"/>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                    </StackPanel>
+                </Border>
+
+                <!-- ============================================================ -->
+                <!--  MAIN CONTENT                                                 -->
+                <!-- ============================================================ -->
+                <Grid Margin="30,16,30,0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="20"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+
+                    <!-- ── LEFT COLUMN ── -->
+                    <StackPanel Grid.Column="0">
+
+                        <!-- Greeting + Quote card -->
+                        <Border Style="{StaticResource CardStyle}">
+                            <StackPanel HorizontalAlignment="Center">
+
+                                <!-- Avatar circle: shows avatar image if available, else initials -->
+                                <Grid Width="90" Height="90" Margin="0,0,0,14" HorizontalAlignment="Center">
+                                    <!-- Initials fallback (always rendered below) -->
+                                    <Border CornerRadius="45"
+                                            Background="{DynamicResource ButtonColor}"
+                                            Visibility="{Binding HasAvatar, Converter={StaticResource InvBoolToVis}}">
+                                        <TextBlock Text="{Binding UserInitials}"
+                                                   FontSize="28" FontWeight="Bold" Foreground="White"
+                                                   HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                    </Border>
+                                    <!-- Avatar image (shown on top when available) -->
+                                    <Border CornerRadius="45"
+                                            BorderBrush="{DynamicResource BorderColor}"
+                                            BorderThickness="3"
+                                            Visibility="{Binding HasAvatar, Converter={StaticResource BoolToVis}}">
+                                        <Border.Background>
+                                            <ImageBrush ImageSource="{Binding AvatarUrl}" Stretch="UniformToFill"/>
+                                        </Border.Background>
+                                    </Border>
+                                </Grid>
+
+                                <!-- Greeting line -->
+                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,0,0,2">
+                                    <TextBlock Text="{Binding UserGreeting}"
+                                               FontSize="15" FontWeight="SemiBold"
+                                               Foreground="{DynamicResource TextColor}"
+                                               Margin="0,0,5,0"/>
+                                    <TextBlock Text="{Binding UserDisplayName}"
+                                               FontSize="15" FontWeight="Bold"
+                                               Foreground="{DynamicResource ButtonColor}"/>
+                                </StackPanel>
+
+                                <!-- Divider -->
+                                <Border Height="1" Background="{DynamicResource BorderColor}"
+                                        Margin="20,12,20,12" Opacity="0.4"/>
+
+                                <!-- Quote -->
+                                <TextBlock Text="{Binding QuoteText}"
+                                           FontSize="14" FontStyle="Italic"
+                                           TextWrapping="Wrap" TextAlignment="Center"
+                                           Foreground="{DynamicResource TextColor}"
+                                           LineHeight="22" Margin="4,0,4,8"/>
+
+                                <TextBlock Text="{Binding QuoteAuthor}"
+                                           FontSize="12" FontWeight="SemiBold"
+                                           Foreground="{DynamicResource TextColor}"
+                                           Opacity="0.55" TextAlignment="Center"/>
+                            </StackPanel>
+                        </Border>
+
+                        <!-- Word of the Day card -->
+                        <Border Style="{StaticResource CardStyle}" Margin="0,14,0,0"
+                                Visibility="{Binding WordOfTheDay, Converter={StaticResource NullToVis}}">
+                            <StackPanel>
+
+                                <StackPanel Orientation="Horizontal" Margin="0,0,0,12">
+                                    <Border Width="4" CornerRadius="2"
+                                            Background="{DynamicResource ButtonColor}"
+                                            Margin="0,0,10,0"/>
+                                    <TextBlock Text="Word of the Day"
+                                               FontSize="11" FontWeight="SemiBold"
+                                               Foreground="{DynamicResource TextColor}"
+                                               Opacity="0.6" VerticalAlignment="Center"/>
+                                </StackPanel>
+
+                                <Grid Margin="0,0,0,6">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="Auto"/>
+                                    </Grid.ColumnDefinitions>
+                                    <TextBlock Grid.Column="0"
+                                               Text="{Binding WordOfTheDay.Word}"
+                                               FontSize="22" FontWeight="Bold"
+                                               Foreground="{DynamicResource TextColor}"
+                                               VerticalAlignment="Center"/>
+                                    <Border Grid.Column="1"
+                                            Background="{DynamicResource ToolbarBackground}"
+                                            CornerRadius="4" Padding="7,3" VerticalAlignment="Center"
+                                            Visibility="{Binding WordOfTheDay.PartOfSpeech,
+                                                Converter={StaticResource StrToVis}}">
+                                        <TextBlock Text="{Binding WordOfTheDay.PartOfSpeech}"
+                                                   FontSize="10" FontWeight="Bold"
+                                                   Foreground="{DynamicResource ButtonColor}"/>
+                                    </Border>
+                                </Grid>
+
+                                <TextBlock Text="{Binding WordOfTheDay.Phonetic}"
+                                           FontSize="12" Foreground="{DynamicResource TextColor}"
+                                           Opacity="0.55" Margin="0,0,0,10"
+                                           Visibility="{Binding WordOfTheDay.Phonetic,
+                                               Converter={StaticResource StrToVis}}"/>
+
+                                <TextBlock Text="{Binding WordOfTheDay.Definition}"
+                                           FontSize="14" TextWrapping="Wrap"
+                                           Foreground="{DynamicResource TextColor}"
+                                           Opacity="0.85" LineHeight="22" Margin="0,0,0,16"/>
+
+                                <Button HorizontalAlignment="Right"
+                                        Style="{StaticResource SearchButtonStyle}"
+                                        Content="Look up →"
+                                        Command="{Binding OpenWordOfTheDayCommand}"/>
+                            </StackPanel>
+                        </Border>
+
+                        <!-- Words This Week chart -->
+                        <Border Style="{StaticResource CardStyle}" Margin="0,14,0,14"
+                                Visibility="{Binding HasChartData, Converter={StaticResource BoolToVis}}">
+                            <StackPanel>
+                                <StackPanel Orientation="Horizontal" Margin="0,0,0,14">
+                                    <Border Width="4" CornerRadius="2"
+                                            Background="{DynamicResource ButtonColor}"
+                                            Margin="0,0,10,0"/>
+                                    <TextBlock Text="Words added this week"
+                                               FontSize="11" FontWeight="SemiBold"
+                                               Foreground="{DynamicResource TextColor}"
+                                               Opacity="0.6" VerticalAlignment="Center"/>
+                                </StackPanel>
+
+                                <!-- Bar chart -->
+                                <ItemsControl ItemsSource="{Binding WeeklyChart}">
+                                    <ItemsControl.ItemsPanel>
+                                        <ItemsPanelTemplate>
+                                            <UniformGrid Rows="1"/>
+                                        </ItemsPanelTemplate>
+                                    </ItemsControl.ItemsPanel>
+                                    <ItemsControl.ItemTemplate>
+                                        <DataTemplate DataType="{x:Type vm:DayBarItem}">
+                                            <StackPanel HorizontalAlignment="Center" Margin="4,0">
+                                                <!-- Count label -->
+                                                <TextBlock Text="{Binding Count}"
+                                                           FontSize="10" FontWeight="SemiBold"
+                                                           Foreground="{DynamicResource ButtonColor}"
+                                                           HorizontalAlignment="Center"
+                                                           Margin="0,0,0,3"/>
+                                                <!-- Bar area with fixed max height = 84, bar grows from bottom -->
+                                                <Border Height="84" Width="28" VerticalAlignment="Bottom">
+                                                    <Border.Background>
+                                                        <SolidColorBrush Opacity="0" Color="Transparent"/>
+                                                    </Border.Background>
+                                                    <Grid VerticalAlignment="Bottom">
+                                                        <Border Height="{Binding BarHeight}"
+                                                                CornerRadius="4,4,2,2"
+                                                                VerticalAlignment="Bottom">
+                                                            <Border.Style>
+                                                                <Style TargetType="Border">
+                                                                    <Setter Property="Background" Value="{DynamicResource ButtonColor}"/>
+                                                                    <Setter Property="Opacity" Value="0.45"/>
+                                                                    <Style.Triggers>
+                                                                        <DataTrigger Binding="{Binding IsToday}" Value="True">
+                                                                            <Setter Property="Opacity" Value="1"/>
+                                                                        </DataTrigger>
+                                                                    </Style.Triggers>
+                                                                </Style>
+                                                            </Border.Style>
+                                                        </Border>
+                                                    </Grid>
+                                                </Border>
+                                                <!-- Day label -->
+                                                <TextBlock Text="{Binding Day}"
+                                                           FontSize="10" HorizontalAlignment="Center"
+                                                           Margin="0,4,0,0">
+                                                    <TextBlock.Style>
+                                                        <Style TargetType="TextBlock">
+                                                            <Setter Property="Foreground" Value="{DynamicResource TextColor}"/>
+                                                            <Setter Property="Opacity" Value="0.5"/>
+                                                            <Setter Property="FontWeight" Value="Normal"/>
+                                                            <Style.Triggers>
+                                                                <DataTrigger Binding="{Binding IsToday}" Value="True">
+                                                                    <Setter Property="Foreground" Value="{DynamicResource ButtonColor}"/>
+                                                                    <Setter Property="Opacity" Value="1"/>
+                                                                    <Setter Property="FontWeight" Value="Bold"/>
+                                                                </DataTrigger>
+                                                            </Style.Triggers>
+                                                        </Style>
+                                                    </TextBlock.Style>
+                                                </TextBlock>
+                                            </StackPanel>
+                                        </DataTemplate>
+                                    </ItemsControl.ItemTemplate>
+                                </ItemsControl>
+                            </StackPanel>
+                        </Border>
+
+                    </StackPanel>
+
+                    <!-- RIGHT COLUMN: Vocabulary Collection -->
+                    <Border Grid.Column="2" Style="{StaticResource CardStyle}" Padding="0">
                         <Border BorderBrush="{DynamicResource BorderColor}"
-                                BorderThickness="4,0,0,0" CornerRadius="16">
+                                BorderThickness="2,0,0,0" CornerRadius="16">
                             <Grid>
                                 <Grid.RowDefinitions>
                                     <RowDefinition Height="Auto"/>
                                     <RowDefinition Height="*"/>
                                 </Grid.RowDefinitions>
 
-                                <Border Grid.Row="0" Background="{DynamicResource ToolbarBackground}"
-                                        CornerRadius="16,16,0,0" Padding="20">
-                                    <StackPanel Orientation="Horizontal">
-                                        <TextBlock Text="📚" FontSize="22"
-                                                   Foreground="{DynamicResource TextColor}"
-                                                   Margin="0,0,10,0"/>
-                                        <TextBlock Text="Your vocabulary collection"
-                                                   FontSize="17" FontWeight="Bold"
-                                                   Foreground="{DynamicResource TextColor}"/>
-                                    </StackPanel>
+                                <!-- Header + Sort pills -->
+                                <Border Grid.Row="0"
+                                        Background="{DynamicResource ToolbarBackground}"
+                                        CornerRadius="16,16,0,0" Padding="16,12">
+                                    <Grid>
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="Auto"/>
+                                            <RowDefinition Height="Auto"/>
+                                        </Grid.RowDefinitions>
+                                        <!-- Title row -->
+                                        <Grid Grid.Row="0">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="*"/>
+                                                <ColumnDefinition Width="Auto"/>
+                                            </Grid.ColumnDefinitions>
+                                            <TextBlock Grid.Column="0"
+                                                       Text="Your vocabulary collection"
+                                                       FontSize="14" FontWeight="Bold"
+                                                       Foreground="{DynamicResource TextColor}"
+                                                       VerticalAlignment="Center"/>
+                                            <TextBlock Grid.Column="1"
+                                                       Text="{Binding TotalWords, StringFormat='{}{0} words'}"
+                                                       FontSize="11" Foreground="{DynamicResource TextColor}"
+                                                       Opacity="0.5" VerticalAlignment="Center"/>
+                                        </Grid>
+                                        <!-- Sort pills row -->
+                                        <StackPanel Grid.Row="1" Orientation="Horizontal" Margin="0,8,0,0">
+                                            <Button CommandParameter="recent"
+                                                    Command="{Binding SetSortCommand}"
+                                                    Margin="0,0,6,0" Padding="10,4"
+                                                    Cursor="Hand" FontSize="11"
+                                                    BorderThickness="1.5">
+                                                <Button.Style>
+                                                    <Style TargetType="Button">
+                                                        <Setter Property="Background" Value="Transparent"/>
+                                                        <Setter Property="Foreground" Value="{DynamicResource TextColor}"/>
+                                                        <Setter Property="BorderBrush" Value="{DynamicResource BorderColor}"/>
+                                                        <Setter Property="Template">
+                                                            <Setter.Value>
+                                                                <ControlTemplate TargetType="Button">
+                                                                    <Border Background="{TemplateBinding Background}"
+                                                                            BorderBrush="{TemplateBinding BorderBrush}"
+                                                                            BorderThickness="{TemplateBinding BorderThickness}"
+                                                                            CornerRadius="12" Padding="{TemplateBinding Padding}">
+                                                                        <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                                                    </Border>
+                                                                </ControlTemplate>
+                                                            </Setter.Value>
+                                                        </Setter>
+                                                        <Style.Triggers>
+                                                            <DataTrigger Binding="{Binding SortMode}" Value="{x:Static vm:VocabSortMode.Recent}">
+                                                                <Setter Property="Background" Value="{DynamicResource ButtonColor}"/>
+                                                                <Setter Property="Foreground" Value="White"/>
+                                                                <Setter Property="BorderBrush" Value="{DynamicResource ButtonColor}"/>
+                                                            </DataTrigger>
+                                                        </Style.Triggers>
+                                                    </Style>
+                                                </Button.Style>
+                                                Recent
+                                            </Button>
+                                            <Button CommandParameter="az"
+                                                    Command="{Binding SetSortCommand}"
+                                                    Margin="0,0,6,0" Padding="10,4"
+                                                    Cursor="Hand" FontSize="11"
+                                                    BorderThickness="1.5">
+                                                <Button.Style>
+                                                    <Style TargetType="Button">
+                                                        <Setter Property="Background" Value="Transparent"/>
+                                                        <Setter Property="Foreground" Value="{DynamicResource TextColor}"/>
+                                                        <Setter Property="BorderBrush" Value="{DynamicResource BorderColor}"/>
+                                                        <Setter Property="Template">
+                                                            <Setter.Value>
+                                                                <ControlTemplate TargetType="Button">
+                                                                    <Border Background="{TemplateBinding Background}"
+                                                                            BorderBrush="{TemplateBinding BorderBrush}"
+                                                                            BorderThickness="{TemplateBinding BorderThickness}"
+                                                                            CornerRadius="12" Padding="{TemplateBinding Padding}">
+                                                                        <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                                                    </Border>
+                                                                </ControlTemplate>
+                                                            </Setter.Value>
+                                                        </Setter>
+                                                        <Style.Triggers>
+                                                            <DataTrigger Binding="{Binding SortMode}" Value="{x:Static vm:VocabSortMode.AtoZ}">
+                                                                <Setter Property="Background" Value="{DynamicResource ButtonColor}"/>
+                                                                <Setter Property="Foreground" Value="White"/>
+                                                                <Setter Property="BorderBrush" Value="{DynamicResource ButtonColor}"/>
+                                                            </DataTrigger>
+                                                        </Style.Triggers>
+                                                    </Style>
+                                                </Button.Style>
+                                                A → Z
+                                            </Button>
+                                            <Button CommandParameter="za"
+                                                    Command="{Binding SetSortCommand}"
+                                                    Padding="10,4"
+                                                    Cursor="Hand" FontSize="11"
+                                                    BorderThickness="1.5">
+                                                <Button.Style>
+                                                    <Style TargetType="Button">
+                                                        <Setter Property="Background" Value="Transparent"/>
+                                                        <Setter Property="Foreground" Value="{DynamicResource TextColor}"/>
+                                                        <Setter Property="BorderBrush" Value="{DynamicResource BorderColor}"/>
+                                                        <Setter Property="Template">
+                                                            <Setter.Value>
+                                                                <ControlTemplate TargetType="Button">
+                                                                    <Border Background="{TemplateBinding Background}"
+                                                                            BorderBrush="{TemplateBinding BorderBrush}"
+                                                                            BorderThickness="{TemplateBinding BorderThickness}"
+                                                                            CornerRadius="12" Padding="{TemplateBinding Padding}">
+                                                                        <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                                                    </Border>
+                                                                </ControlTemplate>
+                                                            </Setter.Value>
+                                                        </Setter>
+                                                        <Style.Triggers>
+                                                            <DataTrigger Binding="{Binding SortMode}" Value="{x:Static vm:VocabSortMode.ZtoA}">
+                                                                <Setter Property="Background" Value="{DynamicResource ButtonColor}"/>
+                                                                <Setter Property="Foreground" Value="White"/>
+                                                                <Setter Property="BorderBrush" Value="{DynamicResource ButtonColor}"/>
+                                                            </DataTrigger>
+                                                        </Style.Triggers>
+                                                    </Style>
+                                                </Button.Style>
+                                                Z → A
+                                            </Button>
+                                        </StackPanel>
+                                    </Grid>
                                 </Border>
 
-                                <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto"
-                                              Padding="15" MaxHeight="500">
-                                    <StackPanel x:Name="stpWordItems" HorizontalAlignment="Stretch">
-                                        <!-- [NOTE] WordItems được populate từ code-behind AddWordItem() -->
-                                        <!-- TODO: Gắn lại khi LoadRandomContent() / LoadContent() sẵn sàng -->
-                                    </StackPanel>
+                                <!-- Empty state -->
+                                <StackPanel Grid.Row="1"
+                                            HorizontalAlignment="Center" VerticalAlignment="Center"
+                                            Margin="30,40"
+                                            Visibility="{Binding HasWords,
+                                                Converter={StaticResource InvBoolToVis}}">
+                                    <TextBlock Text="No words yet"
+                                               FontSize="17" FontWeight="SemiBold"
+                                               Foreground="{DynamicResource TextColor}"
+                                               Opacity="0.4" TextAlignment="Center"/>
+                                    <TextBlock FontSize="13" TextWrapping="Wrap"
+                                               Text="Search for words and save them to start building your collection."
+                                               Foreground="{DynamicResource TextColor}"
+                                               Opacity="0.3" TextAlignment="Center"
+                                               Margin="0,8,0,0" MaxWidth="260"/>
+                                </StackPanel>
+
+                                <!-- Word list -->
+                                <ScrollViewer Grid.Row="1"
+                                              VerticalScrollBarVisibility="Auto"
+                                              Padding="14,12" MaxHeight="560"
+                                              Visibility="{Binding HasWords,
+                                                  Converter={StaticResource BoolToVis}}">
+                                    <ItemsControl ItemsSource="{Binding RecentWords}">
+                                        <ItemsControl.ItemTemplate>
+                                            <DataTemplate>
+                                                <Border Style="{StaticResource WordItemStyle}">
+                                                    <Border.InputBindings>
+                                                        <MouseBinding MouseAction="LeftClick"
+                                                            Command="{Binding DataContext.OpenWordCommand,
+                                                                RelativeSource={RelativeSource AncestorType=Page}}"
+                                                            CommandParameter="{Binding}"/>
+                                                    </Border.InputBindings>
+                                                    <StackPanel>
+                                                        <StackPanel Orientation="Horizontal">
+                                                            <TextBlock Text="{Binding Word}"
+                                                                       FontSize="15" FontWeight="SemiBold"
+                                                                       Foreground="{DynamicResource TextColor}"
+                                                                       VerticalAlignment="Center"/>
+                                                            <Border Background="{DynamicResource ToolbarBackground}"
+                                                                    CornerRadius="4" Padding="5,2"
+                                                                    Margin="8,0,0,0" VerticalAlignment="Center"
+                                                                    Visibility="{Binding PartOfSpeech,
+                                                                        Converter={StaticResource StrToVis}}">
+                                                                <TextBlock Text="{Binding PartOfSpeech}"
+                                                                           FontSize="9" FontWeight="Bold"
+                                                                           Foreground="{DynamicResource ButtonColor}"/>
+                                                            </Border>
+                                                        </StackPanel>
+                                                        <TextBlock Text="{Binding Phonetic}"
+                                                                   FontSize="11"
+                                                                   Foreground="{DynamicResource TextColor}"
+                                                                   Opacity="0.55" Margin="0,3,0,0"
+                                                                   Visibility="{Binding Phonetic,
+                                                                       Converter={StaticResource StrToVis}}"/>
+                                                        <TextBlock Text="{Binding Definition}"
+                                                                   FontSize="13" TextWrapping="Wrap"
+                                                                   Foreground="{DynamicResource TextColor}"
+                                                                   Opacity="0.8" Margin="0,5,0,0"
+                                                                   TextTrimming="CharacterEllipsis"
+                                                                   MaxHeight="38"/>
+                                                    </StackPanel>
+                                                </Border>
+                                            </DataTemplate>
+                                        </ItemsControl.ItemTemplate>
+                                    </ItemsControl>
                                 </ScrollViewer>
+
                             </Grid>
                         </Border>
                     </Border>
+
                 </Grid>
-
-                <!-- ================================= -->
-                <!-- FOOTER -->
-                <!-- ================================= -->
-                <Border Background="{DynamicResource NavbarBackground}"
-                        Padding="40,30" Margin="0,50,0,0"
-                        TextElement.Foreground="White">
-                    <Grid>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="*"/>
-                            <ColumnDefinition Width="*"/>
-                            <ColumnDefinition Width="*"/>
-                            <ColumnDefinition Width="*"/>
-                        </Grid.ColumnDefinitions>
-
-                        <!-- Project Info -->
-                        <StackPanel Grid.Column="0" Margin="0,0,20,0">
-                            <TextBlock Text="📚 Project Information" FontSize="16" FontWeight="Bold"
-                                       Foreground="White" Margin="0,0,0,10"/>
-                            <TextBlock Foreground="White" Opacity="0.9" TextWrapping="Wrap">
-                                <Run Text="Subject: " FontWeight="Bold"/>
-                                <Run Text="Lập trình trực quan"/>
-                            </TextBlock>
-                            <TextBlock Foreground="White" Opacity="0.9" TextWrapping="Wrap">
-                                <Run Text="Lecturer: " FontWeight="Bold"/>
-                                <Run Text="Mai Trọng Khang"/>
-                            </TextBlock>
-                            <TextBlock Foreground="White" Opacity="0.9" TextWrapping="Wrap">
-                                <Run Text="Semester: " FontWeight="Bold"/>
-                                <Run Text="1 - Academic Year 2024-2025"/>
-                            </TextBlock>
-                        </StackPanel>
-
-                        <!-- Team Members -->
-                        <StackPanel Grid.Column="1" Margin="0,0,20,0">
-                            <TextBlock Text="👥 Team Members" FontSize="16" FontWeight="Bold"
-                                       Foreground="White" Margin="0,0,0,10"/>
-                            <TextBlock Foreground="White" Opacity="0.9" TextWrapping="Wrap" Margin="0,0,0,5">
-                                <Run Text="Nguyễn Tấn Đạt" FontWeight="Bold"/><LineBreak/>
-                                <Run Text="MSSV: 24520280"/>
-                            </TextBlock>
-                            <TextBlock Foreground="White" Opacity="0.9" TextWrapping="Wrap" Margin="0,0,0,5">
-                                <Run Text="Võ Nguyễn Thanh Hương" FontWeight="Bold"/><LineBreak/>
-                                <Run Text="MSSV: 24520649"/>
-                            </TextBlock>
-                            <TextBlock Foreground="White" Opacity="0.9" TextWrapping="Wrap">
-                                <Run Text="Phan Thế Phong" FontWeight="Bold"/><LineBreak/>
-                                <Run Text="MSSV: 24521342"/>
-                            </TextBlock>
-                        </StackPanel>
-
-                        <!-- Time -->
-                        <StackPanel Grid.Column="2" Margin="0,0,20,0">
-                            <TextBlock Text="📅 Time" FontSize="16" FontWeight="Bold"
-                                       Foreground="White" Margin="0,0,0,10"/>
-                            <TextBlock Foreground="White" Opacity="0.9" TextWrapping="Wrap">
-                                <Run Text="Start: " FontWeight="Bold"/>
-                                <Run Text="08/09/2025"/>
-                            </TextBlock>
-                            <TextBlock Foreground="White" Opacity="0.9" TextWrapping="Wrap">
-                                <Run Text="Finish: " FontWeight="Bold"/>
-                                <Run Text="27/12/2025"/>
-                            </TextBlock>
-                            <TextBlock Foreground="White" Opacity="0.9" TextWrapping="Wrap">
-                                <Run Text="Technology: " FontWeight="Bold"/>
-                                <Run Text="WPF .NET"/>
-                            </TextBlock>
-                            <TextBlock Foreground="White" Opacity="0.9" TextWrapping="Wrap">
-                                <Run Text="Version: " FontWeight="Bold"/>
-                                <Run Text="Microsoft.NETCore.App 9.0.8"/>
-                            </TextBlock>
-                        </StackPanel>
-
-                        <!-- Contact -->
-                        <StackPanel Grid.Column="3">
-                            <TextBlock Text="📞 Contact" FontSize="16" FontWeight="Bold"
-                                       Foreground="White" Margin="0,0,0,10"/>
-                            <TextBlock Text="Email: 24520280@gm.uit.edu.vn"
-                                       Foreground="White" Opacity="0.9" TextWrapping="Wrap"/>
-
-                            <!-- [NOTE] Hyperlink giữ nguyên vì là tương tác UI thuần -->
-                            <!-- TODO: Gắn lại RequestNavigate="Hyperlink_RequestNavigate" khi handler sẵn sàng -->
-                            <TextBlock Foreground="White" Opacity="0.9" TextWrapping="Wrap">
-                                <Hyperlink NavigateUri="https://github.com/Dat-se40/BlueBerry-Dictionary.git"
-                                           Foreground="White">
-                                    https://github.com/Dat-se40/BlueBerry-Dictionary.git
-                                </Hyperlink>
-                            </TextBlock>
-
-                            <TextBlock Text="© 2024 Dictionary App" FontWeight="Bold"
-                                       Foreground="White" Margin="0,10,0,0"/>
-                            <TextBlock Text="All rights reserved" Foreground="White" Opacity="0.9"/>
-                        </StackPanel>
-                    </Grid>
-                </Border>
 
             </StackPanel>
         </ScrollViewer>
+
+        <!-- ============================================================ -->
+        <!--  FOOTER — luôn nằm đáy cửa sổ                               -->
+        <!-- ============================================================ -->
+        <Border Grid.Row="1"
+                Background="{DynamicResource NavbarBackground}"
+                Padding="40,24"
+                TextElement.Foreground="White">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+
+                <!-- Project Info -->
+                <StackPanel Grid.Column="0" Margin="0,0,20,0">
+                    <TextBlock Text="Project Information"
+                               FontSize="13" FontWeight="Bold"
+                               Foreground="White" Margin="0,0,0,8"/>
+                    <TextBlock FontSize="12" Foreground="White" Opacity="0.85" Margin="0,0,0,3">
+                        <Run Text="Subject: " FontWeight="SemiBold"/>
+                        <Run Text="Lập trình trực quan"/>
+                    </TextBlock>
+                    <TextBlock FontSize="12" Foreground="White" Opacity="0.85" Margin="0,0,0,3">
+                        <Run Text="Lecturer: " FontWeight="SemiBold"/>
+                        <Run Text="Mai Trọng Khang"/>
+                    </TextBlock>
+                    <TextBlock FontSize="12" Foreground="White" Opacity="0.85">
+                        <Run Text="Semester: " FontWeight="SemiBold"/>
+                        <Run Text="1 — Academic Year 2024-2025"/>
+                    </TextBlock>
+                </StackPanel>
+
+                <!-- Team Members -->
+                <StackPanel Grid.Column="1" Margin="0,0,20,0">
+                    <TextBlock Text="Team Members"
+                               FontSize="13" FontWeight="Bold"
+                               Foreground="White" Margin="0,0,0,8"/>
+                    <TextBlock FontSize="12" Foreground="White" Opacity="0.85" Margin="0,0,0,5">
+                        <Run Text="Nguyễn Tấn Đạt" FontWeight="SemiBold"/>
+                        <LineBreak/>
+                        <Run Text="MSSV: 24520280" Foreground="#CCFFFFFF"/>
+                    </TextBlock>
+                    <TextBlock FontSize="12" Foreground="White" Opacity="0.85" Margin="0,0,0,5">
+                        <Run Text="Võ Nguyễn Thanh Hương" FontWeight="SemiBold"/>
+                        <LineBreak/>
+                        <Run Text="MSSV: 24520649" Foreground="#CCFFFFFF"/>
+                    </TextBlock>
+                    <TextBlock FontSize="12" Foreground="White" Opacity="0.85">
+                        <Run Text="Phan Thế Phong" FontWeight="SemiBold"/>
+                        <LineBreak/>
+                        <Run Text="MSSV: 24521342" Foreground="#CCFFFFFF"/>
+                    </TextBlock>
+                </StackPanel>
+
+                <!-- Timeline -->
+                <StackPanel Grid.Column="2" Margin="0,0,20,0">
+                    <TextBlock Text="Timeline"
+                               FontSize="13" FontWeight="Bold"
+                               Foreground="White" Margin="0,0,0,8"/>
+                    <TextBlock FontSize="12" Foreground="White" Opacity="0.85" Margin="0,0,0,3">
+                        <Run Text="Start: " FontWeight="SemiBold"/>
+                        <Run Text="08/09/2025"/>
+                    </TextBlock>
+                    <TextBlock FontSize="12" Foreground="White" Opacity="0.85" Margin="0,0,0,3">
+                        <Run Text="Finish: " FontWeight="SemiBold"/>
+                        <Run Text="27/12/2025"/>
+                    </TextBlock>
+                    <TextBlock FontSize="12" Foreground="White" Opacity="0.85" Margin="0,0,0,3">
+                        <Run Text="Technology: " FontWeight="SemiBold"/>
+                        <Run Text="WPF .NET 9"/>
+                    </TextBlock>
+                    <TextBlock FontSize="12" Foreground="White" Opacity="0.85">
+                        <Run Text="Version: " FontWeight="SemiBold"/>
+                        <Run Text="Microsoft.NETCore.App 9.0.8"/>
+                    </TextBlock>
+                </StackPanel>
+
+                <!-- Contact -->
+                <StackPanel Grid.Column="3">
+                    <TextBlock Text="Contact"
+                               FontSize="13" FontWeight="Bold"
+                               Foreground="White" Margin="0,0,0,8"/>
+                    <TextBlock Text="Email: 24520280@gm.uit.edu.vn"
+                               FontSize="12" Foreground="White" Opacity="0.85"
+                               TextWrapping="Wrap" Margin="0,0,0,5"/>
+                    <TextBlock FontSize="12" Foreground="White" Opacity="0.85"
+                               TextWrapping="Wrap" Margin="0,0,0,8">
+                        <Hyperlink NavigateUri="https://github.com/Dat-se40/BlueBerry-Dictionary.git"
+                                   Foreground="White"
+                                   RequestNavigate="Hyperlink_RequestNavigate">
+                            GitHub Repository
+                        </Hyperlink>
+                    </TextBlock>
+                    <TextBlock Text="© 2024 Royal Blueberry Dictionary"
+                               FontSize="11" FontWeight="SemiBold"
+                               Foreground="White" Opacity="0.7"/>
+                </StackPanel>
+
+            </Grid>
+        </Border>
+
     </Grid>
 </Page>
