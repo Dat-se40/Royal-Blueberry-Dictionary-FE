@@ -101,11 +101,18 @@
                                    Foreground="{DynamicResource TextColor}" />
                     </Viewbox>
                     <Border Background="{DynamicResource ToolButtonActive}"
-        CornerRadius="15" Padding="10" Margin="0,0,15,0"
-        HorizontalAlignment="Left"
-        VerticalAlignment="Center" >
-                        <TextBlock Text="{Binding PartOfSpeech}"
-               FontSize="10" FontWeight="Bold" Foreground="White" />
+                            BorderBrush="{DynamicResource BorderColor}"
+                            BorderThickness="1.5"
+                            CornerRadius="12"
+                            Padding="8,2"
+                            Margin="8,0,0,0"
+                            HorizontalAlignment="Left"
+                            VerticalAlignment="Center"
+                            Visibility="{Binding PartOfSpeech, ElementName=root, Converter={StaticResource StringToVi}}">
+                        <TextBlock Text="{Binding PartOfSpeech, ElementName=root}"
+                                   FontSize="10"
+                                   FontWeight="Bold"
+                                   Foreground="White" />
                     </Border>
                 </StackPanel>
 
@@ -159,20 +166,22 @@
             </Grid>
 
             <!-- PRONUNCIATION SECTION -->
-            <StackPanel Margin="0,0,0,15">
+            <StackPanel Margin="0,6,0,15">
                 <Grid>
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="18" />
+                        <ColumnDefinition Width="Auto" />
                         <ColumnDefinition Width="8"/>
                         <ColumnDefinition Width="*" />
                     </Grid.ColumnDefinitions>
 
                     <Border Grid.Column="0"
                             Background="{DynamicResource WordItemBackground}"
-                            CornerRadius="8" Padding="8,3" Margin="0,0,2,0">
+                            BorderBrush="{DynamicResource BorderColor}"
+                            BorderThickness="1"
+                            CornerRadius="8" Padding="8,3" Margin="0,0,2,0"
+                            Visibility="{Binding Region ,Converter={StaticResource StringToVi}}">
                         <TextBlock Text="{Binding Region, ElementName=root}" FontSize="11"
-                                   FontWeight="Bold" Foreground="{DynamicResource ButtonColor}" 
-                                   Visibility="{Binding Region ,Converter={StaticResource StringToVi}}"/>
+                                   FontWeight="Bold" Foreground="{DynamicResource ButtonColor}" />
                     </Border>
 
                     <TextBlock Grid.Column="2"
