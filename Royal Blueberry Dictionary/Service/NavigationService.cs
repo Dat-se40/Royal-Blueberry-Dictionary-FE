@@ -75,7 +75,7 @@ namespace Royal_Blueberry_Dictionary.Service
             switch (tag)
             {
                 case "Home":
-                    NavigateTo<HomePage, SearchViewModel>("home");
+                    NavigateTo<HomePage, HomePageViewModel>("home");
                     break;
                 case "History":
                     NavigateTo<HistoryPage, HistoryPageViewModel>(null);

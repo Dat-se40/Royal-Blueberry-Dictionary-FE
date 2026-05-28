@@ -30,8 +30,8 @@
                         Margin="0,0,0,30">
                     <StackPanel>
                         <StackPanel Orientation="Horizontal" Margin="0,0,0,10">
-                            <TextBlock Text="📥" FontSize="48" Margin="0,0,15,0"
-                                       Foreground="{DynamicResource TextColor}"/>
+                            <TextBlock Style="{StaticResource IconGlyphLg}" Text="&#xE896;"
+                                       Foreground="{DynamicResource ButtonColor}" Margin="0,0,15,0"/>
                             <TextBlock Text="Offline Packages"
                                        FontSize="40"
                                        FontWeight="Bold"
@@ -130,11 +130,13 @@
                         Padding="30"
                         Margin="0,0,0,30">
                     <StackPanel>
-                        <TextBlock Text="✅ Downloaded Packages"
-                                   FontSize="24"
-                                   FontWeight="Bold"
-                                   Foreground="{DynamicResource TextColor}"
-                                   Margin="0,0,0,20"/>
+                        <StackPanel Orientation="Horizontal" Margin="0,0,0,20">
+                            <TextBlock Style="{StaticResource IconGlyphMd}" Text="&#xE73E;"
+                                       Foreground="{DynamicResource ButtonColor}" Margin="0,0,10,0"/>
+                            <TextBlock Text="Đã tải về máy"
+                                       FontSize="24" FontWeight="Bold"
+                                       Foreground="{DynamicResource TextColor}"/>
+                        </StackPanel>
 
                         <ItemsControl ItemsSource="{Binding DownloadedPackages}">
                             <ItemsControl.ItemsPanel>
@@ -152,12 +154,10 @@
                         <StackPanel HorizontalAlignment="Center"
                                     Margin="0,40,0,0"
                                     Visibility="{Binding ShowDownloadedEmpty, Converter={StaticResource BoolToVisWpf}}">
-                            <TextBlock Text="📭"
-                                       FontSize="60"
-                                       Foreground="{DynamicResource TextColor}"
-                                       HorizontalAlignment="Center"
-                                       Opacity="0.5"/>
-                            <TextBlock Text="No packages have been downloaded yet"
+                            <TextBlock Style="{StaticResource IconGlyph}" Text="&#xE896;"
+                                       FontSize="52" Foreground="{DynamicResource ButtonColor}"
+                                       HorizontalAlignment="Center" Opacity="0.4"/>
+                            <TextBlock Text="Chưa có package nào được tải về"
                                        FontSize="16"
                                        Foreground="{DynamicResource TextColor}"
                                        Opacity="0.7"
@@ -175,13 +175,14 @@
                         Padding="30">
                     <StackPanel>
                         <StackPanel Orientation="Horizontal" Margin="0,0,0,20">
-                            <TextBlock Text="📦 Available on Server"
-                                       FontSize="24"
-                                       FontWeight="Bold"
-                                       Foreground="{DynamicResource TextColor}"
-                                       VerticalAlignment="Center"/>
-                            <Button Content="🔄 Refresh List"
-                                    Padding="14,10"
+                            <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                                <TextBlock Style="{StaticResource IconGlyphMd}" Text="&#xE7B8;"
+                                           Foreground="{DynamicResource ButtonColor}" Margin="0,0,8,0"/>
+                                <TextBlock Text="Có trên server"
+                                           FontSize="24" FontWeight="Bold"
+                                           Foreground="{DynamicResource TextColor}"/>
+                            </StackPanel>
+                            <Button Padding="14,10"
                                     Margin="20,0,0,0"
                                     Background="{DynamicResource ButtonColor}"
                                     Foreground="White"
@@ -197,6 +198,11 @@
                                         </Border>
                                     </ControlTemplate>
                                 </Button.Template>
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock Style="{StaticResource IconGlyphSm}" Text="&#xE72C;"
+                                               Foreground="White" Margin="0,0,6,0"/>
+                                    <TextBlock Text="Cập nhật danh sách" FontSize="13" Foreground="White"/>
+                                </StackPanel>
                             </Button>
                         </StackPanel>
 

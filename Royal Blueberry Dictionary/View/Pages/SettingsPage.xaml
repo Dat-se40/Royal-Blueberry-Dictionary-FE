@@ -15,8 +15,9 @@
             <!-- ============ PAGE HEADER ============ -->
             <Border Style="{StaticResource CardStyle}" Margin="0,0,0,30">
                 <StackPanel Orientation="Horizontal">
-                    <TextBlock Text="⚙️" FontSize="48" Margin="0,0,15,0"
-                               Foreground="{DynamicResource TextColor}" />
+                    <TextBlock Style="{StaticResource IconGlyphLg}" Text="&#xE713;"
+                               Foreground="{DynamicResource ButtonColor}"
+                               Margin="0,0,15,0"/>
                     <StackPanel>
                         <TextBlock Text="Settings"
                                    FontSize="32"
@@ -35,8 +36,8 @@
                 <StackPanel>
                     <!-- Header -->
                     <StackPanel Orientation="Horizontal" Margin="0,0,0,20">
-                        <TextBlock Text="☀️" FontSize="24" Margin="0,0,12,0"
-                                   Foreground="{DynamicResource TextColor}" />
+                        <TextBlock Style="{StaticResource IconGlyphMd}" Text="&#xE706;"
+                                   Foreground="{DynamicResource ButtonColor}" Margin="0,0,12,0"/>
                         <TextBlock Text="Interface &amp; Display"
                                    FontSize="18"
                                    FontWeight="Bold"
@@ -152,8 +153,8 @@
                 <StackPanel>
                     <!-- Header -->
                     <StackPanel Orientation="Horizontal" Margin="0,0,0,20">
-                        <TextBlock Text="❓" FontSize="24" Margin="0,0,12,0"
-                                   Foreground="{DynamicResource TextColor}" />
+                        <TextBlock Style="{StaticResource IconGlyphMd}" Text="&#xE897;"
+                                   Foreground="{DynamicResource ButtonColor}" Margin="0,0,12,0"/>
                         <TextBlock Text="Support &amp; Information"
                                    FontSize="18"
                                    FontWeight="Bold"
@@ -187,7 +188,7 @@
                                     Command="{Binding OpenUserGuideCommand}"
                                     IsEnabled="True">
                                 <StackPanel Orientation="Horizontal">
-                                    <TextBlock Text="📖" FontSize="16" Margin="0,0,8,0" />
+                                    <TextBlock Style="{StaticResource IconGlyphSm}" Text="&#xE82D;" Foreground="{DynamicResource ButtonColor}" Margin="0,0,8,0"/>
                                     <TextBlock Text="View" />
                                 </StackPanel>
                             </Button>
@@ -221,7 +222,7 @@
                                     Command="{Binding OpenFAQCommand}"
                                     IsEnabled="True">
                                 <StackPanel Orientation="Horizontal">
-                                    <TextBlock Text="❓" FontSize="16" Margin="0,0,8,0" />
+                                    <TextBlock Style="{StaticResource IconGlyphSm}" Text="&#xE897;" Foreground="{DynamicResource ButtonColor}" Margin="0,0,8,0"/>
                                     <TextBlock Text="View" />
                                 </StackPanel>
                             </Button>
@@ -256,7 +257,7 @@
                                     Command="{Binding ContactSupportCommand}"
                                     IsEnabled="True">
                                 <StackPanel Orientation="Horizontal">
-                                    <TextBlock Text="📧" FontSize="16" Margin="0,0,8,0" />
+                                    <TextBlock Style="{StaticResource IconGlyphSm}" Text="&#xE715;" Foreground="{DynamicResource ButtonColor}" Margin="0,0,8,0"/>
                                     <TextBlock Text="Contact" />
                                 </StackPanel>
                             </Button>
@@ -290,7 +291,7 @@
                                     Command="{Binding ReportBugCommand}"
                                     IsEnabled="True">
                                 <StackPanel Orientation="Horizontal">
-                                    <TextBlock Text="🐛" FontSize="16" Margin="0,0,8,0" />
+                                    <TextBlock Style="{StaticResource IconGlyphSm}" Text="&#xE946;" Foreground="{DynamicResource ButtonColor}" Margin="0,0,8,0"/>
                                     <TextBlock Text="Report a Bug" />
                                 </StackPanel>
                             </Button>
@@ -324,7 +325,7 @@
                                     Command="{Binding RateAppCommand}"
                                     IsEnabled="True">
                                 <StackPanel Orientation="Horizontal">
-                                    <TextBlock Text="⭐" FontSize="16" Margin="0,0,8,0" />
+                                    <TextBlock Style="{StaticResource IconGlyphSm}" Text="&#xE734;" Foreground="{DynamicResource ButtonColor}" Margin="0,0,8,0"/>
                                     <TextBlock Text="Rating" />
                                 </StackPanel>
                             </Button>
@@ -358,7 +359,7 @@
                                     Command="{Binding ShowAboutCommand}"
                                     IsEnabled="True">
                                 <StackPanel Orientation="Horizontal">
-                                    <TextBlock Text="ℹ️" FontSize="16" Margin="0,0,8,0" />
+                                    <TextBlock Style="{StaticResource IconGlyphSm}" Text="&#xE946;" Foreground="{DynamicResource ButtonColor}" Margin="0,0,8,0"/>
                                     <TextBlock Text="View" />
                                 </StackPanel>
                             </Button>
@@ -392,7 +393,7 @@
                                     Command="{Binding ShowTermsCommand}"
                                     IsEnabled="True">
                                 <StackPanel Orientation="Horizontal">
-                                    <TextBlock Text="📄" FontSize="16" Margin="0,0,8,0" />
+                                    <TextBlock Style="{StaticResource IconGlyphSm}" Text="&#xE8A5;" Foreground="{DynamicResource ButtonColor}" Margin="0,0,8,0"/>
                                     <TextBlock Text="View" />
                                 </StackPanel>
                             </Button>
@@ -424,7 +425,7 @@
                                     Command="{Binding ShowLicensesCommand}"
                                     IsEnabled="True">
                                 <StackPanel Orientation="Horizontal">
-                                    <TextBlock Text="⚖️" FontSize="16" Margin="0,0,8,0" />
+                                    <TextBlock Style="{StaticResource IconGlyphSm}" Text="&#xE8C1;" Foreground="{DynamicResource ButtonColor}" Margin="0,0,8,0"/>
                                     <TextBlock Text="View" />
                                 </StackPanel>
                             </Button>

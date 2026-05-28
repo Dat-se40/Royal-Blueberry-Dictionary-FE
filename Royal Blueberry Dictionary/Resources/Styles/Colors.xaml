@@ -338,24 +338,24 @@
                   Opacity="0.3"
                   Color="Black" />
 
-    <!-- Suggestions Popup -->
+    <!-- Suggestions Popup (Light) -->
     <SolidColorBrush x:Key="LightSuggestionsBackground" Color="#FFFFFF" />
     <SolidColorBrush x:Key="LightSuggestionsBorder" Color="#5B7FFF" />
     <SolidColorBrush x:Key="LightSuggestionsItemBorder" Color="#E8F1FF" />
-    <SolidColorBrush x:Key="LightSuggestionsItemHover" Color="#E8F1FF" />
-    <SolidColorBrush x:Key="LightSuggestionsItemSelected" Color="#D1E3FF" />
+    <SolidColorBrush x:Key="LightSuggestionsItemHover" Color="#2D4ACC" />
+    <SolidColorBrush x:Key="LightSuggestionsItemSelected" Color="#1A2D6D" />
 
-    <!-- Suggestions Popup -->
+    <!-- Suggestions Popup (Dark) -->
     <SolidColorBrush x:Key="DarkSuggestionsBackground" Color="#1E293B" />
     <SolidColorBrush x:Key="DarkSuggestionsBorder" Color="#3B82F6" />
     <SolidColorBrush x:Key="DarkSuggestionsItemBorder" Color="#334155" />
-    <SolidColorBrush x:Key="DarkSuggestionsItemHover" Color="#334155" />
-    <SolidColorBrush x:Key="DarkSuggestionsItemSelected" Color="#475569" />
+    <SolidColorBrush x:Key="DarkSuggestionsItemHover" Color="#2563EB" />
+    <SolidColorBrush x:Key="DarkSuggestionsItemSelected" Color="#1D4ED8" />
 
-    <!-- Suggestions Popup -->
+    <!-- Suggestions Popup (Default = Light) -->
     <SolidColorBrush x:Key="SuggestionsBackground" Color="#FFFFFF" />
     <SolidColorBrush x:Key="SuggestionsBorder" Color="#5B7FFF" />
     <SolidColorBrush x:Key="SuggestionsItemBorder" Color="#E8F1FF" />
-    <SolidColorBrush x:Key="SuggestionsItemHover" Color="#E8F1FF" />
-    <SolidColorBrush x:Key="SuggestionsItemSelected" Color="#D1E3FF" />
+    <SolidColorBrush x:Key="SuggestionsItemHover" Color="#2D4ACC" />
+    <SolidColorBrush x:Key="SuggestionsItemSelected" Color="#1A2D6D" />
 </ResourceDictionary>

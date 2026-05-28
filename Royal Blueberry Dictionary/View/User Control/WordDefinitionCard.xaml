@@ -148,7 +148,8 @@
                             Style="{StaticResource CardActionButton}"
                             Margin="3" />
                        -->
-                    <Button Content="❌" Width="40" Height="40"
+                    <Button Content="&#xE74D;" FontFamily="Segoe MDL2 Assets" FontSize="14"
+                            Width="40" Height="40"
         Style="{StaticResource DeleteButton}"
         Margin="3"
         Name="btnDelete"

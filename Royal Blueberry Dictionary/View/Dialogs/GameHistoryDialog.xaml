@@ -107,10 +107,12 @@
                                     CornerRadius="8"
                                     Padding="10,5"
                                     Margin="0,0,10,0">
-                                <TextBlock FontSize="13" FontWeight="SemiBold" Foreground="#10b981">
-                                    <Run Text="✅ " />
-                                    <Run Text="{Binding KnownCards, Mode=OneWay}" />
-                                </TextBlock>
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock FontFamily="Segoe MDL2 Assets" Text="&#xE73E;" FontSize="12"
+                                               Foreground="#10b981" VerticalAlignment="Center" Margin="0,0,5,0"/>
+                                    <TextBlock FontSize="13" FontWeight="SemiBold" Foreground="#10b981"
+                                               Text="{Binding KnownCards, Mode=OneWay}" VerticalAlignment="Center"/>
+                                </StackPanel>
                             </Border>
 
                             <!-- Unknown Badge -->
@@ -120,10 +122,12 @@
                                     CornerRadius="8"
                                     Padding="10,5"
                                     Margin="0,0,10,0">
-                                <TextBlock FontSize="13" FontWeight="SemiBold" Foreground="#dc2626">
-                                    <Run Text="❌ " />
-                                    <Run Text="{Binding UnknownCards, Mode=OneWay}" />
-                                </TextBlock>
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock FontFamily="Segoe MDL2 Assets" Text="&#xE711;" FontSize="12"
+                                               Foreground="#dc2626" VerticalAlignment="Center" Margin="0,0,5,0"/>
+                                    <TextBlock FontSize="13" FontWeight="SemiBold" Foreground="#dc2626"
+                                               Text="{Binding UnknownCards, Mode=OneWay}" VerticalAlignment="Center"/>
+                                </StackPanel>
                             </Border>
 
                             <!-- Duration Badge -->
@@ -260,10 +264,14 @@
 
             <!-- Action Buttons -->
             <UniformGrid Grid.Row="3" Columns="2" Rows="1" Margin="30,20,30,30">
-                <Button Content="🗑️ Delete All"
-                        Style="{StaticResource ClearButtonStyle}"
+                <Button Style="{StaticResource ClearButtonStyle}"
                         Margin="0,0,10,0"
-                        Click="ClearHistory_Click" />
+                        Click="ClearHistory_Click">
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock FontFamily="Segoe MDL2 Assets" Text="&#xE74D;" FontSize="13" VerticalAlignment="Center" Margin="0,0,6,0"/>
+                        <TextBlock Text="Delete All" VerticalAlignment="Center"/>
+                    </StackPanel>
+                </Button>
                 <Button Content="✓ Close"
                         Style="{StaticResource PrimaryButtonStyle}"
                         Margin="10,0,0,0"

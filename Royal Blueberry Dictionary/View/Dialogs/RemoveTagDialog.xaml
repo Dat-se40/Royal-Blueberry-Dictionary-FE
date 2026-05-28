@@ -89,10 +89,9 @@
                             CornerRadius="14"
                             Background="#1AFF4D4F"
                             Margin="0,0,14,0">
-                        <TextBlock Text="🗑️"
-                                   FontSize="26"
-                                   HorizontalAlignment="Center"
-                                   VerticalAlignment="Center"/>
+                        <TextBlock FontFamily="Segoe MDL2 Assets" Text="&#xE74D;"
+                                   FontSize="22" Foreground="#FF4D4F"
+                                   HorizontalAlignment="Center" VerticalAlignment="Center"/>
                     </Border>
 
                     <StackPanel VerticalAlignment="Center">
@@ -109,7 +108,9 @@
                 </StackPanel>
 
                 <Button Grid.Column="1"
-                        Content="✕"
+                        Content="&#xE711;"
+                        FontFamily="Segoe MDL2 Assets"
+                        FontSize="14"
                         Style="{StaticResource DialogCloseButtonStyle}"
                         Click="Cancel_Click"/>
             </Grid>
@@ -123,9 +124,9 @@
                     Padding="14"
                     Margin="0,0,0,16">
                 <StackPanel Orientation="Horizontal">
-                    <TextBlock Text="⚠️"
-                               FontSize="18"
-                               Margin="0,0,10,0"/>
+                    <TextBlock FontFamily="Segoe MDL2 Assets" Text="&#xE7BA;"
+                               FontSize="18" Foreground="#F59E0B"
+                               VerticalAlignment="Center" Margin="0,0,10,0"/>
                     <TextBlock Text="Deleting a tag will not delete the words linked to it. Only the tag itself will be removed."
                                TextWrapping="Wrap"
                                Foreground="{DynamicResource TextColor}"
@@ -154,8 +155,8 @@
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
 
-        <TextBlock Text="🔍"
-                   FontSize="16"
+        <TextBlock FontFamily="Segoe MDL2 Assets" Text="&#xE721;"
+                   FontSize="14"
                    VerticalAlignment="Center"
                    Margin="0,0,10,0"
                    Foreground="{DynamicResource TextColor}"
@@ -263,10 +264,14 @@
 
                 <Button Grid.Column="2"
                         x:Name="DeleteButton"
-                        Content="🗑 Delete Selected"
                         Padding="20,10"
                         Style="{StaticResource DangerButtonStyle}"
-                        Click="Delete_Click"/>
+                        Click="Delete_Click">
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock FontFamily="Segoe MDL2 Assets" Text="&#xE74D;" FontSize="13" VerticalAlignment="Center" Margin="0,0,6,0"/>
+                        <TextBlock Text="Delete Selected" VerticalAlignment="Center"/>
+                    </StackPanel>
+                </Button>
             </Grid>
         </Grid>
     </Border>

@@ -194,11 +194,9 @@
                         </Grid.ColumnDefinitions>
 
                         <StackPanel Grid.Column="0" Orientation="Horizontal">
-                            <TextBlock Text="📚"
-                                       FontSize="48"
-                                       VerticalAlignment="Center"
-                                       Foreground="{DynamicResource TextColor}"
-                                       Margin="0,0,15,0" />
+                            <TextBlock Style="{StaticResource IconGlyphLg}" Text="&#xE736;"
+                                       Foreground="{DynamicResource ButtonColor}"
+                                       VerticalAlignment="Center" Margin="0,0,15,0"/>
                             <TextBlock Text="My Words"
                                        FontSize="40"
                                        FontWeight="Bold"
@@ -210,13 +208,13 @@
                             <Button Style="{StaticResource SecondaryButtonStyle}" Margin="0,0,12,0"
                                     Command="{Binding CreateTagCommand}">
                                 <StackPanel Orientation="Horizontal">
-                                    <TextBlock Text="🏷️" FontSize="16" Margin="0,0,8,0" />
+                                    <TextBlock Style="{StaticResource IconGlyphSm}" Text="&#xE8EC;" Foreground="{DynamicResource ButtonColor}" Margin="0,0,8,0"/>
                                     <TextBlock Text="Create New Tag" FontSize="16" />
                                 </StackPanel>
                             </Button>
                             <Button Style="{StaticResource ClearButtonStyle}" Command="{Binding OpenRemoveTagDialogCommand}">
                                 <StackPanel Orientation="Horizontal">
-                                    <TextBlock Text="❌" FontSize="16" Margin="0,0,8,0" />
+                                    <TextBlock Style="{StaticResource IconGlyphSm}" Text="&#xE74D;" Foreground="#DC2626" Margin="0,0,8,0"/>
                                     <TextBlock Text="Delete Tag" FontSize="16" />
                                 </StackPanel>
                             </Button>
@@ -326,9 +324,9 @@
                                 <ToggleButton x:Name="AlphabetDropdownToggle"
                                               Style="{StaticResource TagDropdownButtonStyle}">
                                     <StackPanel Orientation="Horizontal">
-                                        <TextBlock Text="🔤" FontSize="14" Margin="0,0,8,0" />
+                                        <TextBlock Style="{StaticResource IconGlyphSm}" Text="&#xE8CB;" Foreground="{DynamicResource ButtonColor}" Margin="0,0,8,0"/>
                                         <TextBlock Text="Filter By Letter" Margin="0,0,8,0" />
-                                        <TextBlock Text="▼" FontSize="12" />
+                                        <TextBlock Style="{StaticResource IconGlyphSm}" Text="&#xE70D;" FontSize="10"/>
                                     </StackPanel>
                                 </ToggleButton>
 
@@ -375,9 +373,9 @@
                                 <ToggleButton x:Name="TagsDropdownToggle"
                                               Style="{StaticResource TagDropdownButtonStyle}">
                                     <StackPanel Orientation="Horizontal">
-                                        <TextBlock Text="🏷️" FontSize="14" Margin="0,0,8,0" />
+                                        <TextBlock Style="{StaticResource IconGlyphSm}" Text="&#xE8EC;" Foreground="{DynamicResource ButtonColor}" Margin="0,0,8,0"/>
                                         <TextBlock Text="Filter By Tag" Margin="0,0,8,0" />
-                                        <TextBlock Text="▼" FontSize="12" />
+                                        <TextBlock Style="{StaticResource IconGlyphSm}" Text="&#xE70D;" FontSize="10"/>
                                     </StackPanel>
                                 </ToggleButton>
 
@@ -411,9 +409,11 @@
                                                                     <ColumnDefinition Width="*" />
                                                                 </Grid.ColumnDefinitions>
                                                                 <TextBlock Grid.Column="0"
-                                                                           Text="{Binding Tag.Icon, FallbackValue=📚}"
-                                                                           FontSize="20"
+                                                                           Text="{Binding Tag.Icon, FallbackValue=&#xE736;}"
+                                                                           FontFamily="Segoe MDL2 Assets"
+                                                                           FontSize="16"
                                                                            Margin="0,0,10,0"
+                                                                           Foreground="{DynamicResource ButtonColor}"
                                                                            VerticalAlignment="Center" />
                                                                 <StackPanel Grid.Column="1">
                                                                     <TextBlock Text="{Binding Tag.Name}"

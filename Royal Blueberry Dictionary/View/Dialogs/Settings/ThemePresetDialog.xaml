@@ -133,10 +133,9 @@
 
                     <StackPanel Orientation="Horizontal">
                         <Border Style="{StaticResource HeaderIconWrapStyle}">
-                            <TextBlock Text="🖌️"
-                                       FontSize="20"
-                                       HorizontalAlignment="Center"
-                                       VerticalAlignment="Center"/>
+                            <TextBlock FontFamily="Segoe MDL2 Assets" Text="&#xE81E;"
+                                       FontSize="20" Foreground="{DynamicResource ButtonColor}"
+                                       HorizontalAlignment="Center" VerticalAlignment="Center"/>
                         </Border>
 
                         <StackPanel Margin="12,0,0,0" VerticalAlignment="Center">
@@ -153,7 +152,9 @@
                     </StackPanel>
 
                     <Button Grid.Column="1"
-                            Content="✕"
+                            Content="&#xE711;"
+                            FontFamily="Segoe MDL2 Assets"
+                            FontSize="14"
                             Style="{StaticResource CloseButtonStyle}"
                             Click="Close_Click"/>
                 </Grid>

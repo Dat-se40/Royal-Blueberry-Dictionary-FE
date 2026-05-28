@@ -144,10 +144,9 @@
                                 Width="64" Height="64"
                                 CornerRadius="16"
                                 Margin="0,0,20,0">
-                            <TextBlock Text="❓"
-                                       FontSize="40"
-                                       HorizontalAlignment="Center"
-                                       VerticalAlignment="Center"/>
+                            <TextBlock FontFamily="Segoe MDL2 Assets" Text="&#xE897;"
+                                       FontSize="32" Foreground="White"
+                                       HorizontalAlignment="Center" VerticalAlignment="Center"/>
                         </Border>
                         <StackPanel VerticalAlignment="Center">
                             <TextBlock Text="FREQUENTLY ASKED QUESTIONS"
@@ -163,8 +162,9 @@
                     </StackPanel>
 
                     <!-- Close Button -->
-                    <Button Content="✕"
-                            FontSize="24"
+                    <Button Content="&#xE711;"
+                            FontFamily="Segoe MDL2 Assets"
+                            FontSize="16"
                             Width="40" Height="40"
                             HorizontalAlignment="Right"
                             VerticalAlignment="Top"
@@ -206,11 +206,36 @@
                 <ScrollViewer HorizontalScrollBarVisibility="Auto"
                               VerticalScrollBarVisibility="Disabled">
                     <StackPanel Orientation="Horizontal" x:Name="TabsPanel">
-                        <Button Content="🔍 Lookup" Tag="search" Click="Tab_Click" Style="{StaticResource ActiveTabStyle}"/>
-                        <Button Content="📚 Word Management" Tag="manage" Click="Tab_Click" Style="{StaticResource TabButtonStyle}"/>
-                        <Button Content="🎨 User Interface" Tag="theme" Click="Tab_Click" Style="{StaticResource TabButtonStyle}"/>
-                        <Button Content="☁️ Sync" Tag="sync" Click="Tab_Click" Style="{StaticResource TabButtonStyle}"/>
-                        <Button Content="🐛 Technical Issues" Tag="bugs" Click="Tab_Click" Style="{StaticResource TabButtonStyle}"/>
+                        <Button Tag="search" Click="Tab_Click" Style="{StaticResource ActiveTabStyle}">
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock FontFamily="Segoe MDL2 Assets" Text="&#xE721;" FontSize="12" VerticalAlignment="Center" Margin="0,0,6,0"/>
+                                <TextBlock Text="Lookup" VerticalAlignment="Center"/>
+                            </StackPanel>
+                        </Button>
+                        <Button Tag="manage" Click="Tab_Click" Style="{StaticResource TabButtonStyle}">
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock FontFamily="Segoe MDL2 Assets" Text="&#xE736;" FontSize="12" VerticalAlignment="Center" Margin="0,0,6,0"/>
+                                <TextBlock Text="Word Management" VerticalAlignment="Center"/>
+                            </StackPanel>
+                        </Button>
+                        <Button Tag="theme" Click="Tab_Click" Style="{StaticResource TabButtonStyle}">
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock FontFamily="Segoe MDL2 Assets" Text="&#xE81E;" FontSize="12" VerticalAlignment="Center" Margin="0,0,6,0"/>
+                                <TextBlock Text="User Interface" VerticalAlignment="Center"/>
+                            </StackPanel>
+                        </Button>
+                        <Button Tag="sync" Click="Tab_Click" Style="{StaticResource TabButtonStyle}">
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock FontFamily="Segoe MDL2 Assets" Text="&#xE8A7;" FontSize="12" VerticalAlignment="Center" Margin="0,0,6,0"/>
+                                <TextBlock Text="Sync" VerticalAlignment="Center"/>
+                            </StackPanel>
+                        </Button>
+                        <Button Tag="bugs" Click="Tab_Click" Style="{StaticResource TabButtonStyle}">
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock FontFamily="Segoe MDL2 Assets" Text="&#xE946;" FontSize="12" VerticalAlignment="Center" Margin="0,0,6,0"/>
+                                <TextBlock Text="Technical Issues" VerticalAlignment="Center"/>
+                            </StackPanel>
+                        </Button>
                     </StackPanel>
                 </ScrollViewer>
             </Border>

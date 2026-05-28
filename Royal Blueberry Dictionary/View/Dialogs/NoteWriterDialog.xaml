@@ -98,8 +98,7 @@
             <StackPanel Grid.Row="3"
                         Orientation="Horizontal"
                         HorizontalAlignment="Right">
-                <Button Content="❌ Cancel"
-                        Padding="25,14"
+                <Button Padding="25,14"
                         FontSize="15"
                         FontWeight="SemiBold"
                         Margin="0,0,12,0"
@@ -108,16 +107,15 @@
                         Style="{StaticResource DangerButtonStyle}"
                         Cursor="Hand">
                     <Button.Effect>
-                        <DropShadowEffect Color="#000000"
-                                          Direction="270"
-                                          ShadowDepth="2"
-                                          BlurRadius="8"
-                                          Opacity="0.2"/>
+                        <DropShadowEffect Color="#000000" Direction="270" ShadowDepth="2" BlurRadius="8" Opacity="0.2"/>
                     </Button.Effect>
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock FontFamily="Segoe MDL2 Assets" Text="&#xE711;" FontSize="14" VerticalAlignment="Center" Margin="0,0,6,0"/>
+                        <TextBlock Text="Cancel" VerticalAlignment="Center"/>
+                    </StackPanel>
                 </Button>
 
-                <Button Content="💾 Save"
-                        Padding="30,14"
+                <Button Padding="30,14"
                         FontSize="15"
                         FontWeight="SemiBold"
                         x:Name="btnSave"
@@ -125,12 +123,12 @@
                         Style="{StaticResource SecondaryButtonStyle}"
                         Cursor="Hand">
                     <Button.Effect>
-                        <DropShadowEffect Color="#000000"
-                                          Direction="270"
-                                          ShadowDepth="2"
-                                          BlurRadius="8"
-                                          Opacity="0.2"/>
+                        <DropShadowEffect Color="#000000" Direction="270" ShadowDepth="2" BlurRadius="8" Opacity="0.2"/>
                     </Button.Effect>
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock FontFamily="Segoe MDL2 Assets" Text="&#xE74E;" FontSize="14" VerticalAlignment="Center" Margin="0,0,6,0"/>
+                        <TextBlock Text="Save" VerticalAlignment="Center"/>
+                    </StackPanel>
                 </Button>
             </StackPanel>
         </Grid>

@@ -85,6 +85,22 @@ namespace Royal_Blueberry_Dictionary.Converters
     }
 
     /// <summary>
+    /// Inverse: true → Collapsed, false → Visible
+    /// </summary>
+    public class InverseBoolToVisibilityConverter : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            if (value is bool b)
+                return b ? Visibility.Collapsed : Visibility.Visible;
+            return Visibility.Visible;
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+            => (value is Visibility v) && v == Visibility.Collapsed;
+    }
+
+    /// <summary>
     /// Check if object is null
     /// </summary>
     public class NullToVisibilityConverter : IValueConverter

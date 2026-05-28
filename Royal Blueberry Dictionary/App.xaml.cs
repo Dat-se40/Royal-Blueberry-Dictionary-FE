@@ -95,6 +95,7 @@ namespace Royal_Blueberry_Dictionary
             serviceCollection.AddTransient<WelcomeWindowViewModel>();
             serviceCollection.AddTransient<GameViewModel>();
             serviceCollection.AddScoped<OfflinePackagesPageViewModel>();
+            serviceCollection.AddScoped<HomePageViewModel>();
 
             serviceProvider = serviceCollection.BuildServiceProvider();
 
