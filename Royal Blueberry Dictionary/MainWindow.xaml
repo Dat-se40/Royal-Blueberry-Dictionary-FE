@@ -6,7 +6,9 @@
         mc:Ignorable="d"
         Title="Royal Blueberry Dictionary" Height="600" Width="1000"
         
-        Background="{DynamicResource MainBackground}">
+        Background="{DynamicResource MainBackground}"
+        FontFamily="{DynamicResource AppFontFamily}"
+        FontSize="{DynamicResource AppFontSize}">
 
     <Grid>
         <Border x:Name="Overlay"

@@ -5,7 +5,9 @@
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
       mc:Ignorable="d"
       d:DesignHeight="800" d:DesignWidth="1200"
-      Background="{DynamicResource MainBackground}">
+      Background="{DynamicResource MainBackground}"
+      FontFamily="{DynamicResource AppFontFamily}"
+      FontSize="{DynamicResource AppFontSize}">
 
     <ScrollViewer VerticalScrollBarVisibility="Auto">
         <StackPanel MaxWidth="900" Margin="30">
@@ -131,7 +133,6 @@
                                            Opacity="0.7"
                                            Margin="0,5,0,0" />
                             </StackPanel>
-
                             <ComboBox Grid.Column="1"
                                       x:Name="FontFamilyComboBox"
                                       SelectedIndex="0"
@@ -139,6 +140,7 @@
                                       Style="{StaticResource SettingsComboBoxStyle}"
                                       SelectionChanged="FontFamilyComboBox_SelectionChanged">
                                 <ComboBoxItem Content="Default (Segoe UI)" Tag="default" Style="{StaticResource ComboBoxItemFirstStyle}"/>
+                                <ComboBoxItem Content="Customize" Tag="custom_active" Visibility="Collapsed" Style="{StaticResource ComboBoxItemStyle}"/>
                                 <ComboBoxItem Content="Choose font..." Tag="custom_picker" Style="{StaticResource ComboBoxItemLastStyle}"/>
                             </ComboBox>
                         </Grid>
@@ -183,8 +185,8 @@
 
                             <Button Grid.Column="1"
                                     Style="{StaticResource SecondaryButtonStyle}"
-                                    IsEnabled="False"
-                                    ToolTip="Coming soon">
+                                    Command="{Binding OpenUserGuideCommand}"
+                                    IsEnabled="True">
                                 <StackPanel Orientation="Horizontal">
                                     <TextBlock Style="{StaticResource IconGlyphSm}" Text="&#xE82D;" Foreground="{DynamicResource ButtonColor}" Margin="0,0,8,0"/>
                                     <TextBlock Text="View" />

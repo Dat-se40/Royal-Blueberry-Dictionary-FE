@@ -7,7 +7,9 @@
       mc:Ignorable="d"
       d:DesignHeight="600" d:DesignWidth="1200"
       Title="MyWordsPage"
-      Background="{DynamicResource MainBackground}">
+      Background="{DynamicResource MainBackground}"
+      FontFamily="{DynamicResource AppFontFamily}"
+      FontSize="{DynamicResource AppFontSize}">
 
     <Page.Resources>
         <Style x:Key="PrimaryButtonStyle" TargetType="Button">

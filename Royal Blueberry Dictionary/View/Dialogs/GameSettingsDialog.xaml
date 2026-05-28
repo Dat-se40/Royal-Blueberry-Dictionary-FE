@@ -8,7 +8,9 @@
         Width="600" Height="550"
         WindowStartupLocation="CenterOwner"
         ResizeMode="NoResize"
-        Background="{DynamicResource MainBackground}">
+        Background="{DynamicResource MainBackground}"
+        FontFamily="{DynamicResource AppFontFamily}"
+        FontSize="{DynamicResource AppFontSize}">
 
     <Window.Resources>
         <!-- Dropdown Button Style -->

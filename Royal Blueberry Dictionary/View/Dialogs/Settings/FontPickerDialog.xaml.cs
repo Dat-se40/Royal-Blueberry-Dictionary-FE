@@ -4,6 +4,10 @@ using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
+using Royal_Blueberry_Dictionary.Service;
+using System.Windows.Controls;
+
+
 
 namespace Royal_Blueberry_Dictionary.View.Dialogs.Settings
 {
@@ -43,10 +47,22 @@ namespace Royal_Blueberry_Dictionary.View.Dialogs.Settings
 
             FontListBox.ItemsSource = fonts;
 
-            var currentAppFont = Application.Current.Resources["AppFontFamily"] as FontFamily;
-            var defaultFont = currentAppFont != null
-                ? fonts.FirstOrDefault(f => f.Source == currentAppFont.Source)
-                : null;
+            var settings = SettingsService.Instance.CurrentSettings;
+
+            FontFamily? defaultFont = null;
+
+            if (!string.IsNullOrWhiteSpace(settings.FontFamily))
+            {
+                defaultFont = fonts.FirstOrDefault(f => f.Source == settings.FontFamily);
+            }
+
+            if (defaultFont == null)
+            {
+                var currentAppFont = Application.Current.Resources["AppFontFamily"] as FontFamily;
+                defaultFont = currentAppFont != null
+                    ? fonts.FirstOrDefault(f => f.Source == currentAppFont.Source)
+                    : null;
+            }
 
             defaultFont ??= fonts.FirstOrDefault(f => f.Source == "Segoe UI") ?? fonts.FirstOrDefault();
 
@@ -56,11 +72,16 @@ namespace Royal_Blueberry_Dictionary.View.Dialogs.Settings
                 SelectedFont = defaultFont;
             }
 
-            if (Application.Current.Resources.Contains("AppFontSize"))
+            if (settings.FontSize > 0)
+            {
+                SelectedFontSize = settings.FontSize;
+            }
+            else if (Application.Current.Resources.Contains("AppFontSize"))
             {
                 SelectedFontSize = (double)Application.Current.Resources["AppFontSize"];
             }
         }
+
 
         private void ApplyGlobalFont()
         {
@@ -165,12 +186,24 @@ namespace Royal_Blueberry_Dictionary.View.Dialogs.Settings
 
             Application.Current.Resources["AppFontFamily"] = SelectedFont;
             Application.Current.Resources["AppFontSize"] = SelectedFontSize;
+            SettingsService.Instance.SaveFont(SelectedFont.Source, SelectedFontSize);
 
             foreach (Window window in Application.Current.Windows)
             {
                 window.FontFamily = SelectedFont;
                 window.FontSize = SelectedFontSize;
+
+                if (window is MainWindow mainWindow)
+                {
+                    var frame = mainWindow.FindName("MainFrame") as Frame;
+                    if (frame?.Content is Page page)
+                    {
+                        page.FontFamily = SelectedFont;
+                        page.FontSize = SelectedFontSize;
+                    }
+                }
             }
+
 
             DialogResult = true;
             Close();

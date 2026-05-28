@@ -8,7 +8,9 @@
       mc:Ignorable="d"
       d:DesignHeight="450" d:DesignWidth="800"
       Title="FavouriteWordsPage"
-      Background="{DynamicResource MainBackground}">
+      Background="{DynamicResource MainBackground}"
+      FontFamily="{DynamicResource AppFontFamily}"
+      FontSize="{DynamicResource AppFontSize}">
 
     <ScrollViewer VerticalScrollBarVisibility="Auto" Padding="30">
         <StackPanel>

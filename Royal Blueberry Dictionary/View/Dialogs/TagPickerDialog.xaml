@@ -5,7 +5,9 @@
         Height="650" Width="550"
         WindowStartupLocation="CenterOwner"
         ResizeMode="NoResize"
-        Background="{DynamicResource MainBackground}">
+        Background="{DynamicResource MainBackground}"
+        FontFamily="{DynamicResource AppFontFamily}"
+        FontSize="{DynamicResource AppFontSize}">
 
     <Window.Resources>
         <Style x:Key="IconButtonStyle" TargetType="Button">

@@ -10,9 +10,10 @@
         WindowStartupLocation="CenterOwner"
         ResizeMode="CanResize"
         Background="{DynamicResource MainBackground}"
-  WindowStyle="None"
-  AllowsTransparency="True"
-        >
+        WindowStyle="None"
+        AllowsTransparency="True"
+        FontFamily="{DynamicResource AppFontFamily}"
+        FontSize="{DynamicResource AppFontSize}">
 
     <Window.Resources>
         <conv:BoolToVisibilityConverter x:Key="BoolToVisibility"/>

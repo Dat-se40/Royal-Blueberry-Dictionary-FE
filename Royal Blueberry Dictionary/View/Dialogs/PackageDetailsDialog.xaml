@@ -8,7 +8,9 @@
         Title="Vocabulary Package Details"
         Height="700" Width="900"
         WindowStartupLocation="CenterOwner"
-        Background="{DynamicResource MainBackground}">
+        Background="{DynamicResource MainBackground}"
+        FontFamily="{DynamicResource AppFontFamily}"
+        FontSize="{DynamicResource AppFontSize}">
 
     <Window.Resources>
         <conv:BoolToVisibilityConverter x:Key="BoolToVisibility"/>

@@ -9,7 +9,9 @@
         WindowStartupLocation="CenterOwner"
         ResizeMode="CanResize"
         MinWidth="800" MinHeight="600"
-        Background="{DynamicResource MainBackground}">
+        Background="{DynamicResource MainBackground}"
+        FontFamily="{DynamicResource AppFontFamily}"
+        FontSize="{DynamicResource AppFontSize}">
 
     <Window.Resources>
         <!-- Button Styles -->

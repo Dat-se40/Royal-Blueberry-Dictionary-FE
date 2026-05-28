@@ -28,6 +28,17 @@ namespace Royal_Blueberry_Dictionary
         {
             base.OnStartup(e);
 
+            if (!Current.Resources.Contains("AppFontFamily"))
+            {
+                Current.Resources["AppFontFamily"] = new System.Windows.Media.FontFamily("Segoe UI");
+            }
+
+            if (!Current.Resources.Contains("AppFontSize"))
+            {
+                Current.Resources["AppFontSize"] = 14d;
+            }
+
+
             var serviceCollection = new ServiceCollection();
             var dbFolder = Path.Combine(
     Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
@@ -116,12 +127,26 @@ namespace Royal_Blueberry_Dictionary
                 }
             }
 
-            if (!string.IsNullOrEmpty(settings.FontFamily) && settings.FontFamily != "Segoe UI")
+            try
             {
-                var fontFamily = new System.Windows.Media.FontFamily(settings.FontFamily);
-                Current.Resources["AppFontFamily"] = fontFamily;
-                Current.Resources["AppFontSize"] = settings.FontSize;
+                string savedFontFamily = string.IsNullOrWhiteSpace(settings.FontFamily)
+                    ? "Segoe UI"
+                    : settings.FontFamily;
+
+                double savedFontSize = settings.FontSize > 0
+                    ? settings.FontSize
+                    : 14d;
+
+                Current.Resources["AppFontFamily"] = new System.Windows.Media.FontFamily(savedFontFamily);
+                Current.Resources["AppFontSize"] = savedFontSize;
             }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"❌ Failed to apply saved font settings: {ex.Message}");
+                Current.Resources["AppFontFamily"] = new System.Windows.Media.FontFamily("Segoe UI");
+                Current.Resources["AppFontSize"] = 14d;
+            }
+
 
             using var scope = serviceProvider.CreateScope();
             var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
