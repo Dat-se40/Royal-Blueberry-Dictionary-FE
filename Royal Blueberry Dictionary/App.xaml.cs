@@ -93,7 +93,6 @@ namespace Royal_Blueberry_Dictionary
             serviceCollection.AddScoped<AccountPageViewModel>();
             serviceCollection.AddScoped<GameViewModel>();
             serviceCollection.AddTransient<WelcomeWindowViewModel>();
-            serviceCollection.AddTransient<GameViewModel>();
             serviceCollection.AddScoped<OfflinePackagesPageViewModel>();
             serviceCollection.AddScoped<HomePageViewModel>();
 
@@ -111,6 +110,8 @@ namespace Royal_Blueberry_Dictionary
                 _ => Service.ThemeMode.Light
             };
             themeManager.SetThemeMode(themeMode);
+            themeManager.StartSystemThemeWatcher();
+
 
             if (!string.IsNullOrEmpty(settings.ColorTheme) && settings.ColorTheme != "default")
             {
@@ -158,8 +159,13 @@ namespace Royal_Blueberry_Dictionary
 
         protected override void OnExit(ExitEventArgs e)
         {
-            base.OnExit(e);
+            var themeManager = serviceProvider.GetService<Service.ThemeManager>();
+            themeManager?.StopSystemThemeWatcher();
+
             serviceProvider.Dispose();
+
+            base.OnExit(e);
         }
+
     }
 }

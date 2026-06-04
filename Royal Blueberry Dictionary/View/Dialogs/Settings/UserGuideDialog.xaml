@@ -140,15 +140,18 @@
                 <Grid>
                     <StackPanel Orientation="Horizontal">
                         <Border Background="#20FFFFFF"
-                                Width="62"
-                                Height="62"
-                                CornerRadius="16"
-                                Margin="0,0,18,0">
-                            <TextBlock Text="📘"
-                                       FontSize="36"
-                                       HorizontalAlignment="Center"
-                                       VerticalAlignment="Center"/>
+        Width="62"
+        Height="62"
+        CornerRadius="16"
+        Margin="0,0,18,0">
+                            <TextBlock FontFamily="Segoe MDL2 Assets"
+               Text=""
+               FontSize="32"
+               Foreground="White"
+               HorizontalAlignment="Center"
+               VerticalAlignment="Center"/>
                         </Border>
+
 
                         <StackPanel VerticalAlignment="Center">
                             <TextBlock Text="USER GUIDE"

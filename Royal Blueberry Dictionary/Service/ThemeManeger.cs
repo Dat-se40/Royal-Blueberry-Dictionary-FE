@@ -1,4 +1,5 @@
 ﻿using Royal_Blueberry_Dictionary.Model.Settings;
+using Microsoft.Win32;
 using System;
 using System.Windows;
 using System.Windows.Media;
@@ -35,6 +36,7 @@ namespace Royal_Blueberry_Dictionary.Service
         #region Fields & Properties
 
         private ResourceDictionary _appResources;
+        public ThemeMode SelectedThemeMode { get; private set; } = ThemeMode.Light;
 
         public ThemeMode CurrentTheme { get; private set; } = ThemeMode.Light;
         public string CurrentColorTheme { get; private set; } = "default";
@@ -63,18 +65,17 @@ namespace Royal_Blueberry_Dictionary.Service
         /// </summary>
         public void SetThemeMode(ThemeMode mode)
         {
-            CurrentTheme = mode;
+            SelectedThemeMode = mode;
 
-            // TODO: Implement System theme detection
-            if (mode == ThemeMode.System)
-            {
-                mode = ThemeMode.Light; // Fallback
-            }
+            ThemeMode actualMode = mode == ThemeMode.System
+                ? GetWindowsThemeMode()
+                : mode;
 
-            // Apply theme
+            CurrentTheme = actualMode;
+
             if (CurrentColorTheme == "default" || _currentThemeObject == null)
             {
-                ReloadDefaultColors(mode);
+                ReloadDefaultColors(actualMode);
             }
             else
             {
@@ -83,10 +84,81 @@ namespace Royal_Blueberry_Dictionary.Service
 
             SettingsService.Instance.SaveThemeMode(mode);
 
-            ThemeChanged?.Invoke(mode);
+            ThemeChanged?.Invoke(actualMode);
 
-            System.Diagnostics.Debug.WriteLine($"✅ Theme mode changed to: {mode} (ColorTheme: {CurrentColorTheme})");
+            System.Diagnostics.Debug.WriteLine(
+                $"✅ Theme mode changed. Selected={mode}, Actual={actualMode}, ColorTheme={CurrentColorTheme}"
+            );
         }
+        private ThemeMode GetWindowsThemeMode()
+        {
+            try
+            {
+                using var key = Registry.CurrentUser.OpenSubKey(
+                    @"Software\Microsoft\Windows\CurrentVersion\Themes\Personalize"
+                );
+
+                object value = key?.GetValue("AppsUseLightTheme");
+
+                if (value is int intValue)
+                {
+                    return intValue == 0 ? ThemeMode.Dark : ThemeMode.Light;
+                }
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"❌ Cannot read Windows theme: {ex.Message}");
+            }
+
+            return ThemeMode.Light;
+        }
+
+        public void StartSystemThemeWatcher()
+        {
+            SystemEvents.UserPreferenceChanged -= OnUserPreferenceChanged;
+            SystemEvents.UserPreferenceChanged += OnUserPreferenceChanged;
+        }
+
+        public void StopSystemThemeWatcher()
+        {
+            SystemEvents.UserPreferenceChanged -= OnUserPreferenceChanged;
+        }
+
+        private void OnUserPreferenceChanged(object sender, UserPreferenceChangedEventArgs e)
+        {
+            if (SelectedThemeMode != ThemeMode.System)
+                return;
+
+            if (e.Category != UserPreferenceCategory.General &&
+                e.Category != UserPreferenceCategory.VisualStyle &&
+                e.Category != UserPreferenceCategory.Color)
+                return;
+
+            Application.Current.Dispatcher.Invoke(() =>
+            {
+                ThemeMode actualMode = GetWindowsThemeMode();
+
+                if (CurrentTheme == actualMode)
+                    return;
+
+                CurrentTheme = actualMode;
+
+                if (CurrentColorTheme == "default" || _currentThemeObject == null)
+                {
+                    ReloadDefaultColors(actualMode);
+                }
+                else
+                {
+                    ApplyColorTheme(_currentThemeObject);
+                }
+
+                ThemeChanged?.Invoke(actualMode);
+
+                System.Diagnostics.Debug.WriteLine($"✅ Windows theme changed. Applied: {actualMode}");
+            });
+        }
+
+
 
         #endregion
 
