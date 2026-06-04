@@ -100,15 +100,29 @@
                             </StackPanel>
 
                             <ComboBox Grid.Column="1"
-                                      x:Name="ColorThemeComboBox"
-                                      SelectedIndex="0"
-                                      MinWidth="220"
-                                      Style="{StaticResource SettingsComboBoxStyle}"
-                                      SelectionChanged="ColorThemeComboBox_SelectionChanged">
-                                <ComboBoxItem Content="Default" Tag="default" Style="{StaticResource ComboBoxItemFirstStyle}"/>
-                                <ComboBoxItem Content="Choose Preset Theme..." Tag="preset_picker" Style="{StaticResource ComboBoxItemStyle}"/>
-                                <ComboBoxItem Content="Custom Colors..." Tag="custom_picker" Style="{StaticResource ComboBoxItemLastStyle}"/>
+          x:Name="ColorThemeComboBox"
+          SelectedIndex="0"
+          MinWidth="220"
+          Style="{StaticResource SettingsComboBoxStyle}"
+          SelectionChanged="ColorThemeComboBox_SelectionChanged">
+                                <ComboBoxItem Content="Default"
+                  Tag="default"
+                  Style="{StaticResource ComboBoxItemFirstStyle}"/>
+
+                                <ComboBoxItem Content="Customize"
+                  Tag="theme_active"
+                  Visibility="Collapsed"
+                  Style="{StaticResource ComboBoxItemStyle}"/>
+
+                                <ComboBoxItem Content="Choose Preset Theme..."
+                  Tag="preset_picker"
+                  Style="{StaticResource ComboBoxItemStyle}"/>
+
+                                <ComboBoxItem Content="Custom Colors..."
+                  Tag="custom_picker"
+                  Style="{StaticResource ComboBoxItemLastStyle}"/>
                             </ComboBox>
+
                         </Grid>
                     </Border>
 

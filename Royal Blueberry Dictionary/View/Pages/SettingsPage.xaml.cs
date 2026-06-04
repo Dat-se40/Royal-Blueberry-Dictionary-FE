@@ -45,52 +45,54 @@ namespace Royal_Blueberry_Dictionary.View.Pages
         /// </summary>
         private void ColorThemeComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            // Tránh trigger khi đang init
             if (_isInitializing || _isResetting) return;
             if (ColorThemeComboBox == null || ViewModel == null) return;
 
+            if (ColorThemeComboBox.SelectedItem is not ComboBoxItem item) return;
 
-            if (ColorThemeComboBox.SelectedItem is ComboBoxItem item && item.Tag is string tag)
+            string tag = item.Tag?.ToString() ?? string.Empty;
+
+            switch (tag)
             {
-                switch (tag)
-                {
-                    case "preset_picker":
-                        // Reset về Default sau khi dialog đóng
-                        ViewModel.OpenThemePresetDialogCommand?.Execute(null);
+                case "theme_active":
+                    System.Diagnostics.Debug.WriteLine("✅ Already using custom theme");
+                    return;
 
-                        _isResetting = true;
-                        ColorThemeComboBox.SelectedIndex = 0;
-                        _isResetting = false;
+                case "preset_picker":
+                    ViewModel.OpenThemePresetDialogCommand?.Execute(null);
 
-                        break;
+                    _isResetting = true;
+                    LoadCurrentSettings();
+                    _isResetting = false;
+                    break;
 
-                    case "custom_picker":
-                        // Mở dialog custom colors
-                        ViewModel.OpenCustomThemeDialogCommand?.Execute(null);
+                case "custom_picker":
+                    ViewModel.OpenCustomThemeDialogCommand?.Execute(null);
 
-                        _isResetting = true;
-                        ColorThemeComboBox.SelectedIndex = 0;
-                        _isResetting = false;
+                    _isResetting = true;
+                    LoadCurrentSettings();
+                    _isResetting = false;
+                    break;
 
-                        break;
+                case "default":
+                    var settings = SettingsService.Instance.CurrentSettings;
 
-                    case "default":
-                        // User chọn "Default" → Confirm reset
-                        var result = MessageBox.Show(
-                            "Reset to default colors?",
-                            "Confirm",
-                            MessageBoxButton.YesNo,
-                            MessageBoxImage.Question
-                        );
+                    bool isDefaultTheme =
+                        string.IsNullOrWhiteSpace(settings.ColorTheme) ||
+                        settings.ColorTheme == "default";
 
-                        if (result == MessageBoxResult.Yes)
-                        {
-                            ViewModel.ResetToDefaultColorsCommand?.Execute(null);
-                        }
-                        break;
-                }
+                    if (!isDefaultTheme)
+                    {
+                        ViewModel.ResetToDefaultColorsCommand?.Execute(null);
+                    }
+
+                    _isResetting = true;
+                    LoadCurrentSettings();
+                    _isResetting = false;
+                    break;
             }
         }
+
 
         #endregion
 
@@ -179,6 +181,23 @@ namespace Royal_Blueberry_Dictionary.View.Pages
         private void LoadCurrentSettings()
         {
             var settings = SettingsService.Instance.CurrentSettings;
+            // ================= COLOR THEME =================
+            bool isDefaultTheme =
+                string.IsNullOrWhiteSpace(settings.ColorTheme) ||
+                settings.ColorTheme == "default";
+
+            if (isDefaultTheme)
+            {
+                HideAllActiveItems(ColorThemeComboBox);
+                ColorThemeComboBox.SelectedIndex = 0;
+            }
+            else
+            {
+                ShowActiveItem(ColorThemeComboBox, 1);
+                ColorThemeComboBox.SelectedIndex = 1;
+            }
+
+            // ================= FONT =================
 
             bool isDefaultFont =
                 string.IsNullOrWhiteSpace(settings.FontFamily) ||
