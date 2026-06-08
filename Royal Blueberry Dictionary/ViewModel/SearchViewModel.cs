@@ -30,6 +30,10 @@ namespace Royal_Blueberry_Dictionary.ViewModel
         private WordDetail? _searchResult;
         [ObservableProperty]
         private bool _isSuggestionsOpen = false;
+
+        [ObservableProperty]
+        private int _selectedSuggestionIndex = -1;
+
         [ObservableProperty]
         private string _statusText ="Search";  
         public SearchViewModel(SearchService searchService, Service.NavigationService navigationService )
@@ -58,6 +62,15 @@ namespace Royal_Blueberry_Dictionary.ViewModel
             Suggestions.Clear();
             foreach (var item in results) Suggestions.Add(item);
             IsSuggestionsOpen = Suggestions.Count > 0;
+            SelectedSuggestionIndex = Suggestions.Count > 0 ? 0 : -1;
+        }
+
+        partial void OnIsSuggestionsOpenChanged(bool value)
+        {
+            if (!value)
+            {
+                SelectedSuggestionIndex = -1;
+            }
         }
 
         // Khi SearchResult có dữ liệu, tự động điều hướng
@@ -68,6 +81,15 @@ namespace Royal_Blueberry_Dictionary.ViewModel
         [RelayCommand]
         public async Task ExecuteSearchAsync(string? targetWord)
         {
+            if (IsSuggestionsOpen &&
+                SelectedSuggestionIndex >= 0 &&
+                SelectedSuggestionIndex < Suggestions.Count &&
+                string.IsNullOrEmpty(targetWord))
+            {
+                await SelectSuggestionAsync(Suggestions[SelectedSuggestionIndex]);
+                return;
+            }
+
             string wordToSearch = targetWord ?? SearchText;
             StatusText = "Searching"; 
             if (string.IsNullOrWhiteSpace(wordToSearch)) return;
@@ -107,6 +129,33 @@ namespace Royal_Blueberry_Dictionary.ViewModel
 
             await ExecuteSearchAsync(selectedWord); // Tiến hành search luôn
         }
+
+        [RelayCommand]
+        private void MoveSuggestionDown()
+        {
+            if (!IsSuggestionsOpen || Suggestions.Count == 0)
+            {
+                return;
+            }
+
+            SelectedSuggestionIndex = SelectedSuggestionIndex < 0
+                ? 0
+                : Math.Min(SelectedSuggestionIndex + 1, Suggestions.Count - 1);
+        }
+
+        [RelayCommand]
+        private void MoveSuggestionUp()
+        {
+            if (!IsSuggestionsOpen || Suggestions.Count == 0)
+            {
+                return;
+            }
+
+            SelectedSuggestionIndex = SelectedSuggestionIndex < 0
+                ? Suggestions.Count - 1
+                : Math.Max(SelectedSuggestionIndex - 1, 0);
+        }
+
         public void NavigateToDetailsPage(WordDetail? wordDetail)
         {
             if (wordDetail == null) return;

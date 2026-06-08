@@ -2,6 +2,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Royal_Blueberry_Dictionary.Service;
 using Royal_Blueberry_Dictionary.View.Pages;
 using Royal_Blueberry_Dictionary.ViewModel;
+using System.ComponentModel;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -39,10 +40,52 @@ namespace Royal_Blueberry_Dictionary
 
             navigationService.NavigateTo<HomePage, HomePageViewModel>("home");
             RefreshAuthSummary();
+
+            searchViewModel.PropertyChanged += SearchViewModel_PropertyChanged;
+        }
+
+        private void SearchViewModel_PropertyChanged(object? sender, PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName == nameof(SearchViewModel.SelectedSuggestionIndex))
+            {
+                ScrollSelectedSuggestionIntoView();
+            }
+        }
+
+        private void ScrollSelectedSuggestionIntoView()
+        {
+            var index = searchViewModel.SelectedSuggestionIndex;
+            if (index < 0 || index >= SuggestionsList.Items.Count)
+            {
+                return;
+            }
+
+            SuggestionsList.ScrollIntoView(SuggestionsList.Items[index]);
+        }
+
+        private void SearchInput_PreviewKeyDown(object sender, KeyEventArgs e)
+        {
+            if (!searchViewModel.IsSuggestionsOpen || searchViewModel.Suggestions.Count == 0)
+            {
+                return;
+            }
+
+            switch (e.Key)
+            {
+                case Key.Down:
+                    searchViewModel.MoveSuggestionDownCommand.Execute(null);
+                    e.Handled = true;
+                    break;
+                case Key.Up:
+                    searchViewModel.MoveSuggestionUpCommand.Execute(null);
+                    e.Handled = true;
+                    break;
+            }
         }
 
         private void MainWindow_Closed(object? sender, EventArgs e)
         {
+            searchViewModel.PropertyChanged -= SearchViewModel_PropertyChanged;
             authService.AuthStateChanged -= OnAuthStateChanged;
             themeManager.ThemeChanged -= OnThemeChanged;
         }

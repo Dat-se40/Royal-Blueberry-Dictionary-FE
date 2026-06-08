@@ -7,6 +7,7 @@
         xmlns:uc="clr-namespace:Royal_Blueberry_Dictionary.View.User_Control"
         mc:Ignorable="d"
         Title="Royal Blueberry Dictionary"
+        Icon="/Resources/Image/app.ico"
         Width="1000"
         Height="650"
         WindowStartupLocation="CenterScreen"
@@ -30,9 +31,9 @@
         <conv:StringNullOrEmptyToVisibilityConverter x:Key="StringToVisibility" />
 
         <Style x:Key="AuthTextBoxStyle" TargetType="TextBox">
-            <Setter Property="Background" Value="#FDFEFF" />
+            <Setter Property="Background" Value="{DynamicResource SearchBackground}" />
             <Setter Property="Foreground" Value="{DynamicResource TextColor}" />
-            <Setter Property="BorderBrush" Value="#C8D7FF" />
+            <Setter Property="BorderBrush" Value="{DynamicResource BorderColor}" />
             <Setter Property="BorderThickness" Value="1.5" />
             <Setter Property="Padding" Value="12,8" />
             <Setter Property="FontSize" Value="12" />
@@ -51,7 +52,7 @@
                         <ControlTemplate.Triggers>
                             <Trigger Property="IsKeyboardFocused" Value="True">
                                 <Setter TargetName="InputBorder" Property="BorderBrush" Value="{DynamicResource ButtonColor}" />
-                                <Setter TargetName="InputBorder" Property="Background" Value="#FFFFFF" />
+                                <Setter TargetName="InputBorder" Property="Background" Value="{DynamicResource SearchBackground}" />
                             </Trigger>
                         </ControlTemplate.Triggers>
                     </ControlTemplate>
@@ -60,9 +61,9 @@
         </Style>
 
         <Style x:Key="AuthPasswordBoxStyle" TargetType="PasswordBox">
-            <Setter Property="Background" Value="#FDFEFF" />
+            <Setter Property="Background" Value="{DynamicResource SearchBackground}" />
             <Setter Property="Foreground" Value="{DynamicResource TextColor}" />
-            <Setter Property="BorderBrush" Value="#C8D7FF" />
+            <Setter Property="BorderBrush" Value="{DynamicResource BorderColor}" />
             <Setter Property="BorderThickness" Value="1.5" />
             <Setter Property="Padding" Value="12,8" />
             <Setter Property="FontSize" Value="12" />
@@ -81,7 +82,7 @@
                         <ControlTemplate.Triggers>
                             <Trigger Property="IsKeyboardFocused" Value="True">
                                 <Setter TargetName="InputBorder" Property="BorderBrush" Value="{DynamicResource ButtonColor}" />
-                                <Setter TargetName="InputBorder" Property="Background" Value="#FFFFFF" />
+                                <Setter TargetName="InputBorder" Property="Background" Value="{DynamicResource SearchBackground}" />
                             </Trigger>
                         </ControlTemplate.Triggers>
                     </ControlTemplate>
@@ -110,8 +111,8 @@
             <Setter Property="HorizontalContentAlignment" Value="Stretch" />
             <Setter Property="VerticalContentAlignment" Value="Stretch" />
             <Setter Property="BorderThickness" Value="1.5" />
-            <Setter Property="Background" Value="#FFFFFF" />
-            <Setter Property="BorderBrush" Value="#C6D6FF" />
+            <Setter Property="Background" Value="{DynamicResource SearchBackground}" />
+            <Setter Property="BorderBrush" Value="{DynamicResource BorderColor}" />
             <Setter Property="Cursor" Value="Hand" />
             <Setter Property="Template">
                 <Setter.Value>
@@ -127,7 +128,7 @@
                         </Border>
                         <ControlTemplate.Triggers>
                             <Trigger Property="IsMouseOver" Value="True">
-                                <Setter TargetName="ButtonBorder" Property="Background" Value="#F5F8FF" />
+                                <Setter TargetName="ButtonBorder" Property="Background" Value="{DynamicResource WordItemHover}" />
                                 <Setter TargetName="ButtonBorder" Property="BorderBrush" Value="{DynamicResource ButtonColor}" />
                             </Trigger>
                             <Trigger Property="IsPressed" Value="True">
@@ -177,6 +178,32 @@
             </Setter>
         </Style>
 
+        <Style x:Key="WelcomeBackButtonStyle" TargetType="Button" BasedOn="{StaticResource SecondaryButtonStyle}">
+            <Setter Property="Foreground" Value="{DynamicResource TextColor}" />
+            <Setter Property="Padding" Value="16,8" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="BackButtonBorder"
+                                Background="{TemplateBinding Background}"
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                CornerRadius="12"
+                                Padding="{TemplateBinding Padding}">
+                            <ContentPresenter HorizontalAlignment="Center"
+                                              VerticalAlignment="Center" />
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="BackButtonBorder" Property="Background" Value="{DynamicResource ToolButtonActive}" />
+                                <Setter Property="Foreground" Value="White" />
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
         <Style x:Key="CloseWindowButtonStyle" TargetType="Button" BasedOn="{StaticResource WindowControlButtonStyle}">
             <Setter Property="Margin" Value="0" />
             <Setter Property="Template">
@@ -205,8 +232,8 @@
     <Grid>
         <Border x:Name="WindowShell"
                 Margin="8"
-                Background="#F8FBFF"
-                BorderBrush="#C8D7FF"
+                Background="{DynamicResource CardBackground}"
+                BorderBrush="{DynamicResource BorderColor}"
                 BorderThickness="1"
                 CornerRadius="22"
                 Effect="{StaticResource WelcomeWindowShadow}">
@@ -230,20 +257,15 @@
                             <ColumnDefinition Width="Auto" />
                         </Grid.ColumnDefinitions>
 
-                        <Border Width="30"
-                                Height="30"
-                                CornerRadius="10"
-                                Background="#18FFFFFF"
-                                BorderBrush="#26FFFFFF"
-                                BorderThickness="1"
-                                VerticalAlignment="Center">
-                            <TextBlock Text="BB"
-                                       FontSize="14"
-                                       FontWeight="Bold"
-                                       Foreground="White"
-                                       HorizontalAlignment="Center"
-                                       VerticalAlignment="Center" />
-                        </Border>
+                        <Image Width="30"
+                               Height="30"
+                               Stretch="Uniform"
+                               VerticalAlignment="Center"
+                               Source="/Resources/Image/logo.png">
+                            <Image.Clip>
+                                <EllipseGeometry Center="15,15" RadiusX="15" RadiusY="15"/>
+                            </Image.Clip>
+                        </Image>
 
                         <StackPanel Grid.Column="1"
                                     Margin="10,0,0,0"
@@ -298,19 +320,16 @@
                                 <RowDefinition Height="Auto" />
                             </Grid.RowDefinitions>
 
-                            <Border Width="72"
-                                    Height="72"
-                                    CornerRadius="22"
-                                    Background="#1CFFFFFF"
-                                    BorderBrush="#2BFFFFFF"
-                                    BorderThickness="1.2">
-                                <TextBlock Text="BB"
-                                           FontSize="24"
-                                           FontWeight="Bold"
-                                           Foreground="White"
-                                           HorizontalAlignment="Center"
-                                           VerticalAlignment="Center" />
-                            </Border>
+                            <Image Grid.Row="0"
+                                   Width="72"
+                                   Height="72"
+                                   Stretch="Uniform"
+                                   HorizontalAlignment="Center"
+                                   Source="/Resources/Image/logo.png">
+                                <Image.Clip>
+                                    <EllipseGeometry Center="36,36" RadiusX="36" RadiusY="36"/>
+                                </Image.Clip>
+                            </Image>
 
                             <TextBlock Grid.Row="1"
                                        Margin="0,18,0,8"
@@ -318,6 +337,7 @@
                                        FontSize="24"
                                        FontWeight="Bold"
                                        Foreground="White"
+                                       TextAlignment="Center"
                                        TextWrapping="Wrap" />
 
                             <TextBlock Grid.Row="2"
@@ -325,6 +345,7 @@
                                        FontSize="12"
                                        Foreground="White"
                                        Opacity="0.9"
+                                       TextAlignment="Center"
                                        TextWrapping="Wrap"
                                        LineHeight="18" />
 
@@ -361,8 +382,8 @@
                     </Border>
 
                     <Border Grid.Column="2"
-                            Background="#FBFDFF"
-                            BorderBrush="#D7E3FF"
+                            Background="{DynamicResource SearchBackground}"
+                            BorderBrush="{DynamicResource BorderColor}"
                             BorderThickness="1"
                             CornerRadius="20"
                             Padding="22">
@@ -403,8 +424,8 @@
                                         <Border Padding="18,16"
                                                 Margin="0,0,0,16"
                                                 CornerRadius="14"
-                                                Background="#F4F8FF"
-                                                BorderBrush="#C8D7FF"
+                                                Background="{DynamicResource CardBackground}"
+                                                BorderBrush="{DynamicResource BorderColor}"
                                                 BorderThickness="1"
                                                 Visibility="{Binding HasActiveSession, Converter={StaticResource BoolToVisibility}}">
                                             <StackPanel>
@@ -459,8 +480,8 @@
                                                         Height="34"
                                                         Margin="12,0,0,0"
                                                         CornerRadius="17"
-                                                        Background="#F1F5FF"
-                                                        BorderBrush="#C6D6FF"
+                                                        Background="{DynamicResource CardBackground}"
+                                                        BorderBrush="{DynamicResource BorderColor}"
                                                         BorderThickness="1"
                                                         VerticalAlignment="Center">
                                                     <TextBlock Text="&#xE72A;"
@@ -498,8 +519,8 @@
                                                         Height="34"
                                                         Margin="12,0,0,0"
                                                         CornerRadius="17"
-                                                        Background="#F1F5FF"
-                                                        BorderBrush="#C6D6FF"
+                                                        Background="{DynamicResource CardBackground}"
+                                                        BorderBrush="{DynamicResource BorderColor}"
                                                         BorderThickness="1"
                                                         VerticalAlignment="Center">
                                                     <TextBlock Text="&#xE710;"
@@ -538,8 +559,8 @@
                                                         Height="34"
                                                         Margin="12,0,0,0"
                                                         CornerRadius="17"
-                                                        Background="#F1F5FF"
-                                                        BorderBrush="#C6D6FF"
+                                                        Background="{DynamicResource CardBackground}"
+                                                        BorderBrush="{DynamicResource BorderColor}"
                                                         BorderThickness="1"
                                                         VerticalAlignment="Center">
                                                     <TextBlock Text="&#xE716;"
@@ -575,39 +596,17 @@
                                     </Grid.Style>
 
                                     <StackPanel Margin="0,2,0,2">
-                                        <Grid Margin="0,0,0,16">
-                                            <Grid.ColumnDefinitions>
-                                                <ColumnDefinition Width="Auto" />
-                                                <ColumnDefinition Width="*" />
-                                            </Grid.ColumnDefinitions>
-
-                                            <Button Command="{Binding BackToChoiceCommand}"
-                                                    Width="102"
-                                                    Height="36"
-                                                    HorizontalAlignment="Left"
-                                                    Style="{StaticResource SecondaryButtonStyle}">
-                                                <TextBlock Text="Back"
-                                                            FontWeight="SemiBold"
-                                                            VerticalAlignment="Center"
-                                                            TextAlignment="Center" />
-                                            </Button>
-
-                                            <Border Grid.Column="1"
-                                                    HorizontalAlignment="Right"
-                                                    Height="36"
-                                                    Padding="12,0"
-                                                    CornerRadius="999"
-                                                    Background="#EFF4FF"
-                                                    BorderBrush="#C8D7FF"
-                                                    BorderThickness="1">
-                                                <TextBlock Text="{Binding AuthTitle}"
-                                                           FontSize="10"
-                                                           FontWeight="SemiBold"
-                                                           Foreground="{DynamicResource ButtonColor}"
-                                                           VerticalAlignment="Center"
-                                                           TextAlignment="Center" />
-                                            </Border>
-                                        </Grid>
+                                        <Button Command="{Binding BackToChoiceCommand}"
+                                                Width="102"
+                                                Height="36"
+                                                HorizontalAlignment="Left"
+                                                Margin="0,0,0,16"
+                                                Style="{StaticResource WelcomeBackButtonStyle}">
+                                            <TextBlock Text="Back"
+                                                       FontWeight="SemiBold"
+                                                       VerticalAlignment="Center"
+                                                       TextAlignment="Center" />
+                                        </Button>
 
                                         <TextBlock Text="{Binding AuthTitle}"
                                                    FontSize="24"
@@ -719,8 +718,8 @@
                                                 <Border Width="24"
                                                         Height="24"
                                                         CornerRadius="12"
-                                                        Background="White"
-                                                        BorderBrush="#E2E8F0"
+                                                        Background="{DynamicResource CardBackground}"
+                                                        BorderBrush="{DynamicResource BorderColor}"
                                                         BorderThickness="1"
                                                         Margin="0,0,10,0"
                                                         VerticalAlignment="Center">
