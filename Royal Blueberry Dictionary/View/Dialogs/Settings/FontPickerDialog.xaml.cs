@@ -31,7 +31,7 @@ namespace Royal_Blueberry_Dictionary.View.Dialogs.Settings
             LoadSystemFonts();
             ApplyGlobalFont();
 
-            FontSizeTextBox.Text = SelectedFontSize.ToString(CultureInfo.InvariantCulture);
+            //FontSizeTextBox.Text = SelectedFontSize.ToString(CultureInfo.InvariantCulture);
             UpdatePreview();
         }
 
@@ -115,31 +115,31 @@ namespace Royal_Blueberry_Dictionary.View.Dialogs.Settings
             PreviewText.FontSize = SelectedFontSize;
         }
 
-        private void ApplyValidatedFontSizeFromText()
-        {
-            if (FontSizeTextBox == null) return;
+        //private void ApplyValidatedFontSizeFromText()
+        //{
+        //    if (FontSizeTextBox == null) return;
 
-            string raw = FontSizeTextBox.Text?.Trim() ?? string.Empty;
+        //    string raw = FontSizeTextBox.Text?.Trim() ?? string.Empty;
 
-            if (string.IsNullOrWhiteSpace(raw))
-                return;
+        //    if (string.IsNullOrWhiteSpace(raw))
+        //        return;
 
-            if (double.TryParse(raw, NumberStyles.Float, CultureInfo.InvariantCulture, out double parsed) ||
-                double.TryParse(raw, NumberStyles.Float, CultureInfo.CurrentCulture, out parsed))
-            {
-                parsed = Math.Max(MinFontSize, Math.Min(MaxFontSize, parsed));
-                SelectedFontSize = parsed;
-                UpdatePreview();
-            }
-        }
+        //    if (double.TryParse(raw, NumberStyles.Float, CultureInfo.InvariantCulture, out double parsed) ||
+        //        double.TryParse(raw, NumberStyles.Float, CultureInfo.CurrentCulture, out parsed))
+        //    {
+        //        parsed = Math.Max(MinFontSize, Math.Min(MaxFontSize, parsed));
+        //        SelectedFontSize = parsed;
+        //        UpdatePreview();
+        //    }
+        //}
 
-        private void SyncFontSizeText()
-        {
-            if (FontSizeTextBox != null)
-            {
-                FontSizeTextBox.Text = SelectedFontSize.ToString("0.##", CultureInfo.InvariantCulture);
-            }
-        }
+        //private void SyncFontSizeText()
+        //{
+        //    if (FontSizeTextBox != null)
+        //    {
+        //        FontSizeTextBox.Text = SelectedFontSize.ToString("0.##", CultureInfo.InvariantCulture);
+        //    }
+        //}
 
         #endregion
 
@@ -154,28 +154,28 @@ namespace Royal_Blueberry_Dictionary.View.Dialogs.Settings
             }
         }
 
-        private void FontSizeTextBox_TextChanged(object sender, TextChangedEventArgs e)
-        {
-            ApplyValidatedFontSizeFromText();
-        }
+        //private void FontSizeTextBox_TextChanged(object sender, TextChangedEventArgs e)
+        //{
+        //    ApplyValidatedFontSizeFromText();
+        //}
 
-        private void DecreaseFontSize_Click(object sender, RoutedEventArgs e)
-        {
-            SelectedFontSize = Math.Max(MinFontSize, SelectedFontSize - 1);
-            SyncFontSizeText();
-            UpdatePreview();
-        }
+        //private void DecreaseFontSize_Click(object sender, RoutedEventArgs e)
+        //{
+        //    SelectedFontSize = Math.Max(MinFontSize, SelectedFontSize - 1);
+        //    SyncFontSizeText();
+        //    UpdatePreview();
+        //}
 
-        private void IncreaseFontSize_Click(object sender, RoutedEventArgs e)
-        {
-            SelectedFontSize = Math.Min(MaxFontSize, SelectedFontSize + 1);
-            SyncFontSizeText();
-            UpdatePreview();
-        }
+        //private void IncreaseFontSize_Click(object sender, RoutedEventArgs e)
+        //{
+        //    SelectedFontSize = Math.Min(MaxFontSize, SelectedFontSize + 1);
+        //    SyncFontSizeText();
+        //    UpdatePreview();
+        //}
 
         private void Apply_Click(object sender, RoutedEventArgs e)
         {
-            ApplyValidatedFontSizeFromText();
+            //ApplyValidatedFontSizeFromText();
 
             if (SelectedFont == null)
             {

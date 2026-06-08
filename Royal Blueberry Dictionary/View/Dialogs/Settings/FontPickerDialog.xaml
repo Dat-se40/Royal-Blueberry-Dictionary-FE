@@ -235,7 +235,7 @@
                         </Border>
 
                         <StackPanel Margin="12,0,0,0" VerticalAlignment="Center">
-                            <TextBlock Text="Font &amp; Size"
+                            <TextBlock Text="Font "
                                        FontSize="24"
                                        FontWeight="Bold"
                                        Foreground="{DynamicResource TextColor}"/>
@@ -270,76 +270,16 @@
                         </Grid.ColumnDefinitions>
 
                         <StackPanel>
-                            <TextBlock Text="Reading size"
+                            <TextBlock Text="Reading font"
                                        FontSize="14"
                                        FontWeight="SemiBold"
                                        Foreground="{DynamicResource TextColor}"/>
-                            <TextBlock Text="This size will be used across dialogs, pages, and content previews."
+                            <TextBlock Text="This font will be used across dialogs, pages, and content previews."
                                        FontSize="12"
                                        Foreground="{DynamicResource TextColor}"
                                        Opacity="0.65"
                                        Margin="0,4,0,0"/>
                         </StackPanel>
-
-                        <Border Grid.Column="1"
-        Background="#FBFDFF"
-        BorderBrush="#C8D7FF"
-        BorderThickness="1.4"
-        CornerRadius="14"
-        Padding="6"
-        VerticalAlignment="Center">
-                            <Grid>
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="Auto"/>
-                                    <ColumnDefinition Width="80"/>
-                                    <ColumnDefinition Width="Auto"/>
-                                    <ColumnDefinition Width="Auto"/>
-                                </Grid.ColumnDefinitions>
-
-                                <Button Grid.Column="0"
-                Width="32"
-                Height="32"
-                Margin="0,0,6,0"
-                Content="−"
-                FontSize="16"
-                FontWeight="Bold"
-                Style="{StaticResource MiniAdjustButtonStyle}"
-
-                Click="DecreaseFontSize_Click"/>
-
-                                <TextBox Grid.Column="1"
-                 x:Name="FontSizeTextBox"
-                 Text="14"
-                 Height="32"
-                 VerticalContentAlignment="Center"
-                 HorizontalContentAlignment="Center"
-                 FontSize="13"
-                 FontWeight="SemiBold"
-                 Background="Transparent"
-                 BorderThickness="0"
-                 Foreground="{DynamicResource TextColor}"
-                 TextChanged="FontSizeTextBox_TextChanged"/>
-
-                                <TextBlock Grid.Column="2"
-                   Text="pt"
-                   VerticalAlignment="Center"
-                   Margin="6,0,8,0"
-                   FontSize="12"
-                   FontWeight="SemiBold"
-                   Foreground="{DynamicResource TextColor}"
-                   Opacity="0.65"/>
-
-                                <Button Grid.Column="3"
-                Width="32"
-                Height="32"
-                Content="+"
-                FontSize="16"
-                FontWeight="Bold"
-                Style="{StaticResource MiniAdjustButtonStyle}"
-
-                Click="IncreaseFontSize_Click"/>
-                            </Grid>
-                        </Border>
 
                     </Grid>
                 </Border>
