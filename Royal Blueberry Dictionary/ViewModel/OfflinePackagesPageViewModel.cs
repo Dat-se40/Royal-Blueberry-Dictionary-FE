@@ -142,11 +142,11 @@ namespace Royal_Blueberry_Dictionary.ViewModel
                         : totalBytes > 0 ? $"{totalBytes} B" : "0 KB";
 
                 if (list.Count == 0)
-                    StatusMessage = "Chưa có package hoặc không kết nối được API.";
+                    StatusMessage = "No packages found or unable to connect to the API.";
             }
             catch (Exception ex)
             {
-                StatusMessage = $"Lỗi: {ex.Message}";
+                StatusMessage = $"Error: {ex.Message}";
             }
             finally
             {
@@ -162,19 +162,19 @@ namespace Royal_Blueberry_Dictionary.ViewModel
                 if (!ok)
                 {
                     MessageBox.Show(
-                        "Không tải được chi tiết package. Đảm bảo BE chạy và có dữ liệu GET /api/packages/details/{id}.",
-                        "Lỗi",
+                        "Could not download package details. Ensure the backend is running and GET /api/packages/details/{id} returns data.",
+                        "Error",
                         MessageBoxButton.OK,
                         MessageBoxImage.Warning);
                     return;
                 }
 
-                MessageBox.Show($"Đã lưu \"{package.name}\" để dùng offline.", "Hoàn tất", MessageBoxButton.OK, MessageBoxImage.Information);
+                MessageBox.Show($"Saved \"{package.name}\" for offline use.", "Done", MessageBoxButton.OK, MessageBoxImage.Information);
                 await LoadAsync();
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message, "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show(ex.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 
@@ -186,8 +186,8 @@ namespace Royal_Blueberry_Dictionary.ViewModel
                 if (detail == null)
                 {
                     MessageBox.Show(
-                        "Không có dữ liệu. Tải package về máy trước hoặc kết nối API.",
-                        "Thông báo",
+                        "No data available. Download the package first or connect to the API.",
+                        "Notice",
                         MessageBoxButton.OK,
                         MessageBoxImage.Information);
                     return;
@@ -201,15 +201,15 @@ namespace Royal_Blueberry_Dictionary.ViewModel
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message, "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show(ex.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 
         internal async Task DeleteOfflineAsync(Package package)
         {
             if (MessageBox.Show(
-                    $"Xóa cache offline của \"{package.name}\"?\n(Từ đã import vào My Words không bị xóa.)",
-                    "Xác nhận",
+                    $"Remove offline cache for \"{package.name}\"?\n(Words already imported into My Words will not be deleted.)",
+                    "Confirm",
                     MessageBoxButton.YesNo,
                     MessageBoxImage.Question) != MessageBoxResult.Yes)
                 return;
@@ -222,14 +222,14 @@ namespace Royal_Blueberry_Dictionary.ViewModel
         {
             if (!_packageService.IsOfflineCached(package.Id))
             {
-                MessageBox.Show("Vui lòng tải package về máy trước khi import.", "Thông báo", MessageBoxButton.OK, MessageBoxImage.Information);
+                MessageBox.Show("Please download the package to your device before importing.", "Notice", MessageBoxButton.OK, MessageBoxImage.Information);
                 return;
             }
 
             var detail = await _packageService.GetCachedDetailAsync(package.Id);
             if (detail?.Words == null || detail.Words.Count == 0)
             {
-                MessageBox.Show("File cache không hợp lệ hoặc rỗng.", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Warning);
+                MessageBox.Show("Cache file is invalid or empty.", "Error", MessageBoxButton.OK, MessageBoxImage.Warning);
                 return;
             }
 
@@ -237,14 +237,14 @@ namespace Royal_Blueberry_Dictionary.ViewModel
             {
                 var n = await _packageService.ImportPackageToMyWordsAsync(package, detail, App.UserId);
                 MessageBox.Show(
-                    $"Đã thêm {n} từ mới; từ đã có chỉ được gắn thêm tag nếu chưa có.",
-                    "Hoàn tất",
+                    $"Added {n} new word(s); existing words only receive the tag if they do not have it yet.",
+                    "Done",
                     MessageBoxButton.OK,
                     MessageBoxImage.Information);
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message, "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show(ex.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
     }

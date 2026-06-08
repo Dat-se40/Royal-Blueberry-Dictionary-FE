@@ -287,7 +287,8 @@
         Background="{DynamicResource WordItemBackground}"
         BorderBrush="{DynamicResource BorderColor}"
         BorderThickness="3"
-        ClipToBounds="True">
+        ClipToBounds="True"
+        Visibility="Collapsed">
                             <Border.Effect>
                                 <DropShadowEffect Color="Black"
                           Opacity="0.1"
@@ -322,7 +323,8 @@
                                             <ItemsControl.ItemTemplate>
                                                 <DataTemplate>
                                                     <StackPanel Margin="0,0,0,15">
-                                                        <TextBlock TextWrapping="Wrap" FontSize="15">
+                                                        <TextBlock TextWrapping="Wrap" FontSize="15"
+                                                                   Foreground="{DynamicResource TextColor}">
                                                             <Run Text="• " FontWeight="Bold" Foreground="{DynamicResource ButtonColor}"/>
                                                             <Run Text="{Binding Text}"/>
                                                         </TextBlock>
@@ -330,7 +332,8 @@
                                                                 BorderThickness="3,0,0,0" BorderBrush="{DynamicResource ExampleBorder}" 
                                                                 Background="{DynamicResource ExampleBackground}" Margin="25,8,0,0" Padding="10"
                                                                  Visibility="{Binding Example,Converter={StaticResource StringToVi}}">
-                                                            <TextBlock Text="{Binding Example}" FontStyle="Italic" Opacity="0.8"/>
+                                                            <TextBlock Text="{Binding Example}" FontStyle="Italic" Opacity="0.8"
+                                                                       Foreground="{DynamicResource TextColor}"/>
                                                         </Border>
                                                     </StackPanel>
                                                 </DataTemplate>

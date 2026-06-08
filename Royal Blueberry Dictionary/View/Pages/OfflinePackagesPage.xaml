@@ -133,7 +133,7 @@
                         <StackPanel Orientation="Horizontal" Margin="0,0,0,20">
                             <TextBlock Style="{StaticResource IconGlyphMd}" Text="&#xE73E;"
                                        Foreground="{DynamicResource ButtonColor}" Margin="0,0,10,0"/>
-                            <TextBlock Text="Đã tải về máy"
+                            <TextBlock Text="Downloaded"
                                        FontSize="24" FontWeight="Bold"
                                        Foreground="{DynamicResource TextColor}"/>
                         </StackPanel>
@@ -157,7 +157,7 @@
                             <TextBlock Style="{StaticResource IconGlyph}" Text="&#xE896;"
                                        FontSize="52" Foreground="{DynamicResource ButtonColor}"
                                        HorizontalAlignment="Center" Opacity="0.4"/>
-                            <TextBlock Text="Chưa có package nào được tải về"
+                            <TextBlock Text="No packages downloaded yet"
                                        FontSize="16"
                                        Foreground="{DynamicResource TextColor}"
                                        Opacity="0.7"
@@ -178,7 +178,7 @@
                             <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
                                 <TextBlock Style="{StaticResource IconGlyphMd}" Text="&#xE7B8;"
                                            Foreground="{DynamicResource ButtonColor}" Margin="0,0,8,0"/>
-                                <TextBlock Text="Có trên server"
+                                <TextBlock Text="Available on Server"
                                            FontSize="24" FontWeight="Bold"
                                            Foreground="{DynamicResource TextColor}"/>
                             </StackPanel>
@@ -201,7 +201,7 @@
                                 <StackPanel Orientation="Horizontal">
                                     <TextBlock Style="{StaticResource IconGlyphSm}" Text="&#xE72C;"
                                                Foreground="White" Margin="0,0,6,0"/>
-                                    <TextBlock Text="Cập nhật danh sách" FontSize="13" Foreground="White"/>
+                                    <TextBlock Text="Refresh list" FontSize="13" Foreground="White"/>
                                 </StackPanel>
                             </Button>
                         </StackPanel>
