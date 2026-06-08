@@ -71,7 +71,7 @@ namespace Royal_Blueberry_Dictionary.ViewModel
 
             if (HasActiveSession)
             {
-                navigationService.NavigateTo<HomePage, SearchViewModel>("home");
+                navigationService.NavigateTo<HomePage, HomePageViewModel>("home");
                 return;
             }
 
@@ -107,7 +107,7 @@ namespace Royal_Blueberry_Dictionary.ViewModel
         {
             authService.ContinueAsGuest();
             SyncState();
-            navigationService.NavigateTo<HomePage, SearchViewModel>("home");
+            navigationService.NavigateTo<HomePage, HomePageViewModel>("home");
         }
 
         private async Task RestoreSessionIfNeededAsync()

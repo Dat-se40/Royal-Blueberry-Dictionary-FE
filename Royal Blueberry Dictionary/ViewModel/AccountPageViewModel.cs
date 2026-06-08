@@ -341,7 +341,7 @@ namespace Royal_Blueberry_Dictionary.ViewModel
             ClearFormInputs();
             authService.ContinueAsGuest();
             SyncFromAuthService();
-            navigationService.NavigateTo<HomePage, SearchViewModel>("home");
+            navigationService.NavigateTo<HomePage, HomePageViewModel>("home");
         }
 
         [RelayCommand]
@@ -391,7 +391,7 @@ namespace Royal_Blueberry_Dictionary.ViewModel
             authService.Logout();
             SyncFromAuthService();
             SetStatus("Logged out successfully.", false);
-            navigationService.NavigateTo<HomePage, SearchViewModel>("home");
+            navigationService.NavigateTo<HomePage, HomePageViewModel>("home");
         }
         [RelayCommand]
         public async Task Pull()

@@ -226,8 +226,8 @@
 
                         <Border x:Name="Example2Container"
                                 Visibility="Collapsed"
-                                Background="#FFF5E6"
-                                BorderBrush="#FFD700"
+                                Background="{DynamicResource ExampleBackground}"
+                                BorderBrush="{DynamicResource ExampleBorder}"
                                 BorderThickness="1"
                                 CornerRadius="6"
                                 Padding="12,8"
@@ -237,14 +237,15 @@
                                            Text="Note:"
                                            FontWeight="Bold"
                                            FontSize="11"
-                                           Foreground="#FF8C00"
+                                           Foreground="{DynamicResource ButtonColor}"
                                            Margin="0,0,0,5" />
                                 <TextBlock x:Name="Example2Text"
                                            Text="{Binding Example2, ElementName=root}"
                                            FontStyle="Italic"
                                            FontSize="12"
                                            TextWrapping="Wrap"
-                                           Foreground="#FF8C00" 
+                                           Foreground="{DynamicResource TextColor}"
+                                           Opacity="0.85"
                                            Visibility="{Binding Example2 ,Converter={StaticResource StringToVi}}"/>
                             </StackPanel>
                         </Border>

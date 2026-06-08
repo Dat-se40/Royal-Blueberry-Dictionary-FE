@@ -17,6 +17,7 @@ namespace Royal_Blueberry_Dictionary
         private readonly SearchViewModel searchViewModel;
         private readonly NavigationService navigationService;
         private readonly AuthService authService;
+        private readonly ThemeManager themeManager;
 
         public MainWindow()
         {
@@ -25,12 +26,16 @@ namespace Royal_Blueberry_Dictionary
             searchViewModel = App.serviceProvider.GetRequiredService<SearchViewModel>();
             navigationService = App.serviceProvider.GetRequiredService<NavigationService>();
             authService = App.serviceProvider.GetRequiredService<AuthService>();
+            themeManager = App.serviceProvider.GetRequiredService<ThemeManager>();
 
             navigationService.SetMainFrame(MainFrame);
             DataContext = searchViewModel;
 
             Closed += MainWindow_Closed;
             authService.AuthStateChanged += OnAuthStateChanged;
+            themeManager.ThemeChanged += OnThemeChanged;
+
+            ApplyThemeToggleVisual(themeManager.CurrentTheme == Service.ThemeMode.Dark);
 
             navigationService.NavigateTo<HomePage, HomePageViewModel>("home");
             RefreshAuthSummary();
@@ -39,6 +44,32 @@ namespace Royal_Blueberry_Dictionary
         private void MainWindow_Closed(object? sender, EventArgs e)
         {
             authService.AuthStateChanged -= OnAuthStateChanged;
+            themeManager.ThemeChanged -= OnThemeChanged;
+        }
+
+        private void ThemeToggle_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            var newMode = themeManager.CurrentTheme == Service.ThemeMode.Dark
+                ? Service.ThemeMode.Light
+                : Service.ThemeMode.Dark;
+            themeManager.SetThemeMode(newMode);
+            ApplyThemeToggleVisual(newMode == Service.ThemeMode.Dark);
+        }
+
+        private void OnThemeChanged(Service.ThemeMode mode)
+        {
+            Dispatcher.Invoke(() => ApplyThemeToggleVisual(mode == Service.ThemeMode.Dark));
+        }
+
+        private void ApplyThemeToggleVisual(bool isDark)
+        {
+            var targetLeft = isDark ? 39.0 : 3.0;
+            var animation = new DoubleAnimation(targetLeft, TimeSpan.FromMilliseconds(200))
+            {
+                EasingFunction = new CubicEase { EasingMode = EasingMode.EaseOut }
+            };
+            ThemeSlider.BeginAnimation(Canvas.LeftProperty, animation);
+            ThemeIcon.Text = isDark ? "\uE708" : "\uE706";
         }
 
         private void HamburgerBtn_Click(object sender, RoutedEventArgs e)
