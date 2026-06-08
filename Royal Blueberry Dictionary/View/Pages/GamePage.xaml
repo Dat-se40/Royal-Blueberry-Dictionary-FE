@@ -72,7 +72,7 @@
                 </Border>
 
                 <Button HorizontalAlignment="Center" Margin="0,20,0,0" Click="ViewHistory_Click"
-                        Padding="20,10" Background="{DynamicResource SearchBackground}">
+                        Style="{StaticResource SecondaryButtonStyle}">
                     <StackPanel Orientation="Horizontal">
                         <TextBlock Style="{StaticResource IconGlyphSm}" Text="&#xE9D9;"
                                    Foreground="{DynamicResource ButtonColor}" Margin="0,0,8,0"/>
@@ -90,7 +90,7 @@
 
             <Border Grid.Row="0" Background="{DynamicResource CardBackground}" BorderBrush="{DynamicResource BorderColor}" BorderThickness="0,0,0,2" Padding="20,15">
                 <DockPanel>
-                    <Button Background="Transparent" Foreground="Red" BorderBrush="Red" BorderThickness="1"
+                    <Button Style="{StaticResource DangerButtonStyle}"
                             Padding="15,8" DockPanel.Dock="Left" Click="ExitGame_Click">
                         <StackPanel Orientation="Horizontal">
                             <TextBlock Style="{StaticResource IconGlyphSm}" Text="&#xE8BB;" Foreground="Red" Margin="0,0,6,0"/>
@@ -171,14 +171,14 @@
                 </Border>
 
                 <UniformGrid Grid.Row="2" Columns="3" Rows="1" Margin="30,20,30,30" MaxWidth="700">
-                    <Button Background="White" Foreground="Red" BorderBrush="Red" BorderThickness="1"
+                    <Button Style="{StaticResource DangerButtonStyle}"
                             Margin="0,0,7,0" Click="SkipCard_Click" Padding="15">
                         <StackPanel Orientation="Horizontal">
                             <TextBlock Style="{StaticResource IconGlyphSm}" Text="&#xE711;" Foreground="Red" Margin="0,0,6,0"/>
                             <TextBlock Text="Skip"/>
                         </StackPanel>
                     </Button>
-                    <Button Background="{DynamicResource SearchBackground}" Margin="7,0,7,0"
+                    <Button Style="{StaticResource SecondaryButtonStyle}" Margin="7,0,7,0"
                             Click="PreviousCard_Click" IsEnabled="{Binding CanGoBack}">
                         <StackPanel Orientation="Horizontal">
                             <TextBlock Style="{StaticResource IconGlyphSm}" Text="&#xE76B;"
@@ -186,7 +186,8 @@
                             <TextBlock Text="Previous" Foreground="{DynamicResource TextColor}"/>
                         </StackPanel>
                     </Button>
-                    <Button Content="{Binding NextButtonText}" Background="{DynamicResource ToolButtonActive}" Foreground="White" Margin="7,0,0,0" Click="NextCard_Click" />
+                    <Button Style="{StaticResource FilterChipStyle}" Tag="Active"
+                            Content="{Binding NextButtonText}" Margin="7,0,0,0" Click="NextCard_Click" />
                 </UniformGrid>
             </Grid>
         </Grid>
