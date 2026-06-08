@@ -5,7 +5,7 @@ using Royal_Blueberry_Dictionary.Model;
 using Royal_Blueberry_Dictionary.Service;
 using Royal_Blueberry_Dictionary.View.Pages;
 using System.Collections.ObjectModel;
-using System.Windows.Navigation;
+using System.Windows;
 using NavigationService = Royal_Blueberry_Dictionary.Service.NavigationService;
 
 namespace Royal_Blueberry_Dictionary.ViewModel
@@ -73,13 +73,21 @@ namespace Royal_Blueberry_Dictionary.ViewModel
             if (string.IsNullOrWhiteSpace(wordToSearch)) return;
             try
             {
-                Console.WriteLine($"Searching : {wordToSearch}");
                 IsSearching = true;
+                IsSuggestionsOpen = false;
                 var result = await _searchService.searchAWord(wordToSearch);
                 if (result != null && _searchService.IsValidWordDetail(result))
                 {
                     SearchResult = result;
                     NavigateToDetailsPage(result);
+                }
+                else
+                {
+                    MessageBox.Show(
+                        $"No definition found for \"{wordToSearch}\".",
+                        "Search",
+                        MessageBoxButton.OK,
+                        MessageBoxImage.Information);
                 }
             }
             finally
@@ -99,12 +107,9 @@ namespace Royal_Blueberry_Dictionary.ViewModel
 
             await ExecuteSearchAsync(selectedWord); // Tiến hành search luôn
         }
-        public void NavigateToDetailsPage(WordDetail wordDetail)
+        public void NavigateToDetailsPage(WordDetail? wordDetail)
         {
-            if (wordDetail == null) 
-            {
-                Console.WriteLine("have no data to load");
-            }
+            if (wordDetail == null) return;
             _navigationService.NavigateTo<DetailsPage, DetailsPageViewModel>(wordDetail);
         }
 

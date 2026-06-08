@@ -64,7 +64,7 @@ namespace Royal_Blueberry_Dictionary
             serviceCollection.AddScoped<Service.SearchService>();
             serviceCollection.AddScoped<Service.TagService>();
             serviceCollection.AddScoped<Service.PackageService>();
-            serviceCollection.AddScoped<Service.NavigationService>();
+            serviceCollection.AddSingleton<Service.NavigationService>();
             serviceCollection.AddScoped<Service.WordService>();
             serviceCollection.AddSingleton<Service.ThemeManager>();
             serviceCollection.AddSingleton(_ => Service.SettingsService.Instance);

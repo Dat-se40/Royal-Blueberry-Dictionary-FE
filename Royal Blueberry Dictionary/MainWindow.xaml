@@ -39,7 +39,6 @@
 
                     <Button Grid.Column="0" x:Name="HamburgerBtn"
                             Style="{StaticResource HamburgerButtonStyle}"
-                            Foreground="{DynamicResource MainBackground}"
                             Margin="0,0,10,0"
                             Click="HamburgerBtn_Click"/>
 
@@ -62,7 +61,7 @@
                     <Button Grid.Column="3" x:Name="ReloadBtn"
                             Style="{StaticResource NavButtonStyle}"
                             Margin="0,0,20,0"
-                            Foreground="{DynamicResource MainBackground}" Click="ReloadBtn_Click">
+                            Click="ReloadBtn_Click">
                         <TextBlock Style="{StaticResource IconGlyphMd}" Text="&#xE72C;"/>
                     </Button>
 
@@ -82,7 +81,7 @@
                                 <TextBlock Grid.Column="0"
                                            Style="{StaticResource IconGlyphMd}"
                                            Text="&#xE721;"
-                                           Foreground="{DynamicResource TextColor}"
+                                           Foreground="{DynamicResource SearchIcon}"
                                            Margin="0,0,10,0"/>
 
                                 <TextBox Grid.Column="1" x:Name="SearchInput" Style="{StaticResource SearchTextBoxStyle}"
@@ -112,7 +111,18 @@
                  Background="Transparent" 
                  BorderThickness="0"
                  ScrollViewer.HorizontalScrollBarVisibility="Disabled">
-                                    
+
+                                    <ListBox.ItemTemplate>
+                                        <DataTemplate>
+                                            <TextBlock Text="{Binding}" Padding="2,0">
+                                                <TextBlock.InputBindings>
+                                                    <MouseBinding MouseAction="LeftClick"
+                                                                  Command="{Binding DataContext.SelectSuggestionCommand, RelativeSource={RelativeSource AncestorType=Window}}"
+                                                                  CommandParameter="{Binding}"/>
+                                                </TextBlock.InputBindings>
+                                            </TextBlock>
+                                        </DataTemplate>
+                                    </ListBox.ItemTemplate>
 
                                     <ListBox.ItemContainerStyle>
                                         <Style TargetType="ListBoxItem">
@@ -143,12 +153,6 @@
                                             </Style.Triggers>
                                         </Style>
                                     </ListBox.ItemContainerStyle>
-
-                                    <ListBox.InputBindings>
-                                        <MouseBinding MouseAction="LeftClick" 
-                              Command="{Binding SelectSuggestionCommand}"
-                              CommandParameter="{Binding ElementName=SuggestionsList, Path=SelectedItem}"/>
-                                    </ListBox.InputBindings>
                                 </ListBox>
                             </Border>
                         </Popup>
@@ -157,13 +161,16 @@
                     <Border Grid.Column="5" x:Name="ThemeToggle"
                             Width="70" Height="34"
                             Background="{DynamicResource ThemeToggleBackground}"
-                            CornerRadius="17" Cursor="Hand">
+                            CornerRadius="17" Cursor="Hand"
+                            MouseLeftButtonDown="ThemeToggle_MouseLeftButtonDown">
                         <Canvas>
                             <Border x:Name="ThemeSlider" Width="28" Height="28"
                                     Background="{DynamicResource ThemeSliderBackground}"
                                     CornerRadius="14" Canvas.Left="3" Canvas.Top="3">
-                                <TextBlock FontFamily="Segoe MDL2 Assets" Text="&#xE708;" FontSize="14"
-                                           Foreground="{DynamicResource TextColor}"
+                                <TextBlock x:Name="ThemeIcon"
+                                           FontFamily="Segoe MDL2 Assets"
+                                           Text="&#xE706;" FontSize="14"
+                                           Foreground="{DynamicResource ThemeIconColor}"
                                            HorizontalAlignment="Center" VerticalAlignment="Center"/>
                             </Border>
                         </Canvas>
@@ -228,7 +235,8 @@
                                 <TextBlock Style="{StaticResource IconGlyphMd}" Text="&#xE80F;"
                                            Foreground="{DynamicResource ButtonColor}"
                                            Margin="0,0,15,0" Width="24"/>
-                                <TextBlock Text="Home" FontSize="15" VerticalAlignment="Center"/>
+                                <TextBlock Text="Home" FontSize="15" VerticalAlignment="Center"
+                                           Foreground="{DynamicResource TextColor}"/>
                             </StackPanel>
                         </Button>
 
@@ -237,7 +245,8 @@
                                 <TextBlock Style="{StaticResource IconGlyphMd}" Text="&#xE81C;"
                                            Foreground="{DynamicResource ButtonColor}"
                                            Margin="0,0,15,0" Width="24"/>
-                                <TextBlock Text="History" FontSize="15" VerticalAlignment="Center"/>
+                                <TextBlock Text="History" FontSize="15" VerticalAlignment="Center"
+                                           Foreground="{DynamicResource TextColor}"/>
                             </StackPanel>
                         </Button>
 
@@ -246,7 +255,8 @@
                                 <TextBlock Style="{StaticResource IconGlyphMd}" Text="&#xE734;"
                                            Foreground="{DynamicResource ButtonColor}"
                                            Margin="0,0,15,0" Width="24"/>
-                                <TextBlock Text="Favorite" FontSize="15" VerticalAlignment="Center"/>
+                                <TextBlock Text="Favorite" FontSize="15" VerticalAlignment="Center"
+                                           Foreground="{DynamicResource TextColor}"/>
                             </StackPanel>
                         </Button>
 
@@ -255,7 +265,8 @@
                                 <TextBlock Style="{StaticResource IconGlyphMd}" Text="&#xE736;"
                                            Foreground="{DynamicResource ButtonColor}"
                                            Margin="0,0,15,0" Width="24"/>
-                                <TextBlock Text="My Words" FontSize="15" VerticalAlignment="Center"/>
+                                <TextBlock Text="My Words" FontSize="15" VerticalAlignment="Center"
+                                           Foreground="{DynamicResource TextColor}"/>
                             </StackPanel>
                         </Button>
 
@@ -264,7 +275,8 @@
                                 <TextBlock Style="{StaticResource IconGlyphMd}" Text="&#xE7FC;"
                                            Foreground="{DynamicResource ButtonColor}"
                                            Margin="0,0,15,0" Width="24"/>
-                                <TextBlock Text="Game" FontSize="15" VerticalAlignment="Center"/>
+                                <TextBlock Text="Game" FontSize="15" VerticalAlignment="Center"
+                                           Foreground="{DynamicResource TextColor}"/>
                             </StackPanel>
                         </Button>
 
@@ -273,7 +285,8 @@
                                 <TextBlock Style="{StaticResource IconGlyphMd}" Text="&#xE896;"
                                            Foreground="{DynamicResource ButtonColor}"
                                            Margin="0,0,15,0" Width="24"/>
-                                <TextBlock Text="Offline packages" FontSize="15" VerticalAlignment="Center"/>
+                                <TextBlock Text="Offline packages" FontSize="15" VerticalAlignment="Center"
+                                           Foreground="{DynamicResource TextColor}"/>
                             </StackPanel>
                         </Button>
 
@@ -282,7 +295,8 @@
                                 <TextBlock Style="{StaticResource IconGlyphMd}" Text="&#xE77B;"
                                            Foreground="{DynamicResource ButtonColor}"
                                            Margin="0,0,15,0" Width="24"/>
-                                <TextBlock Text="Account" FontSize="15" VerticalAlignment="Center"/>
+                                <TextBlock Text="Account" FontSize="15" VerticalAlignment="Center"
+                                           Foreground="{DynamicResource TextColor}"/>
                             </StackPanel>
                         </Button>
 
@@ -291,7 +305,8 @@
                                 <TextBlock Style="{StaticResource IconGlyphMd}" Text="&#xE713;"
                                            Foreground="{DynamicResource ButtonColor}"
                                            Margin="0,0,15,0" Width="24"/>
-                                <TextBlock Text="Setting" FontSize="15" VerticalAlignment="Center"/>
+                                <TextBlock Text="Setting" FontSize="15" VerticalAlignment="Center"
+                                           Foreground="{DynamicResource TextColor}"/>
                             </StackPanel>
                         </Button>
                     </StackPanel>

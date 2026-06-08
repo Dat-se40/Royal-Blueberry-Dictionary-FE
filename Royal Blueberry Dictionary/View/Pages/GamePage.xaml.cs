@@ -3,23 +3,18 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media.Animation;
-using Microsoft.Extensions.DependencyInjection;
 using Royal_Blueberry_Dictionary.ViewModel;
 using Royal_Blueberry_Dictionary.View.Dialogs;
-using Royal_Blueberry_Dictionary.Service;
 
 namespace Royal_Blueberry_Dictionary.View.Pages
 {
     public partial class GamePage : Page
     {
-        private readonly GameViewModel _viewModel;
+        private GameViewModel ViewModel => (GameViewModel)DataContext;
 
         public GamePage()
         {
             InitializeComponent();
-            // Lấy ViewModel từ cơ chế Dependency Injection thay vì khởi tạo chay bằng "new GameViewModel()"
-            _viewModel = App.serviceProvider.GetRequiredService<GameViewModel>();
-            DataContext = _viewModel;
         }
 
         private void GameCard_Click(object sender, MouseButtonEventArgs e)
@@ -29,7 +24,7 @@ namespace Royal_Blueberry_Dictionary.View.Pages
             if (settingsDialog.ShowDialog() == true)
             {
                 var settings = settingsDialog.GameSettings;
-                _viewModel.StartGame(settings.Flashcards, settings.DataSource, settings.DataSourceName);
+                ViewModel.StartGame(settings.Flashcards, settings.DataSource, settings.DataSourceName);
 
                 GameSelectionPanel.Visibility = Visibility.Collapsed;
                 GamePlayPanel.Visibility = Visibility.Visible;
@@ -43,9 +38,9 @@ namespace Royal_Blueberry_Dictionary.View.Pages
 
         private void FlipCard_Click(object sender, MouseButtonEventArgs e)
         {
-            if (_viewModel.IsAnimating) return;
-            _viewModel.IsAnimating = true;
-            ((Storyboard)FindResource(_viewModel.IsFlipped ? "FlipToFrontPhase1" : "FlipToBackPhase1")).Begin(this);
+            if (ViewModel.IsAnimating) return;
+            ViewModel.IsAnimating = true;
+            ((Storyboard)FindResource(ViewModel.IsFlipped ? "FlipToFrontPhase1" : "FlipToBackPhase1")).Begin(this);
         }
 
         private void FlipToBackPhase1_Completed(object sender, EventArgs e)
@@ -64,38 +59,38 @@ namespace Royal_Blueberry_Dictionary.View.Pages
 
         private void AnimationCompleted(object sender, EventArgs e)
         {
-            _viewModel.IsAnimating = false;
-            _viewModel.IsFlipped = !_viewModel.IsFlipped;
+            ViewModel.IsAnimating = false;
+            ViewModel.IsFlipped = !ViewModel.IsFlipped;
         }
 
-        private void PreviousCard_Click(object sender, RoutedEventArgs e) => _viewModel.PreviousCard();
+        private void PreviousCard_Click(object sender, RoutedEventArgs e) => ViewModel.PreviousCard();
 
         private void NextCard_Click(object sender, RoutedEventArgs e)
         {
-            if (_viewModel.IsLastCard)
+            if (ViewModel.IsLastCard)
             {
-                if (!_viewModel.KnownCards.Contains(_viewModel.CurrentCardIndex) && !_viewModel.SkippedCards.Contains(_viewModel.CurrentCardIndex))
-                    _viewModel.KnownCards.Add(_viewModel.CurrentCardIndex);
+                if (!ViewModel.KnownCards.Contains(ViewModel.CurrentCardIndex) && !ViewModel.SkippedCards.Contains(ViewModel.CurrentCardIndex))
+                    ViewModel.KnownCards.Add(ViewModel.CurrentCardIndex);
                 ShowCompletionDialog();
             }
-            else _viewModel.NextCard();
+            else ViewModel.NextCard();
         }
 
         private void SkipCard_Click(object sender, RoutedEventArgs e)
         {
-            _viewModel.SkipCurrentCard();
-            if (_viewModel.IsLastCard) ShowCompletionDialog();
+            ViewModel.SkipCurrentCard();
+            if (ViewModel.IsLastCard) ShowCompletionDialog();
         }
 
-        private void ReviewSkipped_Click(object sender, RoutedEventArgs e) => _viewModel.GoToFirstSkipped();
+        private void ReviewSkipped_Click(object sender, RoutedEventArgs e) => ViewModel.GoToFirstSkipped();
         private void SkipNumber_Click(object sender, RoutedEventArgs e)
         {
-            if (sender is Button btn && btn.Tag is int index) _viewModel.GoToCard(index);
+            if (sender is Button btn && btn.Tag is int index) ViewModel.GoToCard(index);
         }
 
         private void ShowCompletionDialog()
         {
-            var data = _viewModel.CompleteGame();
+            var data = ViewModel.CompleteGame();
             if (data == null) return;
 
             var dialog = new GameCompletionDialog { Owner = Window.GetWindow(this) };
@@ -104,9 +99,9 @@ namespace Royal_Blueberry_Dictionary.View.Pages
             if (dialog.ShowDialog() == true)
             {
                 if (dialog.UserAction == GameCompletionDialog.CompletionAction.Restart)
-                    _viewModel.RestartGame();
+                    ViewModel.RestartGame();
                 else if (dialog.UserAction == GameCompletionDialog.CompletionAction.ReviewSkipped)
-                    _viewModel.GoToCard(dialog.SelectedCardIndex ?? _viewModel.SkippedCards[0]);
+                    ViewModel.GoToCard(dialog.SelectedCardIndex ?? ViewModel.SkippedCards[0]);
             }
             else
             {
