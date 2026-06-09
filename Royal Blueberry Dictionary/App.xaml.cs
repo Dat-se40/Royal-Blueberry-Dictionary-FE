@@ -1,4 +1,4 @@
-using BlueBerryDictionary.ViewModels;
+﻿using BlueBerryDictionary.ViewModels;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -9,6 +9,7 @@ using Royal_Blueberry_Dictionary.View.Pages;
 using Royal_Blueberry_Dictionary.ViewModel;
 using System.IO;
 using System.Windows;
+using System.Windows.Threading;
 
 namespace Royal_Blueberry_Dictionary
 {
@@ -26,7 +27,13 @@ namespace Royal_Blueberry_Dictionary
 
         protected override void OnStartup(StartupEventArgs e)
         {
-            base.OnStartup(e);
+            var splash = new SplashWindow();
+            splash.Show();
+            Current.Dispatcher.Invoke(() => { }, DispatcherPriority.Render);
+
+            try
+            {
+                base.OnStartup(e);
 
             if (!Current.Resources.Contains("AppFontFamily"))
             {
@@ -155,6 +162,11 @@ namespace Royal_Blueberry_Dictionary
 
             ShutdownMode = ShutdownMode.OnLastWindowClose;
             serviceProvider.GetRequiredService<Service.ApplicationFlowService>().ShowWelcomeWindow();
+            }
+            finally
+            {
+                splash.Close();
+            }
         }
 
         protected override void OnExit(ExitEventArgs e)
