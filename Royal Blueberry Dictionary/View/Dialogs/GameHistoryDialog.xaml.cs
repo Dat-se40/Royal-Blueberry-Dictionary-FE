@@ -12,32 +12,55 @@ namespace Royal_Blueberry_Dictionary.View.Dialogs
         public GameHistoryDialog()
         {
             InitializeComponent();
-            _gameLogService = App.serviceProvider.GetService<GameLogService>();
-            LoadHistoryData();
+            _gameLogService = App.serviceProvider.GetRequiredService<GameLogService>();
+            Loaded += async (_, _) => await LoadHistoryDataAsync();
         }
 
-        private void LoadHistoryData()
+        private async Task LoadHistoryDataAsync()
         {
             if (_gameLogService == null) return;
 
-            TxtTotalGames.Text = _gameLogService.GetTotalGamesPlayed().ToString();
-            TxtTotalCards.Text = _gameLogService.GetTotalCardsStudied().ToString();
-            TxtAvgAccuracy.Text = $"{_gameLogService.GetAverageAccuracy():F1}%";
+            try
+            {
+                var overview = await _gameLogService.GetOverviewAsync(20);
 
-            var ts = _gameLogService.GetTotalStudyTime();
-            TxtTotalTime.Text = ts.TotalHours >= 1 ? $"{(int)ts.TotalHours}h {ts.Minutes}m" : (ts.TotalMinutes >= 1 ? $"{ts.Minutes}m {ts.Seconds}s" : $"{ts.Seconds}s");
-
-            HistoryList.ItemsSource = _gameLogService.GetRecentSessions(20);
+                TxtTotalGames.Text = overview.TotalGamesPlayed.ToString();
+                TxtTotalCards.Text = overview.TotalCardsStudied.ToString();
+                TxtAvgAccuracy.Text = $"{overview.AverageAccuracy:F1}%";
+                TxtTotalTime.Text = FormatDuration(overview.TotalStudyTime);
+                HistoryList.ItemsSource = overview.RecentSessions;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(
+                    $"Could not load training history.\n{ex.Message}",
+                    "History",
+                    MessageBoxButton.OK,
+                    MessageBoxImage.Warning);
+            }
         }
 
-        private void ClearHistory_Click(object sender, RoutedEventArgs e)
+        private static string FormatDuration(TimeSpan ts)
         {
-            if (MessageBox.Show("Are you sure you want to delete all history?\nThis action cannot be undone.", "Confirm", MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.Yes)
+            if (ts.TotalHours >= 1) return $"{(int)ts.TotalHours}h {ts.Minutes}m";
+            if (ts.TotalMinutes >= 1) return $"{ts.Minutes}m {ts.Seconds}s";
+            return $"{ts.Seconds}s";
+        }
+
+        private async void ClearHistory_Click(object sender, RoutedEventArgs e)
+        {
+            if (MessageBox.Show(
+                    "Are you sure you want to delete all history?\nThis action cannot be undone.",
+                    "Confirm",
+                    MessageBoxButton.YesNo,
+                    MessageBoxImage.Warning) != MessageBoxResult.Yes)
             {
-                _gameLogService.ClearAllSessions();
-                LoadHistoryData();
-                MessageBox.Show("All history deleted!", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
+                return;
             }
+
+            await _gameLogService.ClearAllSessionsAsync();
+            await LoadHistoryDataAsync();
+            MessageBox.Show("All history deleted!", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
         }
 
         private void Close_Click(object sender, RoutedEventArgs e) => Close();

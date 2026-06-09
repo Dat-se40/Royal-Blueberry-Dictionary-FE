@@ -14,6 +14,7 @@ namespace Royal_Blueberry_Dictionary.ViewModel
     {
         private readonly SearchService _searchService;
         private readonly NavigationService _navigationService;
+        private CancellationTokenSource? _suggestionCts;
         [ObservableProperty]
         private string _searchText = string.Empty;
 
@@ -57,12 +58,25 @@ namespace Royal_Blueberry_Dictionary.ViewModel
         // partial void On<Properties Name>Change
         private async Task UpdateSuggestionsAsync(string value)
         {
-            var results = await _searchService.GetSuggestionsAsync(value);
+            _suggestionCts?.Cancel();
+            _suggestionCts?.Dispose();
+            _suggestionCts = new CancellationTokenSource();
+            var token = _suggestionCts.Token;
 
-            Suggestions.Clear();
-            foreach (var item in results) Suggestions.Add(item);
-            IsSuggestionsOpen = Suggestions.Count > 0;
-            SelectedSuggestionIndex = Suggestions.Count > 0 ? 0 : -1;
+            try
+            {
+                await Task.Delay(200, token);
+                var results = await _searchService.GetSuggestionsAsync(value);
+                if (token.IsCancellationRequested) return;
+
+                Suggestions.Clear();
+                foreach (var item in results) Suggestions.Add(item);
+                IsSuggestionsOpen = Suggestions.Count > 0;
+                SelectedSuggestionIndex = Suggestions.Count > 0 ? 0 : -1;
+            }
+            catch (TaskCanceledException)
+            {
+            }
         }
 
         partial void OnIsSuggestionsOpenChanged(bool value)

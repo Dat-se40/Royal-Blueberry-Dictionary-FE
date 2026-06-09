@@ -19,7 +19,10 @@ using Royal_Blueberry_Dictionary.Service.ApiClient;
             private readonly Dictionary<string, WordDetail> cache = new();
             private readonly Dictionary<string, DateTime > timeLogs = new();    
             private readonly int cachedExpirationDate;
-            private HashSet<string> _availableWords = new();
+            private readonly HashSet<string> _availableWords = new(StringComparer.Ordinal);
+            private List<string> _sortedWords = new();
+            private readonly Dictionary<char, List<string>> _wordsByFirstLetter = new();
+            private HashSet<string> _recentSearchWords = new(StringComparer.Ordinal);
             public SearchService(IBackendApiClient backendApiClient, AppDbContext appDbContext)
             {
                 this.backendApiClient = backendApiClient;
@@ -97,29 +100,187 @@ using Royal_Blueberry_Dictionary.Service.ApiClient;
                     timeLogs[word] = DateTime.UtcNow;
                 }
                 await dbContext.SaveChangesAsync();
-                _availableWords.Add(word);
+                AddWordToIndex(word);
+                _recentSearchWords.Add(word);
             }
             #endregion
-            #region Levenshtein Implementation
+            #region Suggestion Logic
 
-            public async Task<List<string>> GetSuggestionsAsync(string input, int maxSuggestions = 5)
+            public async Task<List<string>> GetSuggestionsAsync(string input, int maxSuggestions = 8)
             {
                 if (string.IsNullOrWhiteSpace(input)) return new List<string>();
 
                 input = input.ToLower().Trim();
+                if (input.Length < 1) return new List<string>();
 
-                // Thực hiện tính toán LD trên background thread để tránh treo UI
-                return await Task.Run(() =>
+                return await Task.Run(() => BuildSuggestions(input, maxSuggestions));
+            }
+
+            private List<string> BuildSuggestions(string input, int maxSuggestions)
+            {
+                var ranked = new Dictionary<string, int>(StringComparer.Ordinal);
+
+                void TryAdd(string word, int score)
                 {
-                    return _availableWords
-                        .Select(word => new { Word = word, Distance = CalculateLevenshteinDistance(input, word) })
-                        .Where(x => x.Distance <= 3) // Chỉ lấy các từ có sai số tối đa 3 ký tự
-                        .OrderBy(x => x.Distance)
-                        .ThenBy(x => x.Word.Length)
-                        .Take(maxSuggestions)
-                        .Select(x => x.Word)
-                        .ToList();
-                });
+                    if (!ranked.TryGetValue(word, out var existing) || score < existing)
+                    {
+                        ranked[word] = score;
+                    }
+                }
+
+                // Ưu tiên 1: lịch sử tìm kiếm gần đây khớp prefix
+                foreach (var word in _recentSearchWords)
+                {
+                    if (word.StartsWith(input, StringComparison.Ordinal))
+                    {
+                        TryAdd(word, ScorePrefixMatch(input, word, isRecent: true));
+                    }
+                }
+
+                // Ưu tiên 2: prefix match từ danh sách từ (binary search trên list đã sort)
+                foreach (var word in GetPrefixMatches(input))
+                {
+                    TryAdd(word, ScorePrefixMatch(input, word, isRecent: _recentSearchWords.Contains(word)));
+                }
+
+                // Ưu tiên 3: chứa chuỗi con (khi gõ sai vị trí đầu)
+                if (ranked.Count < maxSuggestions && input.Length >= 3)
+                {
+                    foreach (var word in GetContainsMatches(input))
+                    {
+                        TryAdd(word, ScoreContainsMatch(input, word, isRecent: _recentSearchWords.Contains(word)));
+                    }
+                }
+
+                // Ưu tiên 4: fuzzy Levenshtein (chỉ khi chưa đủ gợi ý)
+                if (ranked.Count < maxSuggestions)
+                {
+                    int maxDistance = GetMaxLevenshteinDistance(input.Length);
+                    foreach (var word in GetFuzzyCandidates(input))
+                    {
+                        int distance = CalculateLevenshteinDistance(input, word);
+                        if (distance <= maxDistance)
+                        {
+                            TryAdd(word, ScoreFuzzyMatch(input, word, distance, isRecent: _recentSearchWords.Contains(word)));
+                        }
+                    }
+                }
+
+                return ranked
+                    .OrderBy(x => x.Value)
+                    .ThenBy(x => x.Key.Length)
+                    .ThenBy(x => x.Key, StringComparer.Ordinal)
+                    .Take(maxSuggestions)
+                    .Select(x => x.Key)
+                    .ToList();
+            }
+
+            private IEnumerable<string> GetPrefixMatches(string input)
+            {
+                int start = FindPrefixStartIndex(input);
+                for (int i = start; i < _sortedWords.Count; i++)
+                {
+                    var word = _sortedWords[i];
+                    if (!word.StartsWith(input, StringComparison.Ordinal))
+                    {
+                        break;
+                    }
+                    yield return word;
+                    if (i - start > 200) yield break;
+                }
+            }
+
+            private int FindPrefixStartIndex(string input)
+            {
+                int low = 0;
+                int high = _sortedWords.Count;
+                while (low < high)
+                {
+                    int mid = (low + high) / 2;
+                    if (string.Compare(_sortedWords[mid], input, StringComparison.Ordinal) < 0)
+                    {
+                        low = mid + 1;
+                    }
+                    else
+                    {
+                        high = mid;
+                    }
+                }
+                return low;
+            }
+
+            private IEnumerable<string> GetContainsMatches(string input)
+            {
+                if (input.Length == 0) yield break;
+
+                char first = input[0];
+                if (!_wordsByFirstLetter.TryGetValue(first, out var bucket)) yield break;
+
+                int count = 0;
+                foreach (var word in bucket)
+                {
+                    if (word.Contains(input, StringComparison.Ordinal) && !word.StartsWith(input, StringComparison.Ordinal))
+                    {
+                        yield return word;
+                        if (++count >= 50) yield break;
+                    }
+                }
+            }
+
+            private IEnumerable<string> GetFuzzyCandidates(string input)
+            {
+                if (input.Length == 0) yield break;
+
+                var seen = new HashSet<string>(StringComparer.Ordinal);
+                foreach (char c in GetNearbyLetters(input[0]))
+                {
+                    if (!_wordsByFirstLetter.TryGetValue(c, out var bucket)) continue;
+
+                    foreach (var word in bucket)
+                    {
+                        if (seen.Add(word))
+                        {
+                            yield return word;
+                        }
+                    }
+                }
+            }
+
+            private static IEnumerable<char> GetNearbyLetters(char c)
+            {
+                yield return c;
+                if (c > 'a') yield return (char)(c - 1);
+                if (c < 'z') yield return (char)(c + 1);
+            }
+
+            private static int GetMaxLevenshteinDistance(int inputLength) =>
+                inputLength switch
+                {
+                    <= 2 => 1,
+                    <= 4 => 2,
+                    <= 7 => 3,
+                    _ => 4
+                };
+
+            private static int ScorePrefixMatch(string input, string word, bool isRecent)
+            {
+                int score = word.Length - input.Length;
+                if (isRecent) score -= 20;
+                return score;
+            }
+
+            private static int ScoreContainsMatch(string input, string word, bool isRecent)
+            {
+                int score = 100 + word.IndexOf(input, StringComparison.Ordinal);
+                if (isRecent) score -= 15;
+                return score;
+            }
+
+            private static int ScoreFuzzyMatch(string input, string word, int distance, bool isRecent)
+            {
+                int score = 300 + (distance * 20) + Math.Abs(word.Length - input.Length);
+                if (isRecent) score -= 15;
+                return score;
             }
 
             private int CalculateLevenshteinDistance(string source, string target)
@@ -129,33 +290,92 @@ using Royal_Blueberry_Dictionary.Service.ApiClient;
 
                 int n = source.Length;
                 int m = target.Length;
-                int[,] distance = new int[n + 1, m + 1];
+                int[] prev = new int[m + 1];
+                int[] curr = new int[m + 1];
 
-                for (int i = 0; i <= n; distance[i, 0] = i++) ;
-                for (int j = 0; j <= m; distance[0, j] = j++) ;
+                for (int j = 0; j <= m; j++) prev[j] = j;
 
                 for (int i = 1; i <= n; i++)
                 {
+                    curr[0] = i;
                     for (int j = 1; j <= m; j++)
                     {
-                        int cost = (target[j - 1] == source[i - 1]) ? 0 : 1;
-                        distance[i, j] = Math.Min(
-                            Math.Min(distance[i - 1, j] + 1, distance[i, j - 1] + 1),
-                            distance[i - 1, j - 1] + cost);
+                        int cost = target[j - 1] == source[i - 1] ? 0 : 1;
+                        curr[j] = Math.Min(
+                            Math.Min(curr[j - 1] + 1, prev[j] + 1),
+                            prev[j - 1] + cost);
                     }
+                    (prev, curr) = (curr, prev);
                 }
-                return distance[n, m];
+                return prev[m];
             }
 
             #endregion
             private void loadAvailableWordList()
             {
-           
-               var fileWords = File.ReadAllLines(Path.Combine(AppDomain.CurrentDomain.BaseDirectory,@"Database\AvailableWordList.txt"));
-               var dbWords = cache.Keys;
-               foreach (var w in dbWords) _availableWords.Add(w.ToLower());
-               _availableWords.UnionWith(fileWords);
-               Console.WriteLine($"Loaded {_availableWords.Count} available words for suggestions.");   
+                var filePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"Database\AvailableWordList.txt");
+                if (File.Exists(filePath))
+                {
+                    foreach (var line in File.ReadAllLines(filePath))
+                    {
+                        var word = line.Trim().ToLower();
+                        if (word.Length >= 1 && word.All(char.IsLetter))
+                        {
+                            _availableWords.Add(word);
+                        }
+                    }
+                }
+
+                foreach (var w in cache.Keys)
+                {
+                    _availableWords.Add(w.ToLower());
+                }
+
+                RebuildWordIndexes();
+                Console.WriteLine($"Loaded {_availableWords.Count} available words for suggestions.");
+            }
+
+            private void AddWordToIndex(string word)
+            {
+                if (!_availableWords.Add(word)) return;
+
+                int insertIndex = _sortedWords.BinarySearch(word, StringComparer.Ordinal);
+                if (insertIndex < 0)
+                {
+                    _sortedWords.Insert(~insertIndex, word);
+                }
+
+                char first = word[0];
+                if (!_wordsByFirstLetter.TryGetValue(first, out var bucket))
+                {
+                    bucket = new List<string>();
+                    _wordsByFirstLetter[first] = bucket;
+                }
+                bucket.Add(word);
+            }
+
+            private void RebuildWordIndexes()
+            {
+                _sortedWords = _availableWords.OrderBy(w => w, StringComparer.Ordinal).ToList();
+                _wordsByFirstLetter.Clear();
+
+                foreach (var word in _sortedWords)
+                {
+                    char first = word[0];
+                    if (!_wordsByFirstLetter.TryGetValue(first, out var bucket))
+                    {
+                        bucket = new List<string>();
+                        _wordsByFirstLetter[first] = bucket;
+                    }
+                    bucket.Add(word);
+                }
+
+                _recentSearchWords = timeLogs
+                    .OrderByDescending(kv => kv.Value)
+                    .Select(kv => kv.Key.ToLower())
+                    .Where(_availableWords.Contains)
+                    .Take(50)
+                    .ToHashSet(StringComparer.Ordinal);
             }
         /// <summary>
         /// Lấy ra lịch sử tìm kiếm chỉ trong ngày hôm nay (UTC).
