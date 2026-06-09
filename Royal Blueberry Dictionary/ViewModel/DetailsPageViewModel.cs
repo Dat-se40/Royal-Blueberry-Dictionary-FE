@@ -262,17 +262,26 @@ namespace BlueBerryDictionary.ViewModels
         }
 
         [RelayCommand]
-        private void OpenNote()
+        private async Task OpenNote()
         {
             if (WordDetail == null) return;
 
             try
             {
-                var dialog = new NoteWriterDialog(WordDetail, meaningIndex: _snapshot?.MeaningIndex ?? 0, definitionIndex: 0)
+                _snapshot ??= await _wordService.GetWordEntryByDetail(WordDetail, 0, 0);
+
+                Window dialog = _snapshot != null
+                    ? new NoteWriterDialog(_snapshot) { Owner = Application.Current?.MainWindow }
+                    : new NoteWriterDialog(WordDetail, meaningIndex: 0, definitionIndex: 0)
+                    {
+                        Owner = Application.Current?.MainWindow
+                    };
+
+                if (dialog.ShowDialog() == true && _snapshot != null)
                 {
-                    Owner = Application.Current?.MainWindow
-                };
-                dialog.ShowDialog();
+                    _snapshot = await _wordService.GetExistingEntryAsync(WordDetail.Word, _snapshot.MeaningIndex)
+                                ?? _snapshot;
+                }
             }
             catch (Exception ex)
             {

@@ -137,12 +137,15 @@ namespace Royal_Blueberry_Dictionary.Service
                         var detail = await _searchService.searchAWord(rel.Word);
                         if (detail != null)
                         {
-                            var newEntry = WordService.MapWordDetailToWordEntry(detail, rel.MeaningIndex, 0);
-                            if(newEntry == null) return;    
-                            newEntry.UserId = uid;
-
-                            await _wordRepo.AddAsync(newEntry);
-                            existingKeys.Add(key); 
+                            var existing = await _wordRepo.GetByWordAndMeaningAsync(uid, rel.Word, rel.MeaningIndex);
+                            if (existing == null)
+                            {
+                                var newEntry = WordService.MapWordDetailToWordEntry(detail, rel.MeaningIndex, 0);
+                                if (newEntry == null) return;
+                                newEntry.UserId = uid;
+                                await _wordRepo.AddAsync(newEntry);
+                            }
+                            existingKeys.Add(key);
                         }
                     }
                 }

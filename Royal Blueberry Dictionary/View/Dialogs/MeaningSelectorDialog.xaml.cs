@@ -108,7 +108,7 @@ namespace Royal_Blueberry_Dictionary.View.Dialogs
             SaveSelectionAndClose(applyTag: true);
         }
 
-        private void SaveSelectionAndClose(bool applyTag)
+        private async void SaveSelectionAndClose(bool applyTag)
         {
             if (SelectedMeaningIndex < 0 || SelectedMeaningIndex >= Detail.Meanings.Count)
             {
@@ -122,11 +122,23 @@ namespace Royal_Blueberry_Dictionary.View.Dialogs
                 return;
             }
 
-            SelectedEntry = WordService.MapWordDetailToWordEntry(Detail, SelectedMeaningIndex, SelectedDefinitionIndex);
+            var wordService = App.serviceProvider.GetRequiredService<WordService>();
+            SelectedEntry = await wordService.GetExistingEntryAsync(Detail.Word, SelectedMeaningIndex)
+                ?? WordService.MapWordDetailToWordEntry(Detail, SelectedMeaningIndex, SelectedDefinitionIndex);
+
+            if (SelectedEntry == null)
+            {
+                MessageBox.Show("Unable to prepare word entry for saving.", "Error");
+                return;
+            }
 
             if (applyTag && SelectedTag != null)
             {
-                SelectedEntry.TagIdsJson = new List<string> { SelectedTag.Id };
+                SelectedEntry.TagIdsJson ??= new List<string>();
+                if (!SelectedEntry.TagIdsJson.Contains(SelectedTag.Id))
+                {
+                    SelectedEntry.TagIdsJson.Add(SelectedTag.Id);
+                }
             }
 
             DialogResult = true;

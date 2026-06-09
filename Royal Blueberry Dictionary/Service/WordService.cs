@@ -19,25 +19,28 @@ namespace Royal_Blueberry_Dictionary.Service
         {
             WordEntryRepository = wordEntryRepository;        
         }
-        public async Task<WordEntry> GetWordEntryByDetail(WordDetail detail, int meaningIdx, int defIdx) 
+        public async Task<WordEntry?> GetWordEntryByDetail(WordDetail detail, int meaningIdx, int defIdx)
         {
-            var newEntry  = await WordEntryRepository.GetByWordAndMeaningAsync(App.UserId,detail.Word, meaningIdx); 
-            
             try
             {
-                if (newEntry == null) 
+                var existing = await WordEntryRepository.GetByWordAndMeaningAsync(App.UserId, detail.Word, meaningIdx);
+                if (existing != null)
                 {
-                    newEntry = MapWordDetailToWordEntry(detail, meaningIdx, defIdx);
-                    await SmartUpdate(newEntry); 
+                    return existing;
                 }
+
+                // Chỉ map trong memory để hiển thị — không ghi DB cho đến khi user Save/Favorite/Note.
+                return MapWordDetailToWordEntry(detail, meaningIdx, defIdx);
             }
             catch (Exception ex)
             {
                 Console.WriteLine(ex.ToString());
                 return null;
             }
-            return newEntry;
         }
+
+        public Task<WordEntry?> GetExistingEntryAsync(string word, int meaningIndex) =>
+            WordEntryRepository.GetByWordAndMeaningAsync(App.UserId, word, meaningIndex);
 
         public async Task<List<WordEntry>> GetAllWordsAsync()
         {
@@ -111,25 +114,104 @@ namespace Royal_Blueberry_Dictionary.Service
                 await SmartUpdate(e);
             }
         }
-        public async Task SmartUpdate(WordEntry wordEntry) 
+        public async Task SmartUpdate(WordEntry wordEntry)
         {
+            if (wordEntry == null || string.IsNullOrWhiteSpace(wordEntry.Word))
+            {
+                return;
+            }
+
             var existing = await WordEntryRepository.GetByIdAsync(wordEntry.Id);
+            if (existing == null)
+            {
+                existing = await WordEntryRepository.GetByWordAndMeaningAsync(
+                    App.UserId,
+                    wordEntry.Word,
+                    wordEntry.MeaningIndex);
+            }
 
             if (existing == null)
             {
                 await WordEntryRepository.AddAsync(wordEntry);
+                return;
             }
-            else
+
+            existing.Note = wordEntry.Note;
+            existing.IsFavorited = wordEntry.IsFavorited;
+
+            if (!string.IsNullOrWhiteSpace(wordEntry.Definition))
             {
-                await WordEntryRepository.UpdateAsync(wordEntry);
+                existing.Definition = wordEntry.Definition;
+            }
+
+            if (!string.IsNullOrWhiteSpace(wordEntry.Example))
+            {
+                existing.Example = wordEntry.Example;
+            }
+
+            if (!string.IsNullOrWhiteSpace(wordEntry.Phonetic))
+            {
+                existing.Phonetic = wordEntry.Phonetic;
+            }
+
+            if (!string.IsNullOrWhiteSpace(wordEntry.PartOfSpeech))
+            {
+                existing.PartOfSpeech = wordEntry.PartOfSpeech;
+            }
+
+            MergeTagIds(existing, wordEntry);
+            await WordEntryRepository.UpdateAsync(existing);
+            wordEntry.Id = existing.Id;
+        }
+
+        private static void MergeTagIds(WordEntry existing, WordEntry incoming)
+        {
+            if (incoming.TagIdsJson == null || incoming.TagIdsJson.Count == 0)
+            {
+                return;
+            }
+
+            existing.TagIdsJson ??= new List<string>();
+            foreach (var tagId in incoming.TagIdsJson)
+            {
+                if (!existing.TagIdsJson.Contains(tagId))
+                {
+                    existing.TagIdsJson.Add(tagId);
+                }
             }
         }
         public async Task CleanUpData()
         {
             var list = await WordEntryRepository.GetAllAsync(App.UserId);
             var db = App.serviceProvider.GetRequiredService<AppDbContext>();
-            db.WordEntries.RemoveRange(list.Where(l => l.IsFavorited == false && l.TagIdsJson.Count == 0 && l.Note == string.Empty ));
-            await db.SaveChangesAsync(); 
+
+            var duplicateGroups = list
+                .GroupBy(e => $"{e.Word.ToLower()}|{e.MeaningIndex}", StringComparer.OrdinalIgnoreCase)
+                .Where(g => g.Count() > 1);
+
+            foreach (var group in duplicateGroups)
+            {
+                var keeper = group
+                    .OrderByDescending(e => !string.IsNullOrWhiteSpace(e.Note))
+                    .ThenByDescending(e => e.IsFavorited)
+                    .ThenByDescending(e => e.TagIdsJson?.Count ?? 0)
+                    .ThenByDescending(e => e.LastModifiedAt)
+                    .First();
+
+                foreach (var duplicate in group.Where(e => e.Id != keeper.Id))
+                {
+                    keeper.Note = string.IsNullOrWhiteSpace(keeper.Note) ? duplicate.Note : keeper.Note;
+                    keeper.IsFavorited |= duplicate.IsFavorited;
+                    MergeTagIds(keeper, duplicate);
+                    db.WordEntries.Remove(duplicate);
+                }
+            }
+
+            db.WordEntries.RemoveRange(list.Where(l =>
+                l.IsFavorited == false &&
+                (l.TagIdsJson == null || l.TagIdsJson.Count == 0) &&
+                string.IsNullOrWhiteSpace(l.Note)));
+            await db.SaveChangesAsync();
         }
     }
 }

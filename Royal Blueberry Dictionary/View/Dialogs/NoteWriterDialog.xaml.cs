@@ -38,9 +38,15 @@ namespace Royal_Blueberry_Dictionary.View.Dialogs
 
         private async Task<WordEntry> LoadOrCreateEntry(WordDetail detail, int meaningIndex, int definitionIndex)
         {
+            var existing = await _wordService.GetExistingEntryAsync(detail.Word, meaningIndex);
+            if (existing != null)
+            {
+                return existing;
+            }
+
             var entry = await _wordService.GetWordEntryByDetail(detail, meaningIndex, definitionIndex);
-            entry ??= WordService.MapWordDetailToWordEntry(detail, meaningIndex, definitionIndex);
-            return entry;
+            return entry ?? WordService.MapWordDetailToWordEntry(detail, meaningIndex, definitionIndex)
+                   ?? throw new InvalidOperationException("Unable to prepare word entry for note.");
         }
 
         private void Display()
