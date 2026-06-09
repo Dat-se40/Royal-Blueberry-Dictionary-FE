@@ -33,7 +33,6 @@ dotnet clean
 dotnet publish -c Release -r win-x64 --self-contained true
 cd bin\Release\net9.0-windows\win-x64\publish
 .\RoyalBlueBerryDictionary.exe
-
 ```
 
 ---
@@ -69,7 +68,6 @@ cd bin\Release\net9.0-windows\win-x64\publish
 * **Theme Manager**: Hỗ trợ thay đổi giao diện linh hoạt (Sáng/Tối) và lưu Presets (`ThemeManeger.cs`, `ThemePresetDialog.xaml`).
 * **Custom Fonts & Colors**: Người dùng tự do tùy chỉnh phông chữ, màu sắc ứng dụng (`CustomThemeDialog.xaml`, `FontPickerDialog.xaml`).
 * **Responsive & Animations**: Thiết kế mượt mà, phản hồi tốt trên nhiều độ phân giải màn hình.
-
 ---
 
 ## Cách sử dụng + User Flow
@@ -82,7 +80,6 @@ cd bin\Release\net9.0-windows\win-x64\publish
 3. Chọn Đăng nhập (Tài khoản hệ thống hoặc Google) / Đăng ký
 4. Token được cấp phát và lưu bởi TokenManager
 5. Chuyển vào HomePage
-
 ```
 
 ### Flow 2: Trải nghiệm Minigame Học từ
@@ -93,7 +90,6 @@ cd bin\Release\net9.0-windows\win-x64\publish
 3. Chơi game đoán nghĩa/phát âm
 4. Kết thúc game -> Hiện GameCompletionDialog (Thống kê điểm số)
 5. Lịch sử được lưu vào hệ thống qua GameLogService
-
 ```
 
 ### Flow 3: Quản lý Gói từ vựng Offline
@@ -104,7 +100,6 @@ cd bin\Release\net9.0-windows\win-x64\publish
 3. Click để xem chi tiết (PackageDetailsDialog)
 4. Nhấn Tải về (hệ thống xử lý qua OfflinePackageCacheService)
 5. Sử dụng gói từ offline ngay cả khi mất mạng internet
-
 ```
 
 ---
@@ -124,7 +119,6 @@ cd bin\Release\net9.0-windows\win-x64\publish
 ```bash
 git clone https://github.com/Dat-se40/royal-blueberry-dictionary-fe.git
 cd royal-blueberry-dictionary-fe
-
 ```
 
 2. **Cấu hình API & Backend Server**
@@ -140,7 +134,6 @@ cd royal-blueberry-dictionary-fe
     "BaseUrl": "https://your-backend-api-url.com/"
   }
 }
-
 ```
 
 3. **Restore & Build**
@@ -149,7 +142,6 @@ cd royal-blueberry-dictionary-fe
 dotnet restore
 dotnet build
 dotnet run --project "Royal Blueberry Dictionary"
-
 ```
 
 ---
@@ -178,7 +170,6 @@ Royal Blueberry Dictionary/
 │   └── UserControl/    # Component tái sử dụng (WordCard, PackageCard...)
 ├── ViewModel/          # Chứa logic ViewModels kế thừa từ ObservableObject
 └── Resources/          # Resource Dictionaries (Colors, ButtonStyles, ControlStyles)
-
 ```
 
 ---
@@ -195,7 +186,6 @@ services.AddSingleton<IBackendApiClient, BackendApiClient>();
 services.AddSingleton<TokenManager>();
 services.AddSingleton<AuthService>();
 services.AddTransient<GameViewModel>();
-
 ```
 
 ### 2. Mô hình MVVM với Community Toolkit (`MvvmToolkit.md`)
@@ -221,7 +211,6 @@ public partial class SearchViewModel : ObservableObject
         // Logic tìm kiếm gọi API...
     }
 }
-
 ```
 
 ### 3. Tương tác API (`BackendApiClient`)
@@ -233,7 +222,6 @@ public async Task<ApiResponse<GoogleLoginResponse>> GoogleLoginAsync(GoogleLogin
 {
     // Đính kèm token và gửi HTTP POST tới backend...
 }
-
 ```
 
 ### 4. Quản lý Theme & Giao diện (`ThemeManeger`)
@@ -246,7 +234,6 @@ public void ApplyColorTheme(AppColorTheme theme)
 {
     // Clear old dictionaries and merge new ones
 }
-
 ```
 
 ---
