@@ -1,7 +1,3 @@
-Dưới đây là file `README.md` được viết lại dựa trên cấu trúc bạn yêu cầu, nhưng phản ánh chính xác các thành phần, kiến trúc và tính năng mới có trong source code của **Royal BlueBerry Dictionary** (phiên bản có tích hợp Backend, Game, Đăng nhập, và MVVM Toolkit).
-
----
-
 # Royal BlueBerry Dictionary 📚
 
 ## Tổng quan đồ án
